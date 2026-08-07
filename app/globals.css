@@ -192,3 +192,38 @@
   .bg-coral { background-color: var(--coral); }
   .text-coral { color: var(--coral); }
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 55s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes panelFadeIn {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-panel-in {
+  animation: panelFadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes charFadeIn {
+  0%   { opacity: 0; transform: translateY(6px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0);   filter: blur(0); }
+}
+
+.animate-char {
+  display: inline-block;
+  opacity: 0;
+  animation: charFadeIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
