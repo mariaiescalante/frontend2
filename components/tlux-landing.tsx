@@ -1,17 +1,28 @@
 'use client'
 
+import { useEffect } from 'react'
 import { SiteHeader }     from '@/components/sections/site-header'
 import { HeroSection }    from '@/components/sections/hero-section'
 import { StatsSection }   from '@/components/sections/stats-section'
 import { ClientsSection } from '@/components/sections/clients-section'
 import { ServiciosSection } from '@/components/sections/servicios-section'
 import { FuncionesSection } from '@/components/sections/funciones-section'
+import { StackSection }     from '@/components/sections/stack-section'
 import { NosotrosSection }  from '@/components/sections/nosotros-section'
 import { ContactoSection, SiteFooter } from '@/components/sections/contacto-section'
 
 export function TluxLanding() {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual'
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior })
+    }
+  }, [])
+
   return (
-    <div className="min-h-screen overflow-hidden bg-slate-50 font-sans text-slate-950">
+    <div className="min-h-screen overflow-x-clip bg-slate-50 font-sans text-slate-950">
       <SiteHeader />
       <main id="inicio">
         <HeroSection />
@@ -30,6 +41,7 @@ export function TluxLanding() {
 
         <ServiciosSection />
         <FuncionesSection />
+        <StackSection />
         <NosotrosSection />
         <ContactoSection />
       </main>

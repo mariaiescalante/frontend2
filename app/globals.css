@@ -172,6 +172,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -204,7 +208,14 @@
   animation: marquee 55s linear infinite;
 }
 
-.animate-marquee:hover {
+.animate-fast-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.animate-marquee:hover,
+.animate-fast-marquee:hover {
   animation-play-state: paused;
 }
 

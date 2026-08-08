@@ -16,7 +16,7 @@ export function NosotrosSection() {
     <section
       id="estudio"
       ref={ref}
-      className="border-b border-slate-200 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10"
+      className="scroll-mt-24 border-b border-slate-200 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10"
     >
       <div className="mx-auto max-w-7xl">
 
@@ -43,7 +43,7 @@ export function NosotrosSection() {
 
         {/* ── Módulo Horizontal Interactivo (Accordion Reveal) ───────────────────────────── */}
         <motion.div
-          className="mt-12 w-full min-h-[420px] border-t border-b border-slate-200 py-6 bg-white overflow-hidden"
+          className="mt-12 w-full h-[540px] sm:h-[480px] lg:h-[420px] border-t border-b border-slate-200 py-4 bg-white overflow-hidden"
           initial={hidden}
           animate={inView ? visible : hidden}
           transition={{ duration: 0.6, ease, delay: 0.2 }}
@@ -54,7 +54,7 @@ export function NosotrosSection() {
             <div
               onMouseEnter={() => setHoveredIndex(0)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative cursor-pointer p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between h-full ${
                 hoveredIndex === 0
                   ? 'lg:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'flex-1 bg-slate-50 border-slate-200'
@@ -105,15 +105,15 @@ export function NosotrosSection() {
             <div
               onMouseEnter={() => setHoveredIndex(1)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative cursor-pointer p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between h-full ${
                 hoveredIndex === 1
-                  ? 'lg:flex-[2.5] bg-teal-50/40 border-teal-500/40 shadow-xl shadow-teal-500/5'
+                  ? 'lg:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'flex-1 bg-slate-50 border-slate-200'
               }`}
             >
-              {/* Barra de acento 3px Verde Teal (#14b8a6) */}
+              {/* Barra de acento 3px Azul TLUX (#2563eb) */}
               <span
-                className={`absolute right-0 top-0 h-1 lg:h-full lg:w-1 bg-[#14b8a6] transition-all duration-500 ${
+                className={`absolute right-0 top-0 h-1 lg:h-full lg:w-1 bg-[#2563eb] transition-all duration-500 ${
                   hoveredIndex === 1 ? 'opacity-100' : 'opacity-0'
                 }`}
               />
@@ -121,7 +121,7 @@ export function NosotrosSection() {
               {/* Tag + Titular Gigante */}
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold tracking-widest text-teal-600">
+                  <span className="font-mono text-xs font-bold tracking-widest text-blue-600">
                     [ 02 // VISIÓN ]
                   </span>
                   <span className="font-mono text-xs font-bold text-slate-400">
@@ -129,7 +129,7 @@ export function NosotrosSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-5xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-teal-600 lg:text-7xl">
+                <h3 className="mt-4 text-5xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 lg:text-7xl">
                   VISIÓN
                 </h3>
               </div>
@@ -146,7 +146,7 @@ export function NosotrosSection() {
                   Ser la empresa líder en soluciones tecnológicas que redefinen la experiencia de usuario a nivel global. Aspiramos a transformar el mundo digital mediante productos intuitivos y de vanguardia, contribuyendo al éxito de nuestros clientes al facilitar interacciones que superen las expectativas. En TLUX, creemos que la tecnología debe adaptarse a las personas.
                 </p>
 
-                <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-teal-600">
+                <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
                   [ TARGET: GLOBAL USER EXPERIENCE ]
                 </span>
               </div>

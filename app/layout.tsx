@@ -8,9 +8,14 @@ const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono'
 const cormorant = Cormorant_Garamond({ subsets: ['latin'], variable: '--font-cormorant', style: ['normal', 'italic'] })
 
 export const metadata: Metadata = {
-  title: 'TLUX — Marcas que ocupan espacio.',
-  description: 'TLUX es un estudio digital independiente que convierte negocios con ambición en experiencias imposibles de ignorar.',
+  title: 'Tlux | Tecnología Líder en Experiencia de Usuario',
+  description: 'Tlux es un estudio digital independiente que convierte negocios con ambición en experiencias imposibles de ignorar.',
   generator: 'v0.app',
+  icons: {
+    icon: '/tlux-logo.png',
+    shortcut: '/tlux-logo.png',
+    apple: '/tlux-logo.png',
+  },
 }
 
 export const viewport: Viewport = {
