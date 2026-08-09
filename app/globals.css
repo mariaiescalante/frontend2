@@ -195,6 +195,8 @@
   .bg-ink { background-color: var(--ink); }
   .bg-coral { background-color: var(--coral); }
   .text-coral { color: var(--coral); }
+  .cursor-drag { cursor: grab; }
+  .cursor-drag:active { cursor: grabbing; }
 }
 
 @keyframes marquee {

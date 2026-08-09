@@ -1,21 +1,95 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export function ContactoSection() {
+  const words = [
+    { text: '¿Qué ', isItalic: false },
+    { text: 'espacio ', isItalic: false },
+    { text: 'quieres ', isItalic: false },
+    { text: 'ocupar', isItalic: true },
+    { text: '?', isItalic: false },
+  ]
+
+  // Calcular índice global para escalonar letra por letra
+  let charCounter = 0
+
   return (
     <section id="contacto" className="scroll-mt-24 border-t border-slate-800 bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-blue-500">[ 04 / CONTACTO ]</p>
-          <h2 className="max-w-3xl font-serif text-6xl leading-[0.85] tracking-[-0.05em] text-white sm:text-8xl">
-            ¿Qué espacio quieres <em className="text-blue-500 font-serif italic">ocupar</em>?
+          {/* Tag de sección con Fade-Down */}
+          <motion.p
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-500"
+          >
+            [ 04 / CONTACTO ]
+          </motion.p>
+
+          {/* Título con aparición LETRA POR LETRA */}
+          <h2 className="max-w-3xl font-serif text-6xl leading-none tracking-tighter text-white sm:text-8xl flex flex-wrap">
+            {words.map((wordObj, wordIdx) => (
+              <span
+                key={wordIdx}
+                className={wordObj.isItalic ? 'text-blue-500 font-serif italic inline-flex' : 'inline-flex'}
+              >
+                {wordObj.text.split('').map((char, charIdx) => {
+                  const currentIndex = charCounter
+                  charCounter++
+                  return (
+                    <motion.span
+                      key={`${wordIdx}-${charIdx}`}
+                      initial={{ opacity: 0, y: 14 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-60px' }}
+                      transition={{
+                        duration: 0.3,
+                        delay: currentIndex * 0.035,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="inline-block"
+                    >
+                      {char === ' ' ? '\u00A0' : char}
+                    </motion.span>
+                  )
+                })}
+              </span>
+            ))}
           </h2>
         </div>
-        <a id="empezar-conversacion" href="mailto:hola@tlux.studio" className="scroll-mt-32 inline-flex w-fit items-center gap-2 border border-slate-700 bg-slate-900 px-7 py-4.5 font-mono text-xs uppercase tracking-[0.18em] text-white transition-all duration-300 hover:border-blue-500 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/20">
+
+        {/* Botón de acción con efecto de brinco de entrada + Hover animado con resplandor */}
+        <motion.a
+          id="empezar-conversacion"
+          href="mailto:hola@tlux.studio"
+          initial={{ opacity: 0, scale: 0.9, y: 24 }}
+          whileInView={{
+            opacity: 1,
+            scale: 1,
+            y: [0, -20, 0, -10, 0, -4, 0],
+          }}
+          whileHover={{
+            scale: 1.05,
+            y: -5,
+            boxShadow: '0 12px 30px rgba(37, 99, 235, 0.45)',
+          }}
+          whileTap={{
+            scale: 0.96,
+            y: 0,
+          }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{
+            opacity: { duration: 0.5, delay: 1.05 },
+            y: { duration: 1.3, delay: 1.1, ease: [0.22, 1, 0.36, 1] },
+            scale: { type: 'spring', stiffness: 300, damping: 15 },
+          }}
+          className="scroll-mt-32 inline-flex w-fit items-center gap-2 border border-slate-700 bg-slate-900 px-7 py-4.5 font-mono text-xs uppercase tracking-wider text-white transition-colors duration-300 hover:border-blue-500 hover:bg-blue-600"
+        >
           Empezar una conversación <ArrowUpRight className="size-4 text-blue-400" />
-        </a>
+        </motion.a>
       </div>
     </section>
   )
@@ -66,7 +140,7 @@ export function SiteFooter() {
                   alt="TLUX Logo"
                   className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
-                <span className="bg-gradient-to-r from-[#4F46E5] to-[#2DD4BF] bg-clip-text font-sans text-3xl font-bold tracking-tight text-transparent">
+                <span className="bg-linear-to-r from-[#4F46E5] to-[#2DD4BF] bg-clip-text font-sans text-3xl font-bold tracking-tight text-transparent">
                   TLUX
                 </span>
               </Link>
@@ -77,7 +151,7 @@ export function SiteFooter() {
             </div>
 
             {/* Badge de Disponibilidad */}
-            <div className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1.5 font-mono text-[10px] font-semibold text-teal-400 w-fit">
+            <div className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1.5 font-mono text-xs font-semibold text-teal-400 w-fit">
               <span className="relative flex size-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-teal-400" />
@@ -88,7 +162,7 @@ export function SiteFooter() {
 
           {/* Columna 2: Navegación Principal */}
           <div>
-            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
               [ NAVEGACIÓN ]
             </p>
             <ul className="flex flex-col gap-3 font-mono text-xs uppercase tracking-wider text-slate-400">
@@ -108,7 +182,7 @@ export function SiteFooter() {
 
           {/* Columna 3: Servicios Destacados */}
           <div>
-            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
               [ SERVICIOS ]
             </p>
             <ul className="flex flex-col gap-3 text-sm text-slate-400">
@@ -122,7 +196,7 @@ export function SiteFooter() {
 
           {/* Columna 4: Conectemos & Zona Horaria */}
           <div>
-            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+            <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
               [ CONECTEMOS ]
             </p>
             <a

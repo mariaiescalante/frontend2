@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import Link from 'next/link'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function Logo({ dark = false }: { dark?: boolean }) {
   return (
@@ -12,7 +14,7 @@ function Logo({ dark = false }: { dark?: boolean }) {
         alt="TLUX Logo"
         className="h-9 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
       />
-      <span className="bg-gradient-to-r from-[#4F46E5] to-[#2DD4BF] bg-clip-text font-sans text-2xl sm:text-3xl font-bold tracking-tight text-transparent">
+      <span className="bg-linear-to-r from-[#4F46E5] to-[#2DD4BF] bg-clip-text font-sans text-2xl sm:text-3xl font-bold tracking-tight text-transparent">
         TLUX
       </span>
     </Link>
@@ -68,30 +70,62 @@ export function SiteHeader() {
         </div>
       </header>
 
-      {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/45 md:hidden" onClick={close}>
-          <aside className="ml-auto flex h-full w-[85%] max-w-sm flex-col border-l border-slate-700 bg-slate-950 p-6 text-white" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-              <Logo dark />
-              <button className="flex size-11 items-center justify-center border border-slate-700 text-white transition-colors hover:border-blue-600 hover:bg-blue-600" aria-label="Cerrar menú" onClick={close}>
-                <X />
-              </button>
-            </div>
-            <nav className="mt-10 flex flex-col" aria-label="Navegación móvil">
-              {items.map(([label, href], i) => (
-                <a key={href} href={href} onClick={(e) => { close(); scrollToId(e, href); }} className="flex items-center justify-between border-b border-slate-800 py-5 font-mono text-sm uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white">
-                  <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
-                  <ArrowUpRight className="size-4 text-blue-500" />
+      {/* ── ANIMACIÓN DE APARICIÓN SUAVE DEL MENÚ LATERAL (SIDEBAR DRAWER) ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm md:hidden"
+            onClick={close}
+          >
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="ml-auto flex h-full w-[85%] max-w-sm flex-col border-l border-slate-800 bg-slate-950 p-6 text-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-slate-800 pb-6">
+                <Logo dark />
+                <button
+                  className="flex size-11 items-center justify-center border border-slate-700 text-white transition-colors hover:border-blue-600 hover:bg-blue-600"
+                  aria-label="Cerrar menú"
+                  onClick={close}
+                >
+                  <X />
+                </button>
+              </div>
+
+              <nav className="mt-10 flex flex-col" aria-label="Navegación móvil">
+                {items.map(([label, href], i) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => { close(); scrollToId(e, href); }}
+                    className="flex items-center justify-between border-b border-slate-800 py-5 font-mono text-sm uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white"
+                  >
+                    <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
+                    <ArrowUpRight className="size-4 text-blue-500" />
+                  </a>
+                ))}
+                <a
+                  href="#contacto"
+                  onClick={(e) => { close(); scrollToId(e, 'contacto'); }}
+                  className="mt-8 flex items-center justify-between border border-blue-600 bg-blue-600 px-5 py-4 font-mono text-xs uppercase tracking-[0.16em] text-white transition-colors hover:bg-transparent"
+                >
+                  Hablemos <ArrowUpRight className="size-4" />
                 </a>
-              ))}
-              <a href="#contacto" onClick={(e) => { close(); scrollToId(e, 'contacto'); }} className="mt-8 flex items-center justify-between border border-blue-600 bg-blue-600 px-5 py-4 font-mono text-xs uppercase tracking-[0.16em] text-white transition-colors hover:bg-transparent">
-                Hablemos <ArrowUpRight className="size-4" />
-              </a>
-            </nav>
-            <p className="mt-auto font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500">TLUX / Digital studio / 2026</p>
-          </aside>
-        </div>
-      )}
+              </nav>
+
+              <p className="mt-auto font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500">TLUX / Digital studio / 2026</p>
+            </motion.aside>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

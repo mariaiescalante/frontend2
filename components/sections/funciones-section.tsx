@@ -37,64 +37,95 @@ const features = [
 ]
 
 export function FuncionesSection() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null)
+
+  const handleMouseEnter = (i: number) => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setActiveItemIndex(i)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setActiveItemIndex(null)
+    }
+  }
+
+  const handleClick = (i: number) => {
+    setActiveItemIndex((prev) => (prev === i ? null : i))
+  }
 
   return (
-    <section id="metodo" className="relative scroll-mt-24 bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
+    <section id="metodo" className="relative scroll-mt-24 overflow-hidden bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16 items-center">
 
-          {/* Columna izquierda: título + descripción */}
-          <div>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-teal-400">[ 02 / FUNCIONES ]</p>
-            <h2 className="font-serif text-5xl leading-[1.0] tracking-[-0.04em] sm:text-6xl">
-              Ofrecemos Funciones Importantes para el <em className="text-blue-500">Desarrollo Web</em> y el <em className="text-blue-500">Marketing Digital.</em>
+          {/* ── Columna izquierda: texto que se desplaza HACIA LA DERECHA (x: -60 -> 0) ── */}
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">[ 02 / FUNCIONES ]</p>
+            <h2 className="font-serif text-4xl leading-none tracking-tighter sm:text-5xl lg:text-6xl">
+              Ofrecemos Funciones Importantes para el <em className="text-blue-500 font-serif italic">Desarrollo Web</em> y el <em className="text-blue-500 font-serif italic">Marketing Digital.</em>
             </h2>
             <p className="mt-8 max-w-lg text-base leading-7 text-slate-400">
               En <span className="font-semibold text-white">TLUX</span>, creemos en ofrecer soluciones digitales integrales que mejoren su presencia en línea y generen resultados. Nuestras características principales incluyen:
             </p>
-          </div>
+          </motion.div>
 
-          {/* Columna derecha: lista interactiva con imagen alineada a cada fila (Estilo Monolog) */}
-          <div className="relative flex flex-col justify-center border-l border-slate-800">
+          {/* ── Columna derecha: opciones que se desplazan HACIA LA IZQUIERDA (x: 60 -> 0) ── */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            className="relative flex flex-col justify-center border-l border-slate-800"
+          >
             {features.map((feature, i) => {
-              const isHovered = hoveredIndex === i
+              const isSelected = activeItemIndex === i
+
               return (
                 <div
                   key={feature.title}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  className={`group relative flex items-center gap-5 border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${
-                    isHovered ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
+                  onClick={() => handleClick(i)}
+                  onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={handleMouseLeave}
+                  className={`group relative flex flex-col border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${
+                    isSelected ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
                   }`}
                 >
-                  <span
-                    className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${
-                      isHovered
-                        ? 'border-blue-500 bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                        : 'border-slate-700 bg-slate-900 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-400'
-                    }`}
-                  >
-                    ✓
-                  </span>
-                  <span
-                    className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${
-                      isHovered ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
-                    }`}
-                  >
-                    {feature.title}
-                  </span>
-                  <span
-                    className={`ml-auto font-mono text-xs transition-colors ${
-                      isHovered ? 'text-blue-400 font-bold' : 'text-slate-600'
-                    }`}
-                  >
-                    [0{i + 1}]
-                  </span>
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    <span
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${
+                        isSelected
+                          ? 'border-blue-500 bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                          : 'border-slate-700 bg-slate-900 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-400'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <span
+                      className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${
+                        isSelected ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
+                      }`}
+                    >
+                      {feature.title}
+                    </span>
+                    <span
+                      className={`ml-auto font-mono text-xs transition-colors ${
+                        isSelected ? 'text-blue-400 font-bold' : 'text-slate-600'
+                      }`}
+                    >
+                      [0{i + 1}]
+                    </span>
+                  </div>
 
-                  {/* ── Imagen que aparece al costado DERECHO de la fila activa ── */}
+                  {/* ── 1. VISTA PREVIA ORIGINAL EN DESKTOP (Emergente Flotante a la Derecha) ── */}
                   <AnimatePresence>
-                    {isHovered && (
+                    {isSelected && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.9, x: 16 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -108,9 +139,9 @@ export function FuncionesSection() {
                             alt={feature.title}
                             className="h-full w-full object-cover"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
                           <div className="absolute bottom-3 left-3 right-3">
-                            <span className="font-mono text-[9px] uppercase tracking-widest text-blue-400 block mb-0.5">
+                            <span className="font-mono text-xs uppercase tracking-widest text-blue-400 block mb-0.5">
                               [ TLUX // 0{i + 1} ]
                             </span>
                             <p className="font-sans text-xs font-semibold text-white truncate">
@@ -121,10 +152,40 @@ export function FuncionesSection() {
                       </motion.div>
                     )}
                   </AnimatePresence>
+
+                  {/* ── 2. VISTA PREVIA ADAPTATIVA EN MÓVIL Y TABLET (Desplegable Inline) ── */}
+                  <AnimatePresence>
+                    {isSelected && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden mt-4 lg:hidden"
+                      >
+                        <div className="relative w-full h-48 sm:h-56 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-xl">
+                          <img
+                            src={feature.image}
+                            alt={feature.title}
+                            className="h-full w-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                          <div className="absolute bottom-3 left-3 right-3">
+                            <span className="font-mono text-xs uppercase tracking-widest text-blue-400 block mb-0.5">
+                              [ TLUX // 0{i + 1} ]
+                            </span>
+                            <p className="font-sans text-xs sm:text-sm font-semibold text-white truncate">
+                              {feature.kicker}
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )
             })}
-          </div>
+          </motion.div>
 
         </div>
       </div>

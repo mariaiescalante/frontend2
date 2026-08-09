@@ -10,7 +10,23 @@ const ease = 'easeOut' as const
 export function NosotrosSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  const handleMouseEnter = (idx: number) => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setActiveIndex(idx)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setActiveIndex(null)
+    }
+  }
+
+  const handleClick = (idx: number) => {
+    setActiveIndex((prev) => (prev === idx ? null : idx))
+  }
 
   return (
     <section
@@ -29,7 +45,7 @@ export function NosotrosSection() {
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-zinc-400">
             [ 03 // NOSOTROS ]
           </p>
-          <h2 className="max-w-4xl text-4xl font-bold leading-tight tracking-tight text-slate-900 lg:text-5xl">
+          <h2 className="max-w-4xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
             Impulsamos tu negocio,{' '}
             <span className="font-serif italic text-[#2563eb]">
               revolucionando
@@ -41,29 +57,32 @@ export function NosotrosSection() {
           </p>
         </motion.div>
 
-        {/* ── Módulo Horizontal Interactivo (Accordion Reveal) ───────────────────────────── */}
+        {/* ── Módulo Horizontal Interactivo (Misión & Visión) ───────────────────────────── */}
         <motion.div
-          className="mt-12 w-full h-[540px] sm:h-[480px] lg:h-[420px] border-t border-b border-slate-200 py-4 bg-white overflow-hidden"
+          className="mt-12 w-full min-h-104 lg:h-104 border-t border-b border-slate-200 py-4 bg-white"
           initial={hidden}
           animate={inView ? visible : hidden}
           transition={{ duration: 0.6, ease, delay: 0.2 }}
         >
-          <div className="flex flex-col lg:flex-row gap-4 w-full h-full">
+          <div
+            onMouseLeave={handleMouseLeave}
+            className="flex flex-col md:flex-row gap-4 w-full h-full"
+          >
 
-            {/* ── Bloque 01 - MISIÓN (Expansión hacia la Derecha) ───────────────────────────── */}
+            {/* ── Bloque 01 - MISIÓN ───────────────────────────── */}
             <div
-              onMouseEnter={() => setHoveredIndex(0)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between h-full ${
-                hoveredIndex === 0
-                  ? 'lg:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
-                  : 'flex-1 bg-slate-50 border-slate-200'
+              onClick={() => handleClick(0)}
+              onMouseEnter={() => handleMouseEnter(0)}
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
+                activeIndex === 0
+                  ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
+                  : 'md:flex-1 bg-slate-50 border-slate-200'
               }`}
             >
-              {/* Barra de acento 3px Azul TLUX (#2563eb) */}
+              {/* Barra de acento Azul TLUX (#2563eb) */}
               <span
-                className={`absolute left-0 top-0 h-1 lg:h-full lg:w-1 bg-[#2563eb] transition-all duration-500 ${
-                  hoveredIndex === 0 ? 'opacity-100' : 'opacity-0'
+                className={`absolute left-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${
+                  activeIndex === 0 ? 'opacity-100' : 'opacity-0'
                 }`}
               />
 
@@ -78,17 +97,17 @@ export function NosotrosSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-5xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 lg:text-7xl">
+                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
                   MISIÓN
                 </h3>
               </div>
 
-              {/* Contenido Revelable (Texto literal + Badge) */}
+              {/* Contenido Revelable */}
               <div
                 className={`transition-all duration-500 ease-in-out ${
-                  hoveredIndex === 0
-                    ? 'opacity-100 max-h-96 translate-y-0 mt-6'
-                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 lg:opacity-0'
+                  activeIndex === 0
+                    ? 'opacity-100 max-h-128 translate-y-0 mt-6'
+                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
                 }`}
               >
                 <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
@@ -101,20 +120,20 @@ export function NosotrosSection() {
               </div>
             </div>
 
-            {/* ── Bloque 02 - VISIÓN (Expansión hacia la Izquierda) ───────────────────────────── */}
+            {/* ── Bloque 02 - VISIÓN ───────────────────────────── */}
             <div
-              onMouseEnter={() => setHoveredIndex(1)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between h-full ${
-                hoveredIndex === 1
-                  ? 'lg:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
-                  : 'flex-1 bg-slate-50 border-slate-200'
+              onClick={() => handleClick(1)}
+              onMouseEnter={() => handleMouseEnter(1)}
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
+                activeIndex === 1
+                  ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
+                  : 'md:flex-1 bg-slate-50 border-slate-200'
               }`}
             >
-              {/* Barra de acento 3px Azul TLUX (#2563eb) */}
+              {/* Barra de acento Azul TLUX (#2563eb) */}
               <span
-                className={`absolute right-0 top-0 h-1 lg:h-full lg:w-1 bg-[#2563eb] transition-all duration-500 ${
-                  hoveredIndex === 1 ? 'opacity-100' : 'opacity-0'
+                className={`absolute right-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${
+                  activeIndex === 1 ? 'opacity-100' : 'opacity-0'
                 }`}
               />
 
@@ -129,17 +148,17 @@ export function NosotrosSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-5xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 lg:text-7xl">
+                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
                   VISIÓN
                 </h3>
               </div>
 
-              {/* Contenido Revelable (Texto literal + Badge) */}
+              {/* Contenido Revelable */}
               <div
                 className={`transition-all duration-500 ease-in-out ${
-                  hoveredIndex === 1
-                    ? 'opacity-100 max-h-96 translate-y-0 mt-6'
-                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 lg:opacity-0'
+                  activeIndex === 1
+                    ? 'opacity-100 max-h-128 translate-y-0 mt-6'
+                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
                 }`}
               >
                 <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">

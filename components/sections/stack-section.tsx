@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Check } from 'lucide-react'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 interface TechTool {
   id: string
@@ -28,139 +30,310 @@ const TECH_TOOLS: TechTool[] = [
     useCase: 'Plataformas SaaS, dashboards ejecutivos y sistemas de alta escala.',
     performanceMetric: '99.8% Type Safety / Strict Dependency Injection',
     logo: (
-      <svg viewBox="0 0 256 272" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#DD0031" d="M128 0L0 45.6l19.5 169.5L128 272l108.5-56.9L256 45.6z"/>
-        <path fill="#C3002F" d="M128 0v272l108.5-56.9L256 45.6z"/>
-        <path fill="#FFFFFF" d="M128 35.5L46.8 218h31.8l16.4-40.9h66l16.4 40.9h31.8zM108.6 150l19.4-48.4 19.4 48.4z"/>
-      </svg>
+      <Image
+        src="/Angularjsoldicon.webp"
+        alt="Angular"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
     ),
   },
   {
     id: 'laravel',
     name: 'Laravel',
-    categoryTag: '[ DEV_BACKEND ]',
-    categoryName: 'Backend & Infrastructure Engine',
-    version: 'v11.x REST & GraphQL API',
+    categoryTag: '[ BACKEND_ENGINE ]',
+    categoryName: 'PHP Web Application Framework',
+    version: 'v11.x Enterprise Suite',
     accentColor: '#FF2D20',
-    description: 'Motor backend de alta velocidad con arquitectura MVC, seguridad criptográfica y colas asíncronas.',
-    useCase: 'APIs distribuidas, autenticación OAuth2 y procesamiento masivo de datos.',
-    performanceMetric: 'Sub-20ms Response Time / Automated Queue Processing',
+    description: 'Motor backend de alta elegancia para arquitecturas de datos complejas, ORM Eloquent e integraciones API seguras.',
+    useCase: 'APIs RESTful, microservicios empresariales y portales web transaccionales.',
+    performanceMetric: '99.99% Reliability / Automated Queue Processing',
     logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#FF2D20" d="M485.4 140.7L330.1 51.1c-12.7-7.3-28.5-7.3-41.2 0L133.7 140.7c-12.7 7.3-20.6 20.9-20.6 35.6v179.3c0 14.7 7.8 28.3 20.6 35.6l155.2 89.6c12.7 7.3 28.5 7.3 41.2 0l155.2-89.6c12.7-7.3 20.6-20.9 20.6-35.6V176.3c.1-14.7-7.8-28.3-20.5-35.6zM289.4 87.2l128 73.9-63.5 36.7-128-73.9 63.5-36.7zm-144 83.1l128-73.9 63.5 36.7-128 73.9-63.5-36.7zm16.5 45.2l128 73.9v73.4l-128-73.9v-73.4zm144 220.8l-128-73.9v-45.2l64.5 37.3 63.5-36.7v118.5zm16.5-147.7l63.5-36.7 63.5 36.7-127 73.4v-73.4zm144-45.2v73.4l-63.5 36.7v-73.4l63.5-36.7z"/>
-      </svg>
+      <Image
+        src="/Laravel.svg.webp"
+        alt="Laravel"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'nextjs',
+    name: 'Next.js',
+    categoryTag: '[ FULLSTACK_META ]',
+    categoryName: 'React Server Components Framework',
+    version: 'v15 App Router Architecture',
+    accentColor: '#000000',
+    description: 'El estándar moderno de Next.js para renderizado híbrido (SSR, SSG, ISR), optimización de assets y carga ultrarrápida.',
+    useCase: 'E-commerce headless, plataformas de contenido masivo e interfaces interactivas de alto SEO.',
+    performanceMetric: '100/100 Lighthouse Performance / Zero Layout Shift',
+    logo: (
+      <Image
+        src="/nextjs-icon-dark-background.webp"
+        alt="Next.js"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300 rounded-full"
+      />
+    ),
+  },
+  {
+    id: 'nodejs',
+    name: 'Node.js',
+    categoryTag: '[ RUNTIME_ENVIRONMENT ]',
+    categoryName: 'Asynchronous Event-Driven JS',
+    version: 'v22.x LTS Engine',
+    accentColor: '#5FA04E',
+    description: 'Entorno de ejecución orientado a eventos y E/S no bloqueante para servicios en tiempo real y microservicios escalables.',
+    useCase: 'WebSockets, APIs GraphQL/gRPC y backends distribuidos en la nube.',
+    performanceMetric: '100k+ Concurrently Handled Requests / Non-blocking IO',
+    logo: (
+      <Image
+        src="/Node.js_logo.svg"
+        alt="Node.js"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'postgres',
+    name: 'PostgreSQL',
+    categoryTag: '[ DATABASE_SYSTEM ]',
+    categoryName: 'Advanced Relational Database',
+    version: 'v16.x ACID Engine',
+    accentColor: '#336791',
+    description: 'La base de datos relacional de código abierto más avanzada del mundo, especializada en integridad de datos y búsquedas vectoriales.',
+    useCase: 'Almacenamiento transaccional, datos financieros y vectores para Inteligencia Artificial.',
+    performanceMetric: 'ACID Strict Concurrency / JSONB Index Optimization',
+    logo: (
+      <Image
+        src="/Postgresql.svg.webp"
+        alt="PostgreSQL"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'python',
+    name: 'Python',
+    categoryTag: '[ AI_DATA_ENGINE ]',
+    categoryName: 'High-Level Data Science & Backend',
+    version: 'v3.12 64-bit Core',
+    accentColor: '#3776AB',
+    description: 'Lenguaje líder en automatización, procesamiento masivo de datos, algoritmos de Machine Learning e integraciones de IA.',
+    useCase: 'Modelos de lenguaje (LLMs), pipelines de datos y APIs con FastAPI/Django.',
+    performanceMetric: 'Sub-millisecond Vector Calculations / Direct Tensor Binding',
+    logo: (
+      <Image
+        src="/python.webp"
+        alt="Python"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'react',
+    name: 'React',
+    categoryTag: '[ UI_LIBRARY ]',
+    categoryName: 'Declarative UI Component Library',
+    version: 'v19 Concurrent Mode',
+    accentColor: '#61DAFB',
+    description: 'La librería UI más popular para construir interfaces declarativas y reactivas con renderizado basado en componentes.',
+    useCase: 'SPAs de alto rendimiento, microfrontends y aplicaciones móviles con React Native.',
+    performanceMetric: '60 FPS Smooth Rendering / Fiber Architecture',
+    logo: (
+      <Image
+        src="/React.svg.webp"
+        alt="React"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'tailwind',
+    name: 'Tailwind CSS',
+    categoryTag: '[ DESIGN_SYSTEM ]',
+    categoryName: 'Utility-First CSS Engine',
+    version: 'v4.0 Oxide Core Engine',
+    accentColor: '#06B6D4',
+    description: 'Motor CSS de última generación compilado en Rust para crear sistemas de diseño responsivos y de alto impacto estético sin CSS residual.',
+    useCase: 'Interfaces premium Awwwards, sistemas de diseño corporativos y animaciones fluidas.',
+    performanceMetric: '0kb Unused CSS / JIT Instant Compilation Engine',
+    logo: (
+      <Image
+        src="/Tailwind_CSS_Logo.svg.webp"
+        alt="Tailwind CSS"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'typescript',
+    name: 'TypeScript',
+    categoryTag: '[ LANGUAGE_CORE ]',
+    categoryName: 'Strongly Typed JavaScript',
+    version: 'v5.7.3 Compiler',
+    accentColor: '#3178C6',
+    description: 'Superset tipado de JavaScript que garantiza mantenibilidad a largo plazo, refactorización segura y detección de errores en desarrollo.',
+    useCase: 'Grandes bases de código, integraciones complejas y contratos de datos seguros.',
+    performanceMetric: 'Zero Runtime Errors / Strictly Enforced Type Checking',
+    logo: (
+      <Image
+        src="/Typescript_logo_2020.svg.webp"
+        alt="TypeScript"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'facebook-ads',
+    name: 'Facebook Ads',
+    categoryTag: '[ ADS_MARKETING ]',
+    categoryName: 'Meta Business & Performance Ads Engine',
+    version: 'Meta Ads Manager Enterprise',
+    accentColor: '#0666E5',
+    description: 'Plataforma publicitaria de Meta para campañas de alto impacto, segmentación avanzada de audiencias y retargeting conversivo.',
+    useCase: 'Campañas de adquisición, retargeting dinámico y generación de clientes potenciales.',
+    performanceMetric: 'High-ROAS Conversion Pixel & CAPI Event Sync',
+    logo: (
+      <Image
+        src="/facebook-ads.svg"
+        alt="Facebook Ads"
+        width={75}
+        height={16}
+        className="h-full w-auto object-contain transition-transform duration-300"
+      />
+    ),
+  },
+  {
+    id: 'google-ads',
+    name: 'Google Ads',
+    categoryTag: '[ SEARCH_MARKETING ]',
+    categoryName: 'Google Performance Max & Search Engine',
+    version: 'Google Ads Manager Suite',
+    accentColor: '#4285F4',
+    description: 'Ecosistema publicitario de Google para posicionamiento inmediato en búsquedas, campañas de Display, Shopping y Performance Max.',
+    useCase: 'Captura de intención de compra directa, anuncios de búsqueda y campañas multicanal.',
+    performanceMetric: 'Top-of-Page Impression Share & Smart Bidding AI',
+    logo: (
+      <Image
+        src="/google-ads.webp"
+        alt="Google Ads"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
     ),
   },
   {
     id: 'shopify',
     name: 'Shopify',
-    categoryTag: '[ E_COMMERCE ]',
-    categoryName: 'Global Commerce Ecosystem',
-    version: 'Storefront API / Hydrogen',
+    categoryTag: '[ ECOMMERCE_SUITE ]',
+    categoryName: 'Enterprise Commerce Platform',
+    version: 'Shopify Plus & Liquid Core',
     accentColor: '#95BF47',
-    description: 'Infraestructura global de e-commerce con pasarelas ultra-seguras y optimización de conversión.',
-    useCase: 'Tiendas online de alto volumen, checkout sin fricción y ventas globales.',
-    performanceMetric: '99.99% Uptime / Global CDN Checkout Acceleration',
+    description: 'La plataforma de comercio electrónico líder para tiendas online de alta conversión, pasarelas de pago y gestión de inventario.',
+    useCase: 'Tiendas online escalables, e-commerce global y checkout ultrarrápido.',
+    performanceMetric: 'Sub-second Shop Pay Checkout & 99.99% Uptime',
     logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#95BF47" d="M374.3 118.8c-2.4-1.2-5.4-.5-6.9 1.7l-41.8 61.2-22.3-47.5c-1.3-2.7-4.4-4.1-7.3-3.3l-160 42.7c-2.8.7-4.7 3.3-4.5 6.2l18 238c.3 4.2 3.8 7.4 8 7.4h229.4c4.2 0 7.7-3.2 8-7.4l15-212.8c.2-2.9-1.5-5.6-4.2-6.5l-30.9-8.4zm-142 57.5l17.7 37.8-49 71.8c-1.5 2.2-4.5 2.9-6.9 1.7L154.5 268l77.8-91.7z"/>
-        <path fill="#5E8E3E" d="M325.6 181.7l41.8-61.2c1.5-2.2 4.5-2.9 6.9-1.7l30.9 8.4c2.7.9 4.4 3.6 4.2 6.5l-15 212.8c-.3 4.2-3.8 7.4-8 7.4H285l40.6-172.2z"/>
-      </svg>
+      <Image
+        src="/shopify.webp"
+        alt="Shopify"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
     ),
   },
   {
     id: 'wordpress',
     name: 'WordPress',
     categoryTag: '[ CMS_PLATFORM ]',
-    categoryName: 'Headless Content Management',
-    version: 'Custom Engine / Headless REST',
+    categoryName: 'Content Management System Engine',
+    version: 'v6.7 Headless & Core CMS',
     accentColor: '#21759B',
-    description: 'Gestor editorial personalizado con arquitectura sin acoplamiento para máxima velocidad de carga.',
-    useCase: 'Portales de contenido masivo, blogs de autoridad e integración multilingüe.',
-    performanceMetric: 'Headless Decoupled Architecture / Optimized Caching',
+    description: 'El gestor de contenidos más utilizado del mundo para portales de noticias, blogs corporativos y sitios institucionales autogestionables.',
+    useCase: 'Sitios corporativos autogestionables, portales de noticias e integraciones headless.',
+    performanceMetric: '100% Custom Gutenberg Blocks & Headless API',
     logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#21759B" d="M256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm0 411.4c-35.3 0-68.3-9.9-96.5-27l63.5-174.1 63.8 174.4c.1.3.2.7.4 1 1.4 3.6 2.9 7 4.6 10.3-11.4 9.9-23.9 15.4-35.8 15.4zm-126.9-46.7C100.5 365 80 313.2 80 256c0-43.2 11.9-83.5 32.5-118.2l76.7 210-60.1 248.9zM256 80c43.2 0 83.5 11.9 118.2 32.5l-33.3 97h-1.5c-11.7-23.7-27.1-40.2-49-40.2-25.2 0-43 20.3-43 42 0 20.1 11.7 37 25.5 53.6l44.3 53.1c16.3 19.5 33.7 44.8 33.7 75.7 0 22.8-8.2 44.5-20.8 62.3L256 80z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'google-ads',
-    name: 'Google Ads',
-    categoryTag: '[ ADS_MARKETING ]',
-    categoryName: 'Intent-Based Traffic Engine',
-    version: 'Smart Bidding & Analytics v4',
-    accentColor: '#4285F4',
-    description: 'Estrategias de adquisición de alta intención mediante pujas algorítmicas y embudos de búsqueda directa.',
-    useCase: 'Captación de leads cualificados, retargeting de intención e inversión optimizada.',
-    performanceMetric: 'Real-Time ROAS Tracking / Conversion Rate Optimization',
-    logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#4285F4" d="M120.5 376.5l112-280c6.6-16.5 24.8-24.8 41.3-18.2 8 3.2 14.5 9.7 17.7 17.7l112 280c7.1 17.7-1.4 37.9-19.1 45-17.7 7.1-37.9-1.4-45-19.1l-25.2-63.1H197.8l-25.2 63.1c-7.1 17.7-27.3 26.2-45 19.1-17.7-7.1-26.2-27.3-19.1-44.5zM224 288h64l-32-80-32 80z"/>
-        <path fill="#34A853" d="M437.5 395.6l-112-280c-6.6-16.5-24.8-24.8-41.3-18.2-8 3.2-14.5 9.7-17.7 17.7l-112 280c-7.1 17.7 1.4 37.9 19.1 45 17.7 7.1 37.9-1.4 45-19.1l25.2-63.1h132.4l25.2 63.1c7.1 17.7 27.3 26.2 45 19.1 17.7-7.1-26.2-27.3-19.1-44.5z" opacity="0.3"/>
-        <circle cx="390" cy="380" r="32" fill="#FBBC04"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'facebook-ads',
-    name: 'Facebook Ads',
-    categoryTag: '[ SOCIAL_ADS ]',
-    categoryName: 'Social Growth & Scale',
-    version: 'Meta Conversions API (CAPI)',
-    accentColor: '#1877F2',
-    description: 'Embudo de conversión social con seguimiento first-party CAPI y prueba social masiva.',
-    useCase: 'Escalamiento de marca, campañas creativas de alto impacto y remarketing.',
-    performanceMetric: 'Server-Side Event Tracking / First-Party Pixel Match',
-    logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#1877F2" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.8 90.7 226.4 209.3 245V327.7h-63V256h63v-54.6c0-62.2 37-96.5 93.7-96.5 27.1 0 55.5 4.8 55.5 4.8v61h-31.3c-30.8 0-40.4 19.1-40.4 38.7V256h68.8l-11 71.7h-57.8V501C413.3 482.4 504 379.8 504 256z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'react',
-    name: 'React',
-    categoryTag: '[ FRONTEND_UI ]',
-    categoryName: 'Component Architecture',
-    version: 'v19 Client Runtime',
-    accentColor: '#00D8FF',
-    description: 'Librería de renderizado reactivo para la creación de componentes interactivos modulares.',
-    useCase: 'Interfaces web dinámicas, micro-animaciones e interacciones en tiempo real.',
-    performanceMetric: 'Virtual DOM Reconciliation / Concurrent Rendering',
-    logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#00D8FF" d="M256 216c-22.1 0-40 17.9-40 40s17.9 40 40 40 40-17.9 40-40-17.9-40-40-40zm0 64c-13.2 0-24-10.8-24-24s10.8-24 24-24 24 10.8 24 24-10.8 24-24 24z"/>
-        <path fill="#00D8FF" d="M480 256c0-29.3-17.9-57.3-47.8-78.7-29.8-21.3-71.8-37.3-118.2-45.1C295.2 78.4 275.9 32 256 32s-39.2 46.4-58 100.2c-46.4 7.8-88.4 23.8-118.2 45.1C50 198.7 32 226.7 32 256s17.9 57.3 47.8 78.7c29.8 21.3 71.8 37.3 118.2 45.1 18.8 53.8 38.1 100.2 58 100.2s39.2-46.4 58-100.2c46.4-7.8 88.4-23.8 118.2-45.1C462.1 313.3 480 285.3 480 256zm-224 199.1c-15.6-47-32.9-97.4-45.8-144.1 14.5-2.2 29.8-3.5 45.8-3.5s31.3 1.3 45.8 3.5c-12.9 46.7-30.2 97.1-45.8 144.1zM93.3 318.9c-20.7-14.8-33.3-33.6-33.3-52.9s12.6-38.1 33.3-52.9c22.3-15.9 54.3-28.7 91.1-36.2 12.9 46.7 30.2 97.1 45.8 144.1-36.8-7.5-68.8-20.3-91.1-36.2zm232.3 36.2c15.6-47 32.9-97.4 45.8-144.1 36.8 7.5 68.8 20.3 91.1 36.2 20.7 14.8 33.3 33.6 33.3 52.9s-12.6 38.1-33.3 52.9c-22.3 15.9-54.3 28.7-91.1 36.2z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'nextjs',
-    name: 'Next.js',
-    categoryTag: '[ WEB_STACK ]',
-    categoryName: 'Enterprise Web Framework',
-    version: 'App Router / SSR & Edge',
-    accentColor: '#14b8a6',
-    description: 'Framework híbrido para Next-Gen Web Applications con Server Components y renderizado perimetral.',
-    useCase: 'Aplicaciones web modernas, portales SEO de alta velocidad y arquitecturas Jamstack.',
-    performanceMetric: '100/100 Lighthouse Performance / Edge Rendering',
-    logo: (
-      <svg viewBox="0 0 512 512" className="h-8 w-auto transition-transform duration-300">
-        <path fill="#000000" d="M256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm112.5 315.6L242.7 194.2v153.4h-35.6V164.4h35.6l125.8 153.4v-153.4h35.6v183.2h-35.6z"/>
-      </svg>
+      <Image
+        src="/wordpress.webp"
+        alt="WordPress"
+        width={40}
+        height={40}
+        className="h-7 w-auto object-contain transition-transform duration-300"
+      />
     ),
   },
 ]
 
 export function StackSection() {
   const [selectedTool, setSelectedTool] = useState<TechTool>(TECH_TOOLS[0])
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  // Desplazamiento suave continuo para el carrusel infinito de tecnologías
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    let animId: number
+    let isHovered = false
+
+    const handleMouseEnter = () => { isHovered = true }
+    const handleMouseLeave = () => { isHovered = false }
+
+    el.addEventListener('mouseenter', handleMouseEnter)
+    el.addEventListener('mouseleave', handleMouseLeave)
+
+    const step = () => {
+      if (el && !isHovered) {
+        const maxScroll = el.scrollWidth - el.clientWidth
+        if (maxScroll > 100) {
+          el.scrollLeft += 0.8
+          if (el.scrollLeft >= maxScroll / 2) {
+            el.scrollLeft = 1
+          }
+        }
+      }
+      animId = requestAnimationFrame(step)
+    }
+
+    animId = requestAnimationFrame(step)
+    return () => {
+      cancelAnimationFrame(animId)
+      if (el) {
+        el.removeEventListener('mouseenter', handleMouseEnter)
+        el.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [])
 
   return (
-    <section id="tecnologias" className="relative scroll-mt-24 border-y border-slate-200/80 bg-slate-100/90 px-5 py-24 sm:px-8 lg:px-10">
+    <section id="tecnologias" className="relative scroll-mt-24 border-y border-slate-200/80 bg-slate-100/90 px-5 py-24 sm:px-8 lg:px-10 overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        {/* ── 1. ENCABEZADO AWWWARDS ───────────────────────────── */}
-        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
+        
+        {/* ── 1. ENCABEZADO CON EFECTO DE APARICIÓN HACIA ABAJO (FADE-DOWN) ───────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end"
+        >
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-slate-500 font-semibold">
               [ 05 // SYSTEM_STACK ]
@@ -172,37 +345,50 @@ export function StackSection() {
               Estas son las tecnologías que mayormente implementamos en el desarrollo de nuestros proyectos, aunque contamos con muchas más herramientas a nuestra disposición para adaptarnos a tus necesidades específicas.
             </p>
           </div>
-          <div className="hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500 lg:flex">
+          <div className="hidden items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-500 lg:flex">
             <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-            <span>[ INFINITE_CARRUSEL // RÁPIDO ]</span>
+            <span>[ INFINITE_CARRUSEL // AUTOMÁTICO + TÁCTIL ]</span>
           </div>
-        </div>
+        </motion.div>
 
-        {/* ── 2. CARRUSEL INFINITO EN MOVIMIENTO CONTINUO Y RÁPIDO ───────────────────────────── */}
-        <div className="group relative my-10 overflow-hidden border-y border-slate-200 bg-white/80 py-7 select-none shadow-sm">
-          {/* Degradados de desvanecimiento sutil */}
-          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-slate-100/90 via-slate-100/60 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-24 bg-gradient-to-l from-slate-100/90 via-slate-100/60 to-transparent" />
+        {/* ── 2. CARRUSEL CON APARICIÓN FADE-IN ───────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 1.1, ease: 'easeOut', delay: 0.25 }}
+          className="group relative my-8 overflow-hidden border-y border-slate-200 bg-white/90 py-5 select-none shadow-sm"
+        >
+          {/* Degradados de desvanecimiento sutil en los costados */}
+          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-12 bg-linear-to-r from-slate-100/90 via-slate-100/50 to-transparent sm:w-24" />
+          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-12 bg-linear-to-l from-slate-100/90 via-slate-100/50 to-transparent sm:w-24" />
 
-          {/* Cinta Continua del Carrusel con Marquee Animado Hardware-Accelerated */}
-          <div className="animate-fast-marquee flex w-max items-center gap-6 py-2 select-none group-hover:[animation-play-state:paused]">
-            {[...TECH_TOOLS, ...TECH_TOOLS].map((tool, index) => {
+          {/* Cinta con Movimiento Automático + Arrastre Manual Táctil con el Dedo */}
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto scrollbar-none touch-pan-x gap-3 sm:gap-4 px-4 py-1 select-none cursor-drag"
+          >
+            {[...TECH_TOOLS, ...TECH_TOOLS, ...TECH_TOOLS, ...TECH_TOOLS].map((tool, index) => {
               const isSelected = selectedTool.id === tool.id
               return (
                 <button
                   key={`${tool.id}-${index}`}
                   onClick={() => setSelectedTool(tool)}
-                  className={`group/card flex shrink-0 cursor-pointer items-center gap-4 rounded-none border px-7 py-4.5 transition-all duration-300 text-left ${
+                  className={`group/card flex shrink-0 cursor-pointer items-center gap-3 rounded-none border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200 text-left ${
                     isSelected
-                      ? 'border-blue-600 bg-white shadow-lg shadow-blue-600/10 ring-2 ring-blue-600/20 translate-y-[-2px]'
-                      : 'border-slate-200 bg-white hover:border-blue-500 hover:shadow-md'
+                      ? 'border-blue-600 bg-white shadow-md shadow-blue-600/10 ring-2 ring-blue-600/20 -translate-y-px'
+                      : 'border-slate-200 bg-white hover:border-blue-500 hover:shadow-sm'
                   }`}
                 >
-                  {/* Trato de Logo */}
+                  {/* Logo compacto */}
                   <div
-                    className={`flex items-center justify-center transition-all duration-300 ${
+                    className={`flex items-center justify-center transition-all duration-300 [&_svg]:h-6 sm:[&_svg]:h-7 [&_svg]:w-auto ${
+                      tool.id === 'facebook-ads'
+                        ? '[&_img]:h-2.5 sm:[&_img]:h-3'
+                        : '[&_img]:h-6 sm:[&_img]:h-7'
+                    } [&_img]:w-auto [&_img]:object-contain ${
                       isSelected
-                        ? 'grayscale-0 opacity-100 scale-110'
+                        ? 'grayscale-0 opacity-100 scale-105'
                         : 'grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105'
                     }`}
                   >
@@ -211,25 +397,25 @@ export function StackSection() {
 
                   <div className="flex flex-col">
                     <span
-                      className={`font-mono text-[10px] uppercase tracking-wider transition-colors duration-300 ${
+                      className={`font-mono text-xs uppercase tracking-wider transition-colors duration-200 ${
                         isSelected ? 'text-blue-600 font-bold' : 'text-slate-400 group-hover/card:text-blue-600'
                       }`}
                     >
                       {tool.categoryTag}
                     </span>
-                    <span className="font-mono text-sm font-bold tracking-tight text-slate-900">
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-tight text-slate-900">
                       {tool.name}
                     </span>
                   </div>
 
-                  {/* Badge de Selección al hacer clic */}
+                  {/* Indicador compacto */}
                   {isSelected ? (
-                    <span className="ml-2 flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 font-mono text-[9px] font-bold text-blue-600 border border-blue-200">
-                      <Check className="size-3 text-blue-600" /> SELECCIONADO
+                    <span className="ml-1 flex items-center gap-1 rounded-full bg-blue-50 px-1.5 py-0.5 font-mono text-xs font-bold text-blue-600 border border-blue-200">
+                      <Check className="size-2.5 text-blue-600" />
                     </span>
                   ) : (
                     <span
-                      className="ml-2 h-2 w-2 rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                      className="ml-1 h-1.5 w-1.5 rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity duration-200"
                       style={{ backgroundColor: tool.accentColor || '#2563eb' }}
                     />
                   )}
@@ -237,62 +423,86 @@ export function StackSection() {
               )
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* ── 3. DETALLE / INSPECTOR TERMINAL REVELADO AL CLIC (TAMAÑO Y FUENTES AMPLIADAS) ───────────────────────────── */}
-        <div className="relative overflow-hidden border border-slate-900 bg-slate-950 p-8 text-white shadow-2xl sm:p-10 lg:p-12 rounded-none">
+        {/* ── 3. DETALLE / INSPECTOR TERMINAL REVELADO CON EFECTO FADE-UP (HACIA ARRIBA) ───────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
+          className="relative overflow-hidden border border-slate-900 bg-slate-950 p-5 text-white shadow-2xl sm:p-8 lg:p-10 rounded-none"
+        >
           {/* Barra superior de terminal */}
-          <div className="flex items-center justify-between border-b border-slate-800 pb-5">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
             <div className="flex items-center gap-3">
-              <span className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_#10b981]" />
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-slate-300 font-bold sm:text-sm">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
+              <span className="font-mono text-xs uppercase tracking-wider text-slate-300 font-bold">
                 TERMINAL_INSPECTOR // {selectedTool.categoryTag}
               </span>
             </div>
-            <span className="hidden font-mono text-xs uppercase tracking-[0.16em] text-blue-400 font-semibold sm:inline">
+            <span className="font-mono text-xs uppercase tracking-wider text-blue-400 font-semibold">
               [ INSIGHT_ACTIVO: {selectedTool.name.toUpperCase()} ]
             </span>
           </div>
 
           {/* Rejilla de detalles de la herramienta SELECCIONADA mediante clic */}
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_1.6fr_1.1fr] lg:items-center">
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr_1fr] lg:items-start lg:gap-8">
             {/* Columna 1: Nombre & Versión */}
-            <div className="flex items-center gap-6 border-b border-slate-800 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
-              <div className="flex size-18 sm:size-24 shrink-0 items-center justify-center rounded-2xl bg-slate-900/90 border border-slate-800 p-3.5 shadow-inner [&_svg]:h-12 sm:[&_svg]:h-14 [&_svg]:w-auto">
-                {selectedTool.logo}
+            <div className="flex items-center gap-4 border-b border-slate-800 pb-6 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
+              <div className="flex size-14 sm:size-18 shrink-0 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-800 p-1 sm:p-1.5 shadow-inner overflow-hidden [&_svg]:h-8 sm:[&_svg]:h-10 [&_svg]:w-auto">
+                {selectedTool.id === 'facebook-ads' ? (
+                  <Image
+                    src="/facebook-ads.svg"
+                    alt="Facebook Ads"
+                    width={160}
+                    height={35}
+                    className="w-full h-auto object-contain scale-115 transition-transform duration-300"
+                  />
+                ) : selectedTool.id === 'wordpress' ? (
+                  <Image
+                    src="/wordpress.webp"
+                    alt="WordPress"
+                    width={60}
+                    height={60}
+                    className="h-10 sm:h-12 w-auto object-contain scale-115 transition-transform duration-300"
+                  />
+                ) : (
+                  selectedTool.logo
+                )}
               </div>
-              <div>
-                <h3 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <div className="min-w-0 flex-1">
+                <h3 className="font-sans text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl wrap-break-word">
                   {selectedTool.name}
                 </h3>
-                <p className="mt-1.5 font-mono text-sm text-blue-400 font-semibold sm:text-base">
+                <p className="mt-1 font-mono text-xs text-blue-400 font-semibold sm:text-sm">
                   {selectedTool.version}
                 </p>
               </div>
             </div>
 
             {/* Columna 2: Descripción y Uso */}
-            <div className="space-y-3 border-b border-slate-800 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 font-semibold">
+            <div className="space-y-2 border-b border-slate-800 pb-6 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
+              <p className="font-mono text-xs uppercase tracking-wider text-slate-400 font-semibold">
                 [ ESPECIFICACIÓN_DE_INTEGRACIÓN ]
               </p>
-              <p className="text-base leading-relaxed text-slate-100 font-medium sm:text-lg">
+              <p className="text-sm sm:text-base leading-relaxed text-slate-100 font-medium">
                 {selectedTool.description}
               </p>
-              <p className="text-sm text-slate-300 font-mono pt-2 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 font-mono pt-1 leading-relaxed wrap-break-word">
                 <span className="text-white font-bold">Caso de Uso:</span> {selectedTool.useCase}
               </p>
             </div>
 
             {/* Columna 3: Métrica de Rendimiento */}
-            <div className="flex flex-col justify-between gap-4">
-              <span className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 font-semibold">
+            <div className="flex flex-col justify-between gap-3">
+              <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-semibold">
                 [ MÉTRICA_DE_RENDIMIENTO ]
               </span>
-              <div className="rounded-xl bg-slate-900/90 border border-slate-800 p-5 font-mono text-sm text-emerald-400 font-bold sm:text-base shadow-inner">
+              <div className="rounded-xl bg-slate-900/90 border border-slate-800 p-4 sm:p-5 font-mono text-xs sm:text-sm text-emerald-400 font-bold shadow-inner wrap-break-word">
                 {selectedTool.performanceMetric}
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 font-semibold">
+              <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-semibold">
                 VERIFICADO 100% ARQUITECTURA TLUX
               </span>
             </div>
@@ -303,7 +513,7 @@ export function StackSection() {
             className="absolute bottom-0 left-0 right-0 h-1.5 transition-all duration-500"
             style={{ backgroundColor: selectedTool.accentColor || '#2563eb' }}
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   )

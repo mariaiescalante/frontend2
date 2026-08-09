@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { SiteHeader }     from '@/components/sections/site-header'
 import { HeroSection }    from '@/components/sections/hero-section'
 import { StatsSection }   from '@/components/sections/stats-section'
 import { ClientsSection } from '@/components/sections/clients-section'
+import { RatingsSection } from '@/components/sections/ratings-section'
 import { ServiciosSection } from '@/components/sections/servicios-section'
 import { FuncionesSection } from '@/components/sections/funciones-section'
 import { StackSection }     from '@/components/sections/stack-section'
@@ -28,14 +30,29 @@ export function TluxLanding() {
         <HeroSection />
         <StatsSection />
         <ClientsSection />
+        <RatingsSection />
 
-        {/* Frase separadora */}
-        <section className="border-y border-slate-200 bg-white px-5 py-8 sm:px-8 lg:px-10">
+        {/* ── Frase Separadora & "Scroll to explore ↓" con Efecto Fade-Right Pausado y Suave ── */}
+        <section className="border-y border-slate-200 bg-white px-5 py-8 sm:px-8 lg:px-10 overflow-hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-2xl font-serif text-2xl leading-tight text-slate-900 sm:text-3xl">
+            <motion.p
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-2xl font-serif text-2xl leading-tight text-slate-900 sm:text-3xl"
+            >
               No hacemos páginas bonitas. <span className="text-slate-400">Hacemos que tu negocio sea la opción obvia.</span>
-            </p>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-blue-600">Scroll to explore ↓</span>
+            </motion.p>
+            <motion.span
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+              className="font-mono text-xs uppercase tracking-widest text-blue-600 shrink-0"
+            >
+              Scroll to explore ↓
+            </motion.span>
           </div>
         </section>
 
