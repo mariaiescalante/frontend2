@@ -153,7 +153,7 @@ export function RatingsSection() {
         </div>
 
         {/* ── 3. MOSTRAR 3 TARJETAS A LA VEZ CON FADE-IN DURADERO + EFECTO DE BRINCO SECUENCIAL (UNA POR UNA) ───────────────────────────── */}
-        <div className="relative mt-8 min-height: 340px;">
+        <div className="relative mt-8" style={{ minHeight: '340px' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={page}

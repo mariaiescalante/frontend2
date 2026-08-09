@@ -1,9 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import Link from 'next/link'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+
+function WhatsAppIcon({ className = "size-9" }: { className?: string }) {
+  return (
+    <img
+      src="/whatsapp-logo.png"
+      alt="WhatsApp"
+      className={`${className} object-contain shrink-0 pointer-events-none`}
+    />
+  )
+}
 
 export function ContactoSection() {
   const { t } = useTranslation()
@@ -66,7 +77,7 @@ export function ContactoSection() {
           </h2>
         </div>
 
-        {/* Botón de acción hacia WhatsApp (+58 2427479913) con mensaje predefinido */}
+        {/* Botón de acción hacia WhatsApp (+57 320 324 9742) con el logo exacto enviado por el usuario */}
         <motion.a
           id="empezar-conversacion"
           href={whatsappUrl}
@@ -81,7 +92,7 @@ export function ContactoSection() {
           whileHover={{
             scale: 1.05,
             y: -5,
-            boxShadow: '0 12px 30px rgba(37, 99, 235, 0.45)',
+            boxShadow: '0 12px 30px rgba(37, 211, 102, 0.4)',
           }}
           whileTap={{
             scale: 0.96,
@@ -93,9 +104,11 @@ export function ContactoSection() {
             y: { duration: 1.3, delay: 1.1, ease: [0.22, 1, 0.36, 1] },
             scale: { type: 'spring', stiffness: 300, damping: 15 },
           }}
-          className="scroll-mt-32 inline-flex w-fit items-center gap-2 border border-slate-700 bg-slate-900 px-7 py-4.5 font-mono text-xs uppercase tracking-wider text-white transition-colors duration-300 hover:border-blue-500 hover:bg-blue-600 cursor-pointer"
+          className="scroll-mt-32 inline-flex w-fit items-center gap-3 border border-emerald-500/60 bg-slate-900 px-7 py-4 font-mono text-xs uppercase tracking-wider text-white transition-all duration-300 hover:border-emerald-400 hover:bg-slate-800 cursor-pointer shadow-lg shadow-emerald-950/40"
         >
-          {t('contacto.cta')} <ArrowUpRight className="size-4 text-blue-400" />
+          <WhatsAppIcon className="size-9 sm:size-10" />
+          <span>{t('contacto.cta')}</span>
+          <ArrowUpRight className="size-4 text-emerald-400" />
         </motion.a>
       </div>
     </section>
