@@ -2,8 +2,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslation } from '../../context/language-context'
 
 export function ClientsSection() {
+  const { t } = useTranslation()
   const brands = [
     { name: 'BDL Cap', src: '/BDL-Cap.webp' },
     { name: 'Elizabeth Costa', src: '/Elizabeth-Costa-Top-Real-Estate-Agent-Doral-logo-fondo-nergo.webp' },
@@ -25,11 +27,11 @@ export function ClientsSection() {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto flex max-w-4xl flex-col items-center px-5 text-center sm:px-8"
       >
-        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-blue-500">[ CONFIANZA_Y_PARTNERS ]</p>
+        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-blue-500">{t('clients.tag')}</p>
         <h2 className="font-serif text-3xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Marcas con <em className="font-serif italic text-blue-500">ambición</em> que <em className="font-serif italic text-blue-500">confían</em> en nuestra arquitectura digital.
+          {t('clients.title_part1')}<em className="font-serif italic text-blue-500">{t('clients.title_bold1')}</em>{t('clients.title_part2')}<em className="font-serif italic text-blue-500">{t('clients.title_bold2')}</em>{t('clients.title_part3')}
         </h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">Diseñamos y desarrollamos plataformas de alto rendimiento para compañías que buscan dominar su categoría.</p>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">{t('clients.description')}</p>
       </motion.div>
 
       {/* ── Carrusel de Marcas con efecto Fade-Up Suave y Retraso Escalonado ── */}

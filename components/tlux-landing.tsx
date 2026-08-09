@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation, Locale } from '../context/language-context'
 import { SiteHeader }     from '@/components/sections/site-header'
 import { HeroSection }    from '@/components/sections/hero-section'
 import { StatsSection }   from '@/components/sections/stats-section'
@@ -13,7 +14,16 @@ import { StackSection }     from '@/components/sections/stack-section'
 import { NosotrosSection }  from '@/components/sections/nosotros-section'
 import { ContactoSection, SiteFooter } from '@/components/sections/contacto-section'
 
-export function TluxLanding() {
+export function TluxLanding({ initialLocale }: { initialLocale?: Locale }) {
+  const { t, setLocale } = useTranslation()
+
+  useEffect(() => {
+    if (initialLocale) {
+      setLocale(initialLocale)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLocale])
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if ('scrollRestoration' in window.history) {
@@ -42,7 +52,7 @@ export function TluxLanding() {
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
               className="max-w-2xl font-serif text-2xl leading-tight text-slate-900 sm:text-3xl"
             >
-              No hacemos páginas bonitas. <span className="text-slate-400">Hacemos que tu negocio sea la opción obvia.</span>
+              {t('banner.part1')}<span className="text-slate-400">{t('banner.part2')}</span>
             </motion.p>
             <motion.span
               initial={{ opacity: 0, x: -40 }}
@@ -51,7 +61,7 @@ export function TluxLanding() {
               transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
               className="font-mono text-xs uppercase tracking-widest text-blue-600 shrink-0"
             >
-              Scroll to explore ↓
+              {t('banner.scroll')}
             </motion.span>
           </div>
         </section>

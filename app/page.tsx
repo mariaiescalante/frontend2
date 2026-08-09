@@ -1,5 +1,5 @@
-import { TluxLanding } from '@/components/tlux-landing'
+import { redirect } from 'next/navigation'
 
-export default function Page() {
-  return <TluxLanding />
+export default function RootPage() {
+  redirect('/es')
 }

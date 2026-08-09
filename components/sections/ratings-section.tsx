@@ -3,115 +3,36 @@
 import { useState } from 'react'
 import { Star, CheckCircle2, Quote, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from '../../context/language-context'
 
 interface Testimonial {
   id: string
   name: string
   rating: number
-  categoryTag: string
-  comment: string
+  categoryTagKey: string
+  commentKey: string
   date: string
   avatarInitial: string
   accentColor: string
 }
 
-const TESTIMONIALS: Testimonial[] = [
-  {
-    id: '1',
-    name: 'Carlos Mendoza',
-    rating: 5,
-    categoryTag: '[ DESARROLLO WEB ]',
-    comment: 'Quedé impresionado con el trabajo. Entregaron el sitio web exactamente en la fecha acordada y la velocidad de carga mejoró muchísimo. Muy recomendados.',
-    date: 'Enero 2026',
-    avatarInitial: 'CM',
-    accentColor: '#2563eb',
-  },
-  {
-    id: '2',
-    name: 'Valeria Sotomayor',
-    rating: 5,
-    categoryTag: '[ DISEÑO & EXPERIENCIA ]',
-    comment: 'Atención de primera. Entendieron exactamente lo que buscábamos desde la primera reunión y supieron plasmar la idea a la perfección.',
-    date: 'Diciembre 2025',
-    avatarInitial: 'VS',
-    accentColor: '#0d9488',
-  },
-  {
-    id: '3',
-    name: 'Andrés Guarch',
-    rating: 5,
-    categoryTag: '[ REDISEÑO COMPLETO ]',
-    comment: 'Buscábamos un rediseño completo y el resultado superó nuestras expectativas. La experiencia para nuestros usuarios es mucho más fluida ahora.',
-    date: 'Noviembre 2025',
-    avatarInitial: 'AG',
-    accentColor: '#4f46e5',
-  },
-  {
-    id: '4',
-    name: 'Elena Rostova',
-    rating: 5,
-    categoryTag: '[ OPTIMIZACIÓN WEB ]',
-    comment: 'Excelente servicio. Nos ayudaron a optimizar la estructura de nuestras páginas y el sitio responde súper rápido tanto en móviles como en laptop.',
-    date: 'Febrero 2026',
-    avatarInitial: 'ER',
-    accentColor: '#2563eb',
-  },
-  {
-    id: '5',
-    name: 'Mateo Benítez',
-    rating: 5,
-    categoryTag: '[ DESARROLLO A MEDIDA ]',
-    comment: 'Muy profesionales y dedicados. Resolvieron cada detalle técnico que les pedimos y la comunicación durante todo el proceso fue impecable.',
-    date: 'Enero 2026',
-    avatarInitial: 'MB',
-    accentColor: '#059669',
-  },
-  {
-    id: '6',
-    name: 'Sofia Costa',
-    rating: 5,
-    categoryTag: '[ IDENTIDAD DIGITAL ]',
-    comment: 'Un trabajo impecable. La estética de nuestro sitio web se ve seria y elegante, justo lo que queríamos para proyectar confianza a nuestros clientes.',
-    date: 'Febrero 2026',
-    avatarInitial: 'SC',
-    accentColor: '#d97706',
-  },
-  {
-    id: '7',
-    name: 'Lucía Fernández',
-    rating: 5,
-    categoryTag: '[ NAVEGACIÓN & SOPORTE ]',
-    comment: 'Súper atentos a cada requerimiento. Hicieron la web fácil de navegar para nuestros usuarios y el soporte posterior ha sido de gran ayuda.',
-    date: 'Febrero 2026',
-    avatarInitial: 'LF',
-    accentColor: '#9333ea',
-  },
-  {
-    id: '8',
-    name: 'Javier Morales',
-    rating: 5,
-    categoryTag: '[ PLATAFORMA DIGITAL ]',
-    comment: 'Cumplieron con todo lo prometido. La plataforma quedó rápida, moderna y sin errores. Volvería a trabajar con ellos sin ninguna duda.',
-    date: 'Enero 2026',
-    avatarInitial: 'JM',
-    accentColor: '#0284c7',
-  },
-  {
-    id: '9',
-    name: 'Martina Bianchi',
-    rating: 5,
-    categoryTag: '[ ADAPTACIÓN MÓVIL ]',
-    comment: 'Increíble trabajo de desarrollo. El diseño quedó muy limpio, los efectos se ven geniales y la adaptación a teléfonos celulares funciona perfecto.',
-    date: 'Febrero 2026',
-    avatarInitial: 'MB',
-    accentColor: '#e11d48',
-  },
-]
-
 export function RatingsSection() {
+  const { t } = useTranslation()
+
+  const TESTIMONIALS: Testimonial[] = [
+    { id: '1', name: 'Carlos Mendoza', rating: 5, categoryTagKey: 'ratings.t1_tag', commentKey: 'ratings.t1_comment', date: 'Enero 2026', avatarInitial: 'CM', accentColor: '#2563eb' },
+    { id: '2', name: 'Valeria Sotomayor', rating: 5, categoryTagKey: 'ratings.t2_tag', commentKey: 'ratings.t2_comment', date: 'Diciembre 2025', avatarInitial: 'VS', accentColor: '#0d9488' },
+    { id: '3', name: 'Andrés Guarch', rating: 5, categoryTagKey: 'ratings.t3_tag', commentKey: 'ratings.t3_comment', date: 'Noviembre 2025', avatarInitial: 'AG', accentColor: '#4f46e5' },
+    { id: '4', name: 'Elena Rostova', rating: 5, categoryTagKey: 'ratings.t4_tag', commentKey: 'ratings.t4_comment', date: 'Febrero 2026', avatarInitial: 'ER', accentColor: '#2563eb' },
+    { id: '5', name: 'Mateo Benítez', rating: 5, categoryTagKey: 'ratings.t5_tag', commentKey: 'ratings.t5_comment', date: 'Enero 2026', avatarInitial: 'MB', accentColor: '#059669' },
+    { id: '6', name: 'Sofia Alarcón', rating: 5, categoryTagKey: 'ratings.t6_tag', commentKey: 'ratings.t6_comment', date: 'Diciembre 2025', avatarInitial: 'SA', accentColor: '#d97706' },
+    { id: '7', name: 'Gabriel Torres', rating: 5, categoryTagKey: 'ratings.t7_tag', commentKey: 'ratings.t7_comment', date: 'Febrero 2026', avatarInitial: 'GT', accentColor: '#2563eb' },
+    { id: '8', name: 'Lucía Fernández', rating: 5, categoryTagKey: 'ratings.t8_tag', commentKey: 'ratings.t8_comment', date: 'Enero 2026', avatarInitial: 'LF', accentColor: '#4f46e5' },
+    { id: '9', name: 'Diego Ramírez', rating: 5, categoryTagKey: 'ratings.t9_tag', commentKey: 'ratings.t9_comment', date: 'Febrero 2026', avatarInitial: 'DR', accentColor: '#0d9488' },
+  ]
+
   const [page, setPage] = useState(0)
   const [direction, setDirection] = useState(1)
-
   const itemsPerPage = 3
   const totalPages = Math.ceil(TESTIMONIALS.length / itemsPerPage)
 
@@ -125,7 +46,7 @@ export function RatingsSection() {
     setPage((prev) => (prev - 1 + totalPages) % totalPages)
   }
 
-  const visibleTestimonials = TESTIMONIALS.slice(
+  const displayedTestimonials = TESTIMONIALS.slice(
     page * itemsPerPage,
     page * itemsPerPage + itemsPerPage
   )
@@ -144,13 +65,13 @@ export function RatingsSection() {
             className="max-w-2xl"
           >
             <p className="font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">
-              [ 01.1 / REPUTACIÓN & OPINIONES ]
+              {t('ratings.tag')}
             </p>
             <h2 className="mt-4 font-serif text-4xl font-normal leading-none tracking-tighter text-slate-900 sm:text-5xl lg:text-6xl">
-              Lo que dicen nuestros <em className="text-blue-600 font-serif italic">clientes</em>.
+              {t('ratings.title_part1')}<em className="text-blue-600 font-serif italic">{t('ratings.title_bold')}</em>.
             </h2>
             <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
-              La satisfacción de quienes confían en nosotros se refleja en su experiencia directa, atención dedicada y resultados reales.
+              {t('ratings.description')}
             </p>
           </motion.div>
 
@@ -167,7 +88,7 @@ export function RatingsSection() {
                 4.98
               </span>
               <span className="font-mono text-xs font-semibold text-slate-500">
-                / 5.0 RATING
+                {t('ratings.rating_score')}
               </span>
             </div>
 
@@ -179,7 +100,7 @@ export function RatingsSection() {
               </div>
               <div className="flex items-center gap-1.5 font-mono text-xs font-medium text-slate-600">
                 <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
-                <span>Opiniones de Clientes Reales</span>
+                <span>{t('ratings.verified_label')}</span>
               </div>
             </div>
           </motion.div>
@@ -189,9 +110,9 @@ export function RatingsSection() {
         <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3 font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">
             <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-            <span>MOSTRANDO {page * itemsPerPage + 1} - {Math.min((page + 1) * itemsPerPage, TESTIMONIALS.length)} DE {TESTIMONIALS.length} RESEÑAS</span>
+            <span>{t('ratings.showing_label')} {page * itemsPerPage + 1} - {Math.min((page + 1) * itemsPerPage, TESTIMONIALS.length)} {t('ratings.of_label')} {TESTIMONIALS.length} {t('ratings.reviews_label')}</span>
             <span className="rounded-full bg-slate-100 px-2.5 py-1 text-blue-600 border border-slate-200">
-              [ PÁGINA 0{page + 1} / 0{totalPages} ]
+              [ {t('ratings.page_label')} 0{page + 1} / 0{totalPages} ]
             </span>
           </div>
 
@@ -238,7 +159,7 @@ export function RatingsSection() {
               key={page}
               className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
-              {visibleTestimonials.map((item, cardIdx) => (
+              {displayedTestimonials.map((item, cardIdx) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, scale: 0.95, y: 24 }}
@@ -260,7 +181,7 @@ export function RatingsSection() {
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-xs font-bold uppercase tracking-wider text-blue-600">
-                        {item.categoryTag}
+                        {t(item.categoryTagKey)}
                       </span>
                       <Quote className="size-6 text-slate-200 group-hover:text-blue-200 transition-colors duration-300" />
                     </div>
@@ -274,7 +195,7 @@ export function RatingsSection() {
 
                     {/* Comentario del Usuario */}
                     <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-700 font-normal">
-                      &ldquo;{item.comment}&rdquo;
+                      &ldquo;{t(item.commentKey)}&rdquo;
                     </p>
                   </div>
 

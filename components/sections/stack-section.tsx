@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { useTranslation } from '../../context/language-context'
 
 interface TechTool {
   id: string
@@ -282,6 +283,7 @@ const TECH_TOOLS: TechTool[] = [
 ]
 
 export function StackSection() {
+  const { t } = useTranslation()
   const [selectedTool, setSelectedTool] = useState<TechTool>(TECH_TOOLS[0])
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -325,7 +327,7 @@ export function StackSection() {
   return (
     <section id="tecnologias" className="relative scroll-mt-24 border-y border-slate-200/80 bg-slate-100/90 px-5 py-24 sm:px-8 lg:px-10 overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        
+
         {/* ── 1. ENCABEZADO CON EFECTO DE APARICIÓN HACIA ABAJO (FADE-DOWN) ───────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: -40 }}
@@ -336,18 +338,18 @@ export function StackSection() {
         >
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-slate-500 font-semibold">
-              [ 05 // SYSTEM_STACK ]
+              {t('stack.tag')}
             </p>
             <h2 className="mt-4 font-sans text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              Tecnologías más <span className="font-serif italic text-[#2563eb]">usadas</span>.
+              {t('stack.title_part1')}<span className="font-serif italic text-[#2563eb]">{t('stack.title_bold')}</span>.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-base">
-              Estas son las tecnologías que mayormente implementamos en el desarrollo de nuestros proyectos, aunque contamos con muchas más herramientas a nuestra disposición para adaptarnos a tus necesidades específicas.
+              {t('stack.description')}
             </p>
           </div>
           <div className="hidden items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-500 lg:flex">
             <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-            <span>[ INFINITE_CARRUSEL // AUTOMÁTICO + TÁCTIL ]</span>
+            <span>{t('stack.marquee_tag')}</span>
           </div>
         </motion.div>
 
@@ -374,32 +376,28 @@ export function StackSection() {
                 <button
                   key={`${tool.id}-${index}`}
                   onClick={() => setSelectedTool(tool)}
-                  className={`group/card flex shrink-0 cursor-pointer items-center gap-3 rounded-none border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200 text-left ${
-                    isSelected
+                  className={`group/card flex shrink-0 cursor-pointer items-center gap-3 rounded-none border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200 text-left ${isSelected
                       ? 'border-blue-600 bg-white shadow-md shadow-blue-600/10 ring-2 ring-blue-600/20 -translate-y-px'
                       : 'border-slate-200 bg-white hover:border-blue-500 hover:shadow-sm'
-                  }`}
+                    }`}
                 >
                   {/* Logo compacto */}
                   <div
-                    className={`flex items-center justify-center transition-all duration-300 [&_svg]:h-6 sm:[&_svg]:h-7 [&_svg]:w-auto ${
-                      tool.id === 'facebook-ads'
+                    className={`flex items-center justify-center transition-all duration-300 [&_svg]:h-6 sm:[&_svg]:h-7 [&_svg]:w-auto ${tool.id === 'facebook-ads'
                         ? '[&_img]:h-2.5 sm:[&_img]:h-3'
                         : '[&_img]:h-6 sm:[&_img]:h-7'
-                    } [&_img]:w-auto [&_img]:object-contain ${
-                      isSelected
+                      } [&_img]:w-auto [&_img]:object-contain ${isSelected
                         ? 'grayscale-0 opacity-100 scale-105'
                         : 'grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105'
-                    }`}
+                      }`}
                   >
                     {tool.logo}
                   </div>
 
                   <div className="flex flex-col">
                     <span
-                      className={`font-mono text-xs uppercase tracking-wider transition-colors duration-200 ${
-                        isSelected ? 'text-blue-600 font-bold' : 'text-slate-400 group-hover/card:text-blue-600'
-                      }`}
+                      className={`font-mono text-xs uppercase tracking-wider transition-colors duration-200 ${isSelected ? 'text-blue-600 font-bold' : 'text-slate-400 group-hover/card:text-blue-600'
+                        }`}
                     >
                       {tool.categoryTag}
                     </span>
@@ -438,11 +436,11 @@ export function StackSection() {
             <div className="flex items-center gap-3">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
               <span className="font-mono text-xs uppercase tracking-wider text-slate-300 font-bold">
-                TERMINAL_INSPECTOR // {selectedTool.categoryTag}
+                {t('stack.terminal_tag')} // {selectedTool.categoryTag}
               </span>
             </div>
             <span className="font-mono text-xs uppercase tracking-wider text-blue-400 font-semibold">
-              [ INSIGHT_ACTIVO: {selectedTool.name.toUpperCase()} ]
+              [ {t('stack.active_insight')}: {selectedTool.name.toUpperCase()} ]
             </span>
           </div>
 
@@ -484,20 +482,29 @@ export function StackSection() {
             {/* Columna 2: Descripción y Uso */}
             <div className="space-y-2 border-b border-slate-800 pb-6 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
               <p className="font-mono text-xs uppercase tracking-wider text-slate-400 font-semibold">
-                [ ESPECIFICACIÓN_DE_INTEGRACIÓN ]
+                [ {t('stack.active_insight')} ]
               </p>
               <p className="text-sm sm:text-base leading-relaxed text-slate-100 font-medium">
-                {selectedTool.description}
+                {(() => {
+                  const keyId = selectedTool.id.replace(/-/g, '_')
+                  const translated = t(`stack.${keyId}_desc`)
+                  return translated !== `stack.${keyId}_desc` ? translated : selectedTool.description
+                })()}
               </p>
               <p className="text-xs sm:text-sm text-slate-300 font-mono pt-1 leading-relaxed wrap-break-word">
-                <span className="text-white font-bold">Caso de Uso:</span> {selectedTool.useCase}
+                <span className="text-white font-bold">{t('stack.usage_case')}:</span>{' '}
+                {(() => {
+                  const keyId = selectedTool.id.replace(/-/g, '_')
+                  const translated = t(`stack.${keyId}_case`)
+                  return translated !== `stack.${keyId}_case` ? translated : selectedTool.useCase
+                })()}
               </p>
             </div>
 
             {/* Columna 3: Métrica de Rendimiento */}
             <div className="flex flex-col justify-between gap-3">
               <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-semibold">
-                [ MÉTRICA_DE_RENDIMIENTO ]
+                [ {t('stack.metric_label')} ]
               </span>
               <div className="rounded-xl bg-slate-900/90 border border-slate-800 p-4 sm:p-5 font-mono text-xs sm:text-sm text-emerald-400 font-bold shadow-inner wrap-break-word">
                 {selectedTool.performanceMetric}

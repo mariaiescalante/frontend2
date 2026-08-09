@@ -1,18 +1,23 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useTranslation } from '../../context/language-context'
 
 export function ContactoSection() {
-  const words = [
-    { text: '¿Qué ', isItalic: false },
-    { text: 'espacio ', isItalic: false },
-    { text: 'quieres ', isItalic: false },
-    { text: 'ocupar', isItalic: true },
-    { text: '?', isItalic: false },
-  ]
+  const { t } = useTranslation()
 
-  // Calcular índice global para escalonar letra por letra
+  const headingText = `${t('contacto.title_part1')}${t('contacto.title_part2')}?`
+  const words = headingText.split(' ').map((word) => {
+    const isItalic = word.toLowerCase().includes(t('contacto.title_part2').toLowerCase().trim())
+    return { text: word + ' ', isItalic }
+  })
+
   let charCounter = 0
+
+  const whatsappMsg = encodeURIComponent(t('contacto.whatsapp_msg'))
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=573203249742&text=${whatsappMsg}`
 
   return (
     <section id="contacto" className="scroll-mt-24 border-t border-slate-800 bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
@@ -26,7 +31,7 @@ export function ContactoSection() {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-500"
           >
-            [ 04 / CONTACTO ]
+            {t('contacto.tag')}
           </motion.p>
 
           {/* Título con aparición LETRA POR LETRA */}
@@ -61,10 +66,12 @@ export function ContactoSection() {
           </h2>
         </div>
 
-        {/* Botón de acción con efecto de brinco de entrada + Hover animado con resplandor */}
+        {/* Botón de acción hacia WhatsApp (+58 2427479913) con mensaje predefinido */}
         <motion.a
           id="empezar-conversacion"
-          href="mailto:hola@tlux.studio"
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0, scale: 0.9, y: 24 }}
           whileInView={{
             opacity: 1,
@@ -86,9 +93,9 @@ export function ContactoSection() {
             y: { duration: 1.3, delay: 1.1, ease: [0.22, 1, 0.36, 1] },
             scale: { type: 'spring', stiffness: 300, damping: 15 },
           }}
-          className="scroll-mt-32 inline-flex w-fit items-center gap-2 border border-slate-700 bg-slate-900 px-7 py-4.5 font-mono text-xs uppercase tracking-wider text-white transition-colors duration-300 hover:border-blue-500 hover:bg-blue-600"
+          className="scroll-mt-32 inline-flex w-fit items-center gap-2 border border-slate-700 bg-slate-900 px-7 py-4.5 font-mono text-xs uppercase tracking-wider text-white transition-colors duration-300 hover:border-blue-500 hover:bg-blue-600 cursor-pointer"
         >
-          Empezar una conversación <ArrowUpRight className="size-4 text-blue-400" />
+          {t('contacto.cta')} <ArrowUpRight className="size-4 text-blue-400" />
         </motion.a>
       </div>
     </section>
@@ -96,6 +103,8 @@ export function ContactoSection() {
 }
 
 export function SiteFooter() {
+  const { t } = useTranslation()
+
   const scrollToId = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
     const el = document.getElementById(id)
@@ -105,24 +114,24 @@ export function SiteFooter() {
   }
 
   const socialLinks = [
-    { name: 'LinkedIn',  href: 'https://linkedin.com' },
-    { name: 'GitHub',    href: 'https://github.com' },
+    { name: 'LinkedIn', href: 'https://linkedin.com' },
+    { name: 'GitHub', href: 'https://github.com' },
     { name: 'Twitter/X', href: 'https://x.com' },
     { name: 'Instagram', href: 'https://instagram.com' },
   ]
 
   const navLinks = [
-    { name: 'Servicios', href: 'mercados' },
-    { name: 'Funciones', href: 'metodo' },
-    { name: 'Nosotros',  href: 'estudio' },
-    { name: 'Contacto',  href: 'contacto' },
+    { name: t('nav.servicios'), href: 'mercados' },
+    { name: t('nav.funciones'), href: 'metodo' },
+    { name: t('nav.nosotros'), href: 'estudio' },
+    { name: t('nav.hablemos'), href: 'contacto' },
   ]
 
   const serviceLinks = [
-    'Desarrollo Web Full-Stack',
-    'Desarrollo de E-Commerce',
-    'Marketing Digital & SEO',
-    'Consultoría & Infraestructura',
+    t('footer.svc1'),
+    t('footer.svc2'),
+    t('footer.svc3'),
+    t('footer.svc4'),
   ]
 
   return (
@@ -146,7 +155,7 @@ export function SiteFooter() {
               </Link>
 
               <p className="mt-5 text-sm leading-relaxed text-slate-400">
-                Estudio de ingeniería y arquitectura digital. Transformamos visión estratégica en plataformas web de alto rendimiento.
+                {t('footer.tagline')}
               </p>
             </div>
 
@@ -156,14 +165,14 @@ export function SiteFooter() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-teal-400" />
               </span>
-              [ DISPONIBLE PARA PROYECTOS Q1/Q2 2026 ]
+              {t('footer.disponible')}
             </div>
           </div>
 
           {/* Columna 2: Navegación Principal */}
           <div>
             <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
-              [ NAVEGACIÓN ]
+              [ {t('nav.navegacion')} ]
             </p>
             <ul className="flex flex-col gap-3 font-mono text-xs uppercase tracking-wider text-slate-400">
               {navLinks.map((item) => (
@@ -183,7 +192,7 @@ export function SiteFooter() {
           {/* Columna 3: Servicios Destacados */}
           <div>
             <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
-              [ SERVICIOS ]
+              [ {t('nav.servicios_label')} ]
             </p>
             <ul className="flex flex-col gap-3 text-sm text-slate-400">
               {serviceLinks.map((svc) => (
@@ -197,7 +206,7 @@ export function SiteFooter() {
           {/* Columna 4: Conectemos & Zona Horaria */}
           <div>
             <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-blue-400">
-              [ CONECTEMOS ]
+              [ {t('nav.conectemos')} ]
             </p>
             <a
               href="mailto:hola@tlux.studio"
@@ -206,7 +215,7 @@ export function SiteFooter() {
               hola@tlux.studio
             </a>
             <p className="mt-3 font-mono text-xs text-slate-500">
-              América / España • [ UTC -4 / UTC +1 ]
+              {t('footer.timezone')}
             </p>
 
             {/* Redes Sociales */}
@@ -232,13 +241,13 @@ export function SiteFooter() {
       <div className="border-t border-slate-800 bg-slate-950/60 px-5 py-6 sm:px-8 lg:px-10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="font-mono text-xs text-slate-500">
-            © 2026 TLUX. Todos los derechos reservados.
+            {t('footer.rights')}
           </p>
           <button
             onClick={(e) => scrollToId(e, 'inicio')}
-            className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-400 transition-colors hover:text-blue-400"
+            className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-400 transition-colors hover:text-blue-400 cursor-pointer"
           >
-            Volver arriba{' '}
+            {t('footer.volver_arriba')}{' '}
             <span className="flex size-6 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400 transition-all duration-300 group-hover:border-blue-500 group-hover:bg-blue-600 group-hover:text-white">
               <ArrowUp className="size-3.5" />
             </span>

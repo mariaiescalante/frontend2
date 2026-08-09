@@ -2,42 +2,44 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-const features = [
-  {
-    title: 'Consulta de Optimización Gratuita',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
-    kicker: 'Auditoría & Estrategia',
-  },
-  {
-    title: 'Desarrollo Full Stack',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop',
-    kicker: 'Código & Arquitectura Escalable',
-  },
-  {
-    title: 'Optimización de Contenido',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
-    kicker: 'UX Writing & Copywriting',
-  },
-  {
-    title: 'Análisis de Sitio Web',
-    image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800&auto=format&fit=crop',
-    kicker: 'Performance & Core Web Vitals',
-  },
-  {
-    title: 'Seguimiento y Reporte de Rendimiento',
-    image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
-    kicker: 'Métricas & Conversión en Tiempo Real',
-  },
-  {
-    title: 'Gestión de Redes Sociales',
-    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop',
-    kicker: 'Branding & Presencia Digital',
-  },
-]
+import { useTranslation } from '../../context/language-context'
 
 export function FuncionesSection() {
+  const { t } = useTranslation()
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null)
+
+  const features = [
+    {
+      title: t('funciones.f1_title'),
+      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f1_kicker'),
+    },
+    {
+      title: t('funciones.f2_title'),
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f2_kicker'),
+    },
+    {
+      title: t('funciones.f3_title'),
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f3_kicker'),
+    },
+    {
+      title: t('funciones.f4_title'),
+      image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f4_kicker'),
+    },
+    {
+      title: t('funciones.f5_title'),
+      image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f5_kicker'),
+    },
+    {
+      title: t('funciones.f6_title'),
+      image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop',
+      kicker: t('funciones.f6_kicker'),
+    },
+  ]
 
   const handleMouseEnter = (i: number) => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
@@ -60,19 +62,19 @@ export function FuncionesSection() {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16 items-center">
 
-          {/* ── Columna izquierda: texto que se desplaza HACIA LA DERECHA (x: -60 -> 0) ── */}
+          {/* ── Columna izquierda: texto ── */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">[ 02 / FUNCIONES ]</p>
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">{t('funciones.tag')}</p>
             <h2 className="font-serif text-4xl leading-none tracking-tighter sm:text-5xl lg:text-6xl">
-              Ofrecemos Funciones Importantes para el <em className="text-blue-500 font-serif italic">Desarrollo Web</em> y el <em className="text-blue-500 font-serif italic">Marketing Digital.</em>
+              {t('funciones.title_part1')}<em className="text-blue-500 font-serif italic">{t('funciones.title_bold1')}</em>{t('funciones.title_part2')}<em className="text-blue-500 font-serif italic">{t('funciones.title_bold2')}</em>
             </h2>
             <p className="mt-8 max-w-lg text-base leading-7 text-slate-400">
-              En <span className="font-semibold text-white">TLUX</span>, creemos en ofrecer soluciones digitales integrales que mejoren su presencia en línea y generen resultados. Nuestras características principales incluyen:
+              {t('funciones.description')}
             </p>
           </motion.div>
 
@@ -93,31 +95,27 @@ export function FuncionesSection() {
                   onClick={() => handleClick(i)}
                   onMouseEnter={() => handleMouseEnter(i)}
                   onMouseLeave={handleMouseLeave}
-                  className={`group relative flex flex-col border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${
-                    isSelected ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
-                  }`}
+                  className={`group relative flex flex-col border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${isSelected ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
+                    }`}
                 >
                   <div className="flex items-center gap-4 sm:gap-5">
                     <span
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${
-                        isSelected
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${isSelected
                           ? 'border-blue-500 bg-blue-600 text-white shadow-md shadow-blue-500/20'
                           : 'border-slate-700 bg-slate-900 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-400'
-                      }`}
+                        }`}
                     >
                       ✓
                     </span>
                     <span
-                      className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${
-                        isSelected ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
-                      }`}
+                      className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${isSelected ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
+                        }`}
                     >
                       {feature.title}
                     </span>
                     <span
-                      className={`ml-auto font-mono text-xs transition-colors ${
-                        isSelected ? 'text-blue-400 font-bold' : 'text-slate-600'
-                      }`}
+                      className={`ml-auto font-mono text-xs transition-colors ${isSelected ? 'text-blue-400 font-bold' : 'text-slate-600'
+                        }`}
                     >
                       [0{i + 1}]
                     </span>

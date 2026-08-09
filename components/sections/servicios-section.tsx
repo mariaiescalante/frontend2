@@ -3,27 +3,29 @@
 import { ArrowRight, Check, Code, ShoppingBag, Megaphone, Database, Mail, BookOpen, TrendingUp, Users, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-const servicesData = [
-  { index: '01', title: 'Desarrollo Web a Medida',      kicker: 'Tecnología que escala',      description: 'Creamos soluciones personalizadas que se adaptan a las necesidades específicas de tu negocio, garantizando un rendimiento y escalabilidad óptimos.',                                                                                                                               deliverables: ['Soluciones 100% personalizadas', 'Rendimiento y escalabilidad óptimos', 'Arquitectura moderna'],          result: 'Más control. Máximo rendimiento.', icon: Code },
-  { index: '02', title: 'Desarrollo de E-commerce',     kicker: 'Conversión que se siente',   description: 'Creamos plataformas de comercio electrónico personalizadas y optimizadas que permiten vender en línea de manera efectiva, con gestión de inventario, pasarelas de pago seguras y experiencias atractivas.',                                                                       deliverables: ['Pasarelas de pago seguras', 'Gestión avanzada de inventario', 'Experiencias de usuario atractivas'],      result: 'Más ventas. Menos fricción.',     icon: ShoppingBag },
-  { index: '03', title: 'Marketing Digital Estratégico', kicker: 'Alcance que importa',        description: 'Implementamos estrategias efectivas de marketing digital que incluyen SEO, PPC y campañas en redes sociales para aumentar tu visibilidad y atraer tráfico relevante.',                                                                                                           deliverables: ['Estrategia SEO, PPC y SEM', 'Campañas en redes sociales', 'Tráfico relevante y calificado'],             result: 'Más visibilidad. Tráfico de valor.', icon: Megaphone },
-  { index: '04', title: 'Software de Backend',           kicker: 'Infraestructura sólida',    description: 'Proporcionamos sistemas robustos y seguros que gestionan eficientemente tus operaciones y datos, asegurando una integración fluida con tus plataformas.',                                                                                                                         deliverables: ['Sistemas robustos y seguros', 'Gestión eficiente de datos', 'Integración fluida de plataformas'],        result: 'Operaciones estables. Cero fallos.', icon: Database },
-  { index: '05', title: 'Email Marketing',               kicker: 'Comunicación que conecta',  description: 'Diseñamos campañas de email marketing segmentadas que resuenan con tu audiencia y fomentan la lealtad de los clientes a través de diseños de alto impacto.',                                                                                                                     deliverables: ['Campañas de email segmentadas', 'Diseños de alto impacto', 'Fidelización de clientes'],                  result: 'Más retención. Mayor lealtad.',   icon: Mail },
-  { index: '06', title: 'Consultoría Digital',           kicker: 'Estrategia con visión',     description: 'Asesoramos a las empresas en su proceso de digitalización, ayudándoles a adoptar tecnologías que optimicen sus procesos y mejoren su competitividad en el mercado.',                                                                                                             deliverables: ['Asesoría en digitalización', 'Adopción de nuevas tecnologías', 'Optimización de procesos internos'],     result: 'Más eficiencia. Alta competitividad.', icon: BookOpen },
-  { index: '07', title: 'SEO | SEM',                     kicker: 'Visibilidad orgánica',      description: 'Ofrecemos servicios expertos de SEO y SEM para potenciar tu presencia online y atraer tráfico de calidad. Campañas SEM estratégicas que maximizan tu retorno de inversión (ROI).',                                                                                               deliverables: ['Posicionamiento destacado en buscadores', 'Campañas SEM estratégicas', 'Resultados inmediatos y ROI alto'], result: 'Posiciones destacadas. Tráfico de calidad.', icon: TrendingUp },
-  { index: '08', title: 'Integración de CRM',            kicker: 'Clientes en el centro',     description: 'Centralizamos y optimizamos la gestión de clientes integrando un CRM adaptado a tus procesos, automatizando tareas y brindando datos en tiempo real para impulsar la productividad.',                                                                                            deliverables: ['Centralización de gestión de clientes', 'Tareas automatizadas en tiempo real', 'Productividad e informes avanzados'], result: 'Mayor productividad. Fidelización real.', icon: Users },
-]
+import { useTranslation } from '../../context/language-context'
 
 export function ServiciosSection() {
+  const { t } = useTranslation()
   const [activeDesktopService, setActiveDesktopService] = useState<number>(0)
   const [activeMobileService, setActiveMobileService] = useState<number | null>(0)
+
+  const servicesData = [
+    { index: '01', title: t('servicios.s1_title'), kicker: t('servicios.s1_kicker'), description: t('servicios.s1_desc'), deliverables: [t('servicios.s1_d1'), t('servicios.s1_d2'), t('servicios.s1_d3')], result: t('servicios.s1_result'), icon: Code },
+    { index: '02', title: t('servicios.s2_title'), kicker: t('servicios.s2_kicker'), description: t('servicios.s2_desc'), deliverables: [t('servicios.s2_d1'), t('servicios.s2_d2'), t('servicios.s2_d3')], result: t('servicios.s2_result'), icon: ShoppingBag },
+    { index: '03', title: t('servicios.s3_title'), kicker: t('servicios.s3_kicker'), description: t('servicios.s3_desc'), deliverables: [t('servicios.s3_d1'), t('servicios.s3_d2'), t('servicios.s3_d3')], result: t('servicios.s3_result'), icon: Megaphone },
+    { index: '04', title: t('servicios.s4_title'), kicker: t('servicios.s4_kicker'), description: t('servicios.s4_desc'), deliverables: [t('servicios.s4_d1'), t('servicios.s4_d2'), t('servicios.s4_d3')], result: t('servicios.s4_result'), icon: Database },
+    { index: '05', title: t('servicios.s5_title'), kicker: t('servicios.s5_kicker'), description: t('servicios.s5_desc'), deliverables: [t('servicios.s5_d1'), t('servicios.s5_d2'), t('servicios.s5_d3')], result: t('servicios.s5_result'), icon: Mail },
+    { index: '06', title: t('servicios.s6_title'), kicker: t('servicios.s6_kicker'), description: t('servicios.s6_desc'), deliverables: [t('servicios.s6_d1'), t('servicios.s6_d2'), t('servicios.s6_d3')], result: t('servicios.s6_result'), icon: BookOpen },
+    { index: '07', title: t('servicios.s7_title'), kicker: t('servicios.s7_kicker'), description: t('servicios.s7_desc'), deliverables: [t('servicios.s7_d1'), t('servicios.s7_d2'), t('servicios.s7_d3')], result: t('servicios.s7_result'), icon: TrendingUp },
+    { index: '08', title: t('servicios.s8_title'), kicker: t('servicios.s8_kicker'), description: t('servicios.s8_desc'), deliverables: [t('servicios.s8_d1'), t('servicios.s8_d2'), t('servicios.s8_d3')], result: t('servicios.s8_result'), icon: Users },
+  ]
 
   const toggleMobileService = (index: number) => {
     setActiveMobileService((prev) => (prev === index ? null : index))
   }
 
-  const desktopSvc = servicesData[activeDesktopService]
+  const desktopSvc = servicesData[activeDesktopService] || servicesData[0]
   const DesktopSvcIcon = desktopSvc.icon
 
   return (
@@ -39,13 +41,13 @@ export function ServiciosSection() {
           className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
           <div>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">[ 01 / SERVICIOS & SOLUCIONES ]</p>
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">{t('servicios.tag')}</p>
             <h2 className="max-w-3xl font-serif text-5xl leading-none tracking-tighter text-slate-900 sm:text-7xl lg:text-7xl">
-              Soluciones y servicios <em className="text-blue-600 font-serif italic">hechos a tu medida.</em>
+              {t('servicios.title_part1')}<em className="text-blue-600 font-serif italic">{t('servicios.title_bold')}</em>
             </h2>
           </div>
           <p className="max-w-sm text-base leading-relaxed text-slate-600 font-medium">
-            No usamos fórmulas. Encontramos la oportunidad específica que tu mercado está esperando.
+            {t('servicios.description')}
           </p>
         </motion.div>
 
@@ -66,15 +68,13 @@ export function ServiciosSection() {
               >
                 <button
                   onClick={() => toggleMobileService(index)}
-                  className={`flex w-full items-center justify-between gap-3 px-5 py-4.5 text-left transition-all duration-200 sm:px-6 ${
-                    isOpen ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'
-                  }`}
+                  className={`flex w-full items-center justify-between gap-3 px-5 py-4.5 text-left transition-all duration-200 sm:px-6 ${isOpen ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'
+                    }`}
                 >
                   <div className="flex items-center gap-3.5">
                     <span className="shrink-0 font-mono text-xs font-bold text-blue-600">[{item.index}]</span>
-                    <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                      isOpen ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
-                    }`}>
+                    <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${isOpen ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
+                      }`}>
                       <ItemIcon className="size-4" />
                     </div>
                     <span className="font-mono text-xs font-semibold uppercase tracking-widest leading-tight">
@@ -141,7 +141,7 @@ export function ServiciosSection() {
 
         {/* ── 2. VISTA DESKTOP: APARICIÓN DE BOTONES EN ESCALERA HACIA ABAJO Y PANEL A LA DERECHA CON FADE-LEFT ── */}
         <div className="hidden border-y border-slate-300 lg:grid lg:grid-cols-[0.65fr_1.35fr]">
-          
+
           {/* Columna Izquierda: Tabs verticales en Cascada / Escalera Hacia Abajo (Fade-Down Stagger) */}
           <div className="flex flex-col border-r border-slate-300">
             {servicesData.map((item, index) => {
@@ -156,14 +156,12 @@ export function ServiciosSection() {
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * 0.09 }}
                   onClick={() => setActiveDesktopService(index)}
-                  className={`flex items-center gap-3.5 border-b border-slate-200 last:border-none px-5 py-4.5 text-left transition-colors duration-200 sm:px-6 sm:py-5 ${
-                    isActive ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-white hover:text-slate-900'
-                  }`}
+                  className={`flex items-center gap-3.5 border-b border-slate-200 last:border-none px-5 py-4.5 text-left transition-colors duration-200 sm:px-6 sm:py-5 ${isActive ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                    }`}
                 >
                   <span className="shrink-0 font-mono text-xs font-bold text-blue-600">[{item.index}]</span>
-                  <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                    isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
-                  }`}>
+                  <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}>
                     <ItemIcon className="size-4" />
                   </div>
                   <span className="font-mono text-xs font-semibold uppercase tracking-widest leading-tight">

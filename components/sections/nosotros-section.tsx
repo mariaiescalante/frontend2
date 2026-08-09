@@ -2,12 +2,14 @@
 
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { useTranslation } from '../../context/language-context'
 
 const hidden = { opacity: 0, y: 24 }
 const visible = { opacity: 1, y: 0 }
 const ease = 'easeOut' as const
 
 export function NosotrosSection() {
+  const { t } = useTranslation()
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -43,17 +45,17 @@ export function NosotrosSection() {
           transition={{ duration: 0.6, ease, delay: 0 }}
         >
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-zinc-400">
-            [ 03 // NOSOTROS ]
+            {t('nosotros.tag')}
           </p>
           <h2 className="max-w-4xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            Impulsamos tu negocio,{' '}
+            {t('nosotros.title_part1')}{' '}
             <span className="font-serif italic text-[#2563eb]">
-              revolucionando
+              {t('nosotros.title_bold')}
             </span>{' '}
-            la experiencia de usuario.
+            {t('nosotros.title_part2')}
           </h2>
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-500 lg:text-lg">
-            En TLUX, transformamos la interacción digital con soluciones tecnológicas innovadoras que ponen al usuario en el centro. Nos enfocamos en crear experiencias intuitivas y accesibles que potencian el crecimiento de tu empresa, mientras nos posicionamos como líderes en la evolución de la tecnología para un mundo más conectado y eficiente.
+            {t('nosotros.description')}
           </p>
         </motion.div>
 
@@ -73,24 +75,22 @@ export function NosotrosSection() {
             <div
               onClick={() => handleClick(0)}
               onMouseEnter={() => handleMouseEnter(0)}
-              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
-                activeIndex === 0
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${activeIndex === 0
                   ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'md:flex-1 bg-slate-50 border-slate-200'
-              }`}
+                }`}
             >
               {/* Barra de acento Azul TLUX (#2563eb) */}
               <span
-                className={`absolute left-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${
-                  activeIndex === 0 ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`absolute left-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${activeIndex === 0 ? 'opacity-100' : 'opacity-0'
+                  }`}
               />
 
               {/* Tag + Titular Gigante */}
               <div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold tracking-widest text-blue-600">
-                    [ 01 // MISIÓN ]
+                    {t('nosotros.mision_tag')}
                   </span>
                   <span className="font-mono text-xs font-bold text-slate-400">
                     01
@@ -98,20 +98,19 @@ export function NosotrosSection() {
                 </div>
 
                 <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
-                  MISIÓN
+                  {t('nosotros.mision_title')}
                 </h3>
               </div>
 
               {/* Contenido Revelable */}
               <div
-                className={`transition-all duration-500 ease-in-out ${
-                  activeIndex === 0
+                className={`transition-all duration-500 ease-in-out ${activeIndex === 0
                     ? 'opacity-100 max-h-128 translate-y-0 mt-6'
                     : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
-                }`}
+                  }`}
               >
                 <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                  Nuestro objetivo es empoderar a las empresas para que ofrezcan experiencias digitales excepcionales, enfocándonos en la facilidad de uso, la accesibilidad y la satisfacción del cliente. Buscamos ser el puente entre la tecnología y las personas, creando interacciones fluidas y memorables que impulsen el crecimiento y la lealtad.
+                  {t('nosotros.mision_desc')}
                 </p>
 
                 <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
@@ -124,24 +123,22 @@ export function NosotrosSection() {
             <div
               onClick={() => handleClick(1)}
               onMouseEnter={() => handleMouseEnter(1)}
-              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${
-                activeIndex === 1
+              className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${activeIndex === 1
                   ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'md:flex-1 bg-slate-50 border-slate-200'
-              }`}
+                }`}
             >
               {/* Barra de acento Azul TLUX (#2563eb) */}
               <span
-                className={`absolute right-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${
-                  activeIndex === 1 ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`absolute right-0 top-0 h-1 md:h-full md:w-1 bg-[#2563eb] transition-all duration-500 ${activeIndex === 1 ? 'opacity-100' : 'opacity-0'
+                  }`}
               />
 
               {/* Tag + Titular Gigante */}
               <div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold tracking-widest text-blue-600">
-                    [ 02 // VISIÓN ]
+                    {t('nosotros.vision_tag')}
                   </span>
                   <span className="font-mono text-xs font-bold text-slate-400">
                     02
@@ -149,20 +146,19 @@ export function NosotrosSection() {
                 </div>
 
                 <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
-                  VISIÓN
+                  {t('nosotros.vision_title')}
                 </h3>
               </div>
 
               {/* Contenido Revelable */}
               <div
-                className={`transition-all duration-500 ease-in-out ${
-                  activeIndex === 1
+                className={`transition-all duration-500 ease-in-out ${activeIndex === 1
                     ? 'opacity-100 max-h-128 translate-y-0 mt-6'
                     : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
-                }`}
+                  }`}
               >
                 <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                  Ser la empresa líder en soluciones tecnológicas que redefinen la experiencia de usuario a nivel global. Aspiramos a transformar el mundo digital mediante productos intuitivos y de vanguardia, contribuyendo al éxito de nuestros clientes al facilitar interacciones que superen las expectativas. En TLUX, creemos que la tecnología debe adaptarse a las personas.
+                  {t('nosotros.vision_desc')}
                 </p>
 
                 <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
