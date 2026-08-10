@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
 
 function WhatsAppIcon({ className = "size-9" }: { className?: string }) {
@@ -17,15 +17,19 @@ function WhatsAppIcon({ className = "size-9" }: { className?: string }) {
 }
 
 export function ContactoSection() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
 
-  const headingText = `${t('contacto.title_part1')}${t('contacto.title_part2')}?`
-  const words = headingText.split(' ').map((word) => {
-    const isItalic = word.toLowerCase().includes(t('contacto.title_part2').toLowerCase().trim())
-    return { text: word + ' ', isItalic }
+  const part1 = t('contacto.title_part1')
+  const part2 = t('contacto.title_part2')
+  const fullText = `${part1}${part2}?`
+  const part2Normalized = part2.toLowerCase().trim()
+
+  const words = fullText.split(' ').filter(Boolean).map((word) => {
+    const isItalic = word.toLowerCase().includes(part2Normalized)
+    return { word, isItalic }
   })
 
-  let charCounter = 0
+  let globalCharIndex = 0
 
   const whatsappMsg = encodeURIComponent(t('contacto.whatsapp_msg'))
   const whatsappUrl = `https://api.whatsapp.com/send?phone=573203249742&text=${whatsappMsg}`
@@ -45,35 +49,40 @@ export function ContactoSection() {
             {t('contacto.tag')}
           </motion.p>
 
-          {/* Título con aparición LETRA POR LETRA */}
-          <h2 className="max-w-3xl font-serif text-6xl leading-none tracking-tighter text-white sm:text-8xl flex flex-wrap">
-            {words.map((wordObj, wordIdx) => (
-              <span
-                key={wordIdx}
-                className={wordObj.isItalic ? 'text-blue-500 font-serif italic inline-flex' : 'inline-flex'}
-              >
-                {wordObj.text.split('').map((char, charIdx) => {
-                  const currentIndex = charCounter
-                  charCounter++
-                  return (
-                    <motion.span
-                      key={`${wordIdx}-${charIdx}`}
-                      initial={{ opacity: 0, y: 14 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-60px' }}
-                      transition={{
-                        duration: 0.3,
-                        delay: currentIndex * 0.035,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="inline-block"
-                    >
-                      {char === ' ' ? '\u00A0' : char}
-                    </motion.span>
-                  )
-                })}
-              </span>
-            ))}
+          {/* Título con aparición LETRA POR LETRA fluida en TODOS los idiomas (ES, EN, PT) */}
+          <h2
+            key={`h2-${locale}`}
+            className="max-w-3xl font-serif text-6xl leading-none tracking-tighter text-white sm:text-8xl flex flex-wrap gap-x-[0.25em] gap-y-2"
+          >
+            {words.map(({ word, isItalic }, wIdx) => {
+              return (
+                <span
+                  key={`word-${locale}-${wIdx}-${word}`}
+                  className={isItalic ? 'text-blue-500 font-serif italic inline-flex' : 'inline-flex'}
+                >
+                  {word.split('').map((char, cIdx) => {
+                    const charDelay = globalCharIndex * 0.03
+                    globalCharIndex++
+                    return (
+                      <motion.span
+                        key={`char-${locale}-${wIdx}-${cIdx}-${char}`}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{
+                          duration: 0.35,
+                          delay: charDelay,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="inline-block"
+                      >
+                        {char}
+                      </motion.span>
+                    )
+                  })}
+                </span>
+              )
+            })}
           </h2>
         </div>
 
