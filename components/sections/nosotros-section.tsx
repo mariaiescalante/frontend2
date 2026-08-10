@@ -12,7 +12,7 @@ export function NosotrosSection() {
   const { t } = useTranslation()
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number>(0)
 
   const handleMouseEnter = (idx: number) => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
@@ -22,12 +22,12 @@ export function NosotrosSection() {
 
   const handleMouseLeave = () => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
-      setActiveIndex(null)
+      setActiveIndex(0)
     }
   }
 
   const handleClick = (idx: number) => {
-    setActiveIndex((prev) => (prev === idx ? null : idx))
+    setActiveIndex(idx)
   }
 
   return (
@@ -97,26 +97,35 @@ export function NosotrosSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
+                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-blue-600 transition-colors duration-300 sm:text-5xl lg:text-7xl">
                   {t('nosotros.mision_title')}
                 </h3>
+
+                {/* Previsualización legible cuando está contraída */}
+                {activeIndex !== 0 && (
+                  <div className="mt-4 transition-all duration-300">
+                    <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
+                      {t('nosotros.mision_desc')}
+                    </p>
+                    <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
+                      {t('nosotros.expandir_hint')}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* Contenido Revelable */}
-              <div
-                className={`transition-all duration-500 ease-in-out ${activeIndex === 0
-                    ? 'opacity-100 max-h-128 translate-y-0 mt-6'
-                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
-                  }`}
-              >
-                <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                  {t('nosotros.mision_desc')}
-                </p>
+              {/* Contenido Completo Revelable cuando está abierta */}
+              {activeIndex === 0 && (
+                <div className="mt-6 transition-all duration-500 ease-in-out">
+                  <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
+                    {t('nosotros.mision_desc')}
+                  </p>
 
-                <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
-                  [ FOCUS: USER SATISFACTION & GROWTH ]
-                </span>
-              </div>
+                  <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
+                    [ FOCUS: USER SATISFACTION & GROWTH ]
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* ── Bloque 02 - VISIÓN ───────────────────────────── */}
@@ -145,26 +154,35 @@ export function NosotrosSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:text-5xl lg:text-7xl">
+                <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-blue-600 transition-colors duration-300 sm:text-5xl lg:text-7xl">
                   {t('nosotros.vision_title')}
                 </h3>
+
+                {/* Previsualización legible cuando está contraída */}
+                {activeIndex !== 1 && (
+                  <div className="mt-4 transition-all duration-300">
+                    <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
+                      {t('nosotros.vision_desc')}
+                    </p>
+                    <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
+                      {t('nosotros.expandir_hint')}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* Contenido Revelable */}
-              <div
-                className={`transition-all duration-500 ease-in-out ${activeIndex === 1
-                    ? 'opacity-100 max-h-128 translate-y-0 mt-6'
-                    : 'opacity-0 max-h-0 overflow-hidden translate-y-4 md:opacity-0'
-                  }`}
-              >
-                <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                  {t('nosotros.vision_desc')}
-                </p>
+              {/* Contenido Completo Revelable cuando está abierta */}
+              {activeIndex === 1 && (
+                <div className="mt-6 transition-all duration-500 ease-in-out">
+                  <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
+                    {t('nosotros.vision_desc')}
+                  </p>
 
-                <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
-                  [ TARGET: GLOBAL USER EXPERIENCE ]
-                </span>
-              </div>
+                  <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
+                    [ TARGET: GLOBAL USER EXPERIENCE ]
+                  </span>
+                </div>
+              )}
             </div>
 
           </div>

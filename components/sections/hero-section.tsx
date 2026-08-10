@@ -28,6 +28,15 @@ function HeroGraphic() {
 
 export function HeroSection() {
   const { t } = useTranslation()
+
+  const handleScrollToEnfoque = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const el = document.getElementById('mercados')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <section id="inicio" className="relative isolate overflow-hidden scroll-mt-24 px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:px-10 lg:pt-32">
       {/* ── 1. FUENTE DEL VIDEO PINTEREST (/hero-pinterest.mp4) ───────────────────────────── */}
@@ -55,9 +64,13 @@ export function HeroSection() {
             <p className="max-w-sm text-pretty text-base leading-7 text-slate-100 drop-shadow">
               <span className="font-bold text-white">{t('hero.bold_intro')} </span>{t('hero.description')}
             </p>
-            <Link href="#mercados" className="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-white transition-colors hover:text-blue-400 drop-shadow">
+            <a
+              href="#mercados"
+              onClick={handleScrollToEnfoque}
+              className="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-white transition-colors hover:text-blue-400 drop-shadow cursor-pointer"
+            >
               {t('hero.cta_enfoque')} <ArrowDownRight className="size-5 text-blue-400 transition-transform group-hover:translate-x-1 group-hover:translate-y-1" />
-            </Link>
+            </a>
           </div>
         </div>
         <div className="relative flex justify-end lg:pb-4"><HeroGraphic /></div>

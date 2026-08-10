@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { TluxLanding } from '@/components/tlux-landing'
 import { Locale } from '@/context/language-context'
 
-const BASE_URL = 'https://corptlux.com'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://corptlux.test'
 
 type Props = {
   params: Promise<{ lang: string }>
@@ -10,54 +10,67 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params
-  const validLang = ['es', 'en', 'pt'].includes(lang) ? lang : 'es'
+  const rawLang = lang.toLowerCase()
+  const validLang: Locale = rawLang === 'pt-br' || rawLang === 'pt' ? 'pt-BR' : rawLang === 'en' ? 'en' : 'es'
 
   const titles: Record<string, string> = {
     es: 'TLUX | Tecnología Líder en Experiencia de Usuario',
     en: 'TLUX | Leading User Experience Technology',
     pt: 'TLUX | Tecnologia Líder em Experiência do Usuário',
+    'pt-BR': 'TLUX | Tecnologia Líder em Experiência do Usuário',
   }
 
   const descriptions: Record<string, string> = {
     es: 'TLUX es un estudio digital independiente que convierte negocios con ambición en experiencias imposibles de ignorar.',
     en: 'TLUX is an independent digital studio turning ambitious businesses into unmissable experiences.',
     pt: 'TLUX é um estúdio digital independente que transforma negócios ambiciosos em experiências imperdíveis.',
+    'pt-BR': 'TLUX é um estúdio digital independente que transforma negócios ambiciosos em experiências imperdíveis.',
   }
+
+  // URL Canónica por defecto: En Español apunta directamente a la raíz http://corptlux.test/
+  const canonicalUrl = validLang === 'es' ? `${BASE_URL}/` : `${BASE_URL}/${validLang}/`
 
   return {
     title: titles[validLang] || titles.es,
     description: descriptions[validLang] || descriptions.es,
     alternates: {
-      canonical: `${BASE_URL}/${validLang}/`,
+      canonical: canonicalUrl,
       languages: {
-        'es': `${BASE_URL}/es/`,
+        'es': `${BASE_URL}/`,
         'en': `${BASE_URL}/en/`,
-        'pt': `${BASE_URL}/pt/`,
-        'x-default': `${BASE_URL}/es/`,
+        'pt-BR': `${BASE_URL}/pt-BR/`,
+        'pt-PT': `${BASE_URL}/pt-BR/`,
+        'pt': `${BASE_URL}/pt-BR/`,
+        'x-default': `${BASE_URL}/`,
       },
     },
   }
 }
 
 export async function generateStaticParams() {
-  return [{ lang: 'es' }, { lang: 'en' }, { lang: 'pt' }]
+  return [{ lang: 'es' }, { lang: 'en' }, { lang: 'pt' }, { lang: 'pt-BR' }]
 }
 
 export default async function Page({ params }: Props) {
   const { lang } = await params
-  const validLang: Locale = (['es', 'en', 'pt'].includes(lang) ? lang : 'es') as Locale
+  const rawLang = lang.toLowerCase()
+  const validLang: Locale = rawLang === 'pt-br' || rawLang === 'pt' ? 'pt-BR' : rawLang === 'en' ? 'en' : 'es'
 
   const titles: Record<string, string> = {
     es: 'TLUX | Tecnología Líder en Experiencia de Usuario',
     en: 'TLUX | Leading User Experience Technology',
     pt: 'TLUX | Tecnologia Líder em Experiência do Usuário',
+    'pt-BR': 'TLUX | Tecnologia Líder em Experiência do Usuário',
   }
 
   const descriptions: Record<string, string> = {
     es: 'TLUX es un estudio digital independiente que convierte negocios con ambición en experiencias imposibles de ignorar.',
     en: 'TLUX is an independent digital studio turning ambitious businesses into unmissable experiences.',
     pt: 'TLUX é um estúdio digital independente que transforma negócios ambiciosos em experiências imperdíveis.',
+    'pt-BR': 'TLUX é um estúdio digital independente que transforma negócios ambiciosos em experiências imperdíveis.',
   }
+
+  const currentCanonicalUrl = validLang === 'es' ? `${BASE_URL}/` : `${BASE_URL}/${validLang}/`
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -83,9 +96,9 @@ export default async function Page({ params }: Props) {
       {
         '@type': 'WebSite',
         '@id': `${BASE_URL}/#website`,
-        url: `${BASE_URL}/${validLang}/`,
+        url: currentCanonicalUrl,
         name: titles[validLang] || titles.es,
-        inLanguage: validLang,
+        inLanguage: validLang === 'pt-BR' ? ['pt-BR', 'pt-PT'] : validLang,
       },
     ],
   }

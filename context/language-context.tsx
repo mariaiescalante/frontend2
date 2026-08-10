@@ -5,7 +5,7 @@ import es from '../locales/es.json'
 import en from '../locales/en.json'
 import pt from '../locales/pt.json'
 
-export type Locale = 'es' | 'en' | 'pt'
+export type Locale = 'es' | 'en' | 'pt' | 'pt-BR'
 
 interface LanguageContextType {
   locale: Locale
@@ -13,10 +13,11 @@ interface LanguageContextType {
   t: (keyPath: string) => string
 }
 
-const dictionaries: Record<Locale, Record<string, unknown>> = {
+const dictionaries: Record<string, Record<string, unknown>> = {
   es: es as Record<string, unknown>,
   en: en as Record<string, unknown>,
   pt: pt as Record<string, unknown>,
+  'pt-BR': pt as Record<string, unknown>,
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
@@ -31,7 +32,7 @@ export function LanguageProvider({
   const [locale, setLocaleState] = useState<Locale>(initialLocale || 'es')
 
   useEffect(() => {
-    if (initialLocale && ['es', 'en', 'pt'].includes(initialLocale)) {
+    if (initialLocale && ['es', 'en', 'pt', 'pt-BR'].includes(initialLocale)) {
       setLocaleState(initialLocale)
       if (typeof window !== 'undefined') {
         localStorage.setItem('tlux_locale', initialLocale)
@@ -41,12 +42,13 @@ export function LanguageProvider({
 
     if (typeof window !== 'undefined') {
       const pathname = window.location.pathname
-      const match = pathname.match(/^\/(es|en|pt)(\/|$)/)
-      if (match && ['es', 'en', 'pt'].includes(match[1])) {
-        setLocaleState(match[1] as Locale)
+      const match = pathname.match(/^\/(es|en|pt|pt-BR)(\/|$)/i)
+      if (match && ['es', 'en', 'pt', 'pt-BR'].includes(match[1])) {
+        const matchedLocale = match[1] === 'pt' ? 'pt-BR' : (match[1] as Locale)
+        setLocaleState(matchedLocale)
       } else {
         const savedLocale = localStorage.getItem('tlux_locale') as Locale
-        if (savedLocale && ['es', 'en', 'pt'].includes(savedLocale)) {
+        if (savedLocale && ['es', 'en', 'pt', 'pt-BR'].includes(savedLocale)) {
           setLocaleState(savedLocale)
         }
       }
@@ -57,15 +59,9 @@ export function LanguageProvider({
     setLocaleState(newLocale)
     if (typeof window !== 'undefined') {
       localStorage.setItem('tlux_locale', newLocale)
-      const pathname = window.location.pathname
-      const currentLocaleMatch = pathname.match(/^\/(es|en|pt)(\/|$)/)
       const hash = window.location.hash || ''
-      if (currentLocaleMatch) {
-        const newPath = pathname.replace(/^\/(es|en|pt)/, `/${newLocale}`)
-        window.history.pushState({}, '', newPath + hash)
-      } else {
-        window.history.pushState({}, '', `/${newLocale}/` + hash)
-      }
+      const newPath = newLocale === 'es' ? '/' : `/${newLocale}/`
+      window.history.pushState({}, '', newPath + hash)
     }
   }
 
