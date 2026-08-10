@@ -436,7 +436,7 @@ export function StackSection() {
             <div className="flex items-center gap-3">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
               <span className="font-mono text-xs uppercase tracking-wider text-slate-300 font-bold">
-                {t('stack.terminal_tag')} // {selectedTool.categoryTag}
+                {t('stack.terminal_tag')}{' // '}{selectedTool.categoryTag}
               </span>
             </div>
             <span className="font-mono text-xs uppercase tracking-wider text-blue-400 font-semibold">

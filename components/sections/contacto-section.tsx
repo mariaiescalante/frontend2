@@ -1,9 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import Link from 'next/link'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
 
 function WhatsAppIcon({ className = "size-9" }: { className?: string }) {

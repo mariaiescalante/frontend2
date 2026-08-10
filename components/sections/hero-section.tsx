@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { ArrowDownRight } from 'lucide-react'
 import { useTranslation } from '../../context/language-context'
 

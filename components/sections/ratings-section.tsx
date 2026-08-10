@@ -32,17 +32,14 @@ export function RatingsSection() {
   ]
 
   const [page, setPage] = useState(0)
-  const [direction, setDirection] = useState(1)
   const itemsPerPage = 3
   const totalPages = Math.ceil(TESTIMONIALS.length / itemsPerPage)
 
   const handleNext = () => {
-    setDirection(1)
     setPage((prev) => (prev + 1) % totalPages)
   }
 
   const handlePrev = () => {
-    setDirection(-1)
     setPage((prev) => (prev - 1 + totalPages) % totalPages)
   }
 
@@ -132,7 +129,6 @@ export function RatingsSection() {
                 <button
                   key={idx}
                   onClick={() => {
-                    setDirection(idx > page ? 1 : -1)
                     setPage(idx)
                   }}
                   aria-label={`Ir a página ${idx + 1}`}

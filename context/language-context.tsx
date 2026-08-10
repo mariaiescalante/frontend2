@@ -1,11 +1,13 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useSyncExternalStore } from 'react'
 import es from '../locales/es.json'
 import en from '../locales/en.json'
 import pt from '../locales/pt.json'
+import { normalizeLocale } from '../lib/locale'
+import type { Locale } from '../lib/locale'
 
-export type Locale = 'es' | 'en' | 'pt' | 'pt-BR'
+export type { Locale } from '../lib/locale'
 
 interface LanguageContextType {
   locale: Locale
@@ -22,6 +24,25 @@ const dictionaries: Record<string, Record<string, unknown>> = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
+function getUrlLocale(): Locale | null {
+  if (typeof window === 'undefined') return null
+  const pathname = window.location.pathname
+  if (pathname === '/' || pathname === '') return 'es'
+  const match = pathname.match(/^\/(es|en|pt|pt-BR)(\/|$)/i)
+  if (match) return normalizeLocale(match[1])
+  const saved = localStorage.getItem('tlux_locale')
+  return saved ? normalizeLocale(saved) : null
+}
+
+function subscribeUrlLocale(callback: () => void) {
+  window.addEventListener('popstate', callback)
+  window.addEventListener('storage', callback)
+  return () => {
+    window.removeEventListener('popstate', callback)
+    window.removeEventListener('storage', callback)
+  }
+}
+
 export function LanguageProvider({
   children,
   initialLocale,
@@ -29,39 +50,22 @@ export function LanguageProvider({
   children: React.ReactNode
   initialLocale?: Locale
 }) {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale || 'es')
+  const urlLocale = useSyncExternalStore(subscribeUrlLocale, getUrlLocale, () => null)
+  const locale = urlLocale || (initialLocale ? normalizeLocale(initialLocale) : 'es')
 
-  useEffect(() => {
-    if (initialLocale && ['es', 'en', 'pt', 'pt-BR'].includes(initialLocale)) {
-      setLocaleState(initialLocale)
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('tlux_locale', initialLocale)
-      }
-      return
-    }
-
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname
-      const match = pathname.match(/^\/(es|en|pt|pt-BR)(\/|$)/i)
-      if (match && ['es', 'en', 'pt', 'pt-BR'].includes(match[1])) {
-        const matchedLocale = match[1] === 'pt' ? 'pt-BR' : (match[1] as Locale)
-        setLocaleState(matchedLocale)
-      } else {
-        const savedLocale = localStorage.getItem('tlux_locale') as Locale
-        if (savedLocale && ['es', 'en', 'pt', 'pt-BR'].includes(savedLocale)) {
-          setLocaleState(savedLocale)
-        }
-      }
-    }
-  }, [initialLocale])
-
+  // Cambio de idioma: recarga completa de la página para que el servidor
+  // reconstruya el DOM, los metadatos y el JSON-LD en el idioma objetivo.
   const setLocale = (newLocale: Locale) => {
-    setLocaleState(newLocale)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tlux_locale', newLocale)
-      const hash = window.location.hash || ''
-      const newPath = newLocale === 'es' ? '/' : `/${newLocale}/`
-      window.history.pushState({}, '', newPath + hash)
+    const normalized = normalizeLocale(newLocale)
+    if (typeof window === 'undefined') return
+    localStorage.setItem('tlux_locale', normalized)
+
+    const current = getUrlLocale()
+    const hash = window.location.hash || ''
+    const newPath = normalized === 'es' ? '/' : `/${normalized}/`
+
+    if (current !== normalized) {
+      window.location.assign(newPath + hash)
     }
   }
 

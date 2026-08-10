@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import Link from 'next/link'
@@ -13,7 +12,7 @@ const LANGUAGES: { code: Locale; label: string; flag: string }[] = [
   { code: 'pt', label: 'Português', flag: '🇧🇷' },
 ]
 
-function Logo({ dark = false }: { dark?: boolean }) {
+function Logo() {
   return (
     <Link href="#inicio" aria-label="TLUX inicio" className="flex items-center gap-3 group">
       <img
@@ -72,7 +71,7 @@ export function SiteHeader() {
     }
   }
 
-  const currentLang = LANGUAGES.find((l) => l.code === locale) || LANGUAGES[0]
+  const currentLang = LANGUAGES.find((l) => l.code === locale || (locale === 'pt-BR' && l.code === 'pt')) || LANGUAGES[0]
 
   return (
     <>
@@ -126,7 +125,7 @@ export function SiteHeader() {
                           setLangMenuOpen(false)
                         }}
                         className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 font-mono text-xs font-semibold transition-colors cursor-pointer ${
-                          locale === lang.code
+                          locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR')
                             ? 'bg-blue-50 text-blue-600 font-bold'
                             : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                         }`}
@@ -135,7 +134,7 @@ export function SiteHeader() {
                           <span className="text-base">{lang.flag}</span>
                           <span>{lang.label}</span>
                         </span>
-                        {locale === lang.code && <Check className="size-4 text-blue-600" />}
+                        {locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR') ? <Check className="size-4 text-blue-600" /> : null}
                       </button>
                     ))}
                   </motion.div>
@@ -170,7 +169,7 @@ export function SiteHeader() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-                <Logo dark />
+                <Logo />
                 <button
                   className="flex size-11 items-center justify-center border border-slate-700 text-white transition-colors hover:border-blue-600 hover:bg-blue-600"
                   aria-label="Cerrar menú"
@@ -213,7 +212,7 @@ export function SiteHeader() {
                         close()
                       }}
                       className={`flex items-center justify-center gap-1.5 rounded-lg border py-2.5 font-mono text-xs uppercase font-bold transition-all ${
-                        locale === lang.code
+                        locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR')
                           ? 'border-blue-500 bg-blue-600/30 text-blue-400'
                           : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white'
                       }`}
