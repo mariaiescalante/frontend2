@@ -129,7 +129,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         exit={{ opacity: 0, scale: 0.9, x: 16 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden lg:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
+                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden ultrawide:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
                       >
                         <div className="relative h-full w-full">
                           <img
@@ -159,7 +159,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden mt-4 lg:hidden"
+                        className="overflow-hidden mt-4 ultrawide:hidden"
                       >
                         <div className="relative w-full h-48 sm:h-56 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-xl">
                           <img
