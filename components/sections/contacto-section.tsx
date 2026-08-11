@@ -5,12 +5,12 @@ import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
 
-function WhatsAppIcon({ className = "size-9" }: { className?: string }) {
+function WhatsAppIcon({ className = "size-11 sm:size-13" }: { className?: string }) {
   return (
     <img
       src="/whatsapp-logo.png"
       alt="WhatsApp"
-      className={`${className} object-contain shrink-0 pointer-events-none`}
+      className={`${className} object-contain shrink-0 pointer-events-none drop-shadow-[0_0_12px_rgba(37,211,102,0.45)] group-hover:scale-110 transition-transform duration-300`}
     />
   )
 }
@@ -85,7 +85,7 @@ export function ContactoSection() {
           </h2>
         </div>
 
-        {/* Botón de acción hacia WhatsApp (+57 320 324 9742) con el logo exacto enviado por el usuario */}
+        {/* Botón de acción hacia WhatsApp (+57 320 324 9742) con el logo agrandado y resaltado */}
         <motion.a
           id="empezar-conversacion"
           href={whatsappUrl}
@@ -95,12 +95,12 @@ export function ContactoSection() {
           whileInView={{
             opacity: 1,
             scale: 1,
-            y: [0, -20, 0, -10, 0, -4, 0],
+            y: [0, -15, 0],
           }}
           whileHover={{
-            scale: 1.05,
-            y: -5,
-            boxShadow: '0 12px 30px rgba(37, 211, 102, 0.4)',
+            scale: 1.04,
+            y: -4,
+            boxShadow: '0 14px 35px rgba(37, 211, 102, 0.35)',
           }}
           whileTap={{
             scale: 0.96,
@@ -108,15 +108,15 @@ export function ContactoSection() {
           }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{
-            opacity: { duration: 0.5, delay: 1.05 },
-            y: { duration: 1.3, delay: 1.1, ease: [0.22, 1, 0.36, 1] },
+            opacity: { duration: 0.5, delay: 0.8 },
+            y: { duration: 1.2, delay: 0.9, ease: [0.22, 1, 0.36, 1] },
             scale: { type: 'spring', stiffness: 300, damping: 15 },
           }}
-          className="scroll-mt-32 inline-flex w-fit items-center gap-3 border border-emerald-500/60 bg-slate-900 px-7 py-4 font-mono text-xs uppercase tracking-wider text-white transition-all duration-300 hover:border-emerald-400 hover:bg-slate-800 cursor-pointer shadow-lg shadow-emerald-950/40"
+          className="group scroll-mt-32 inline-flex w-fit items-center gap-4 border border-emerald-500/60 bg-slate-900 px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-emerald-400 hover:bg-slate-800 cursor-pointer shadow-xl shadow-emerald-950/50"
         >
-          <WhatsAppIcon className="size-9 sm:size-10" />
-          <span>{t('contacto.cta')}</span>
-          <ArrowUpRight className="size-4 text-emerald-400" />
+          <WhatsAppIcon className="size-11 sm:size-13" />
+          <span className="text-sm font-semibold">{t('contacto.cta')}</span>
+          <ArrowUpRight className="size-5 text-emerald-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
         </motion.a>
       </div>
     </section>

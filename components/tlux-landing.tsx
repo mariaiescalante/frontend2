@@ -13,6 +13,7 @@ import { FuncionesSection } from '@/components/sections/funciones-section'
 import { StackSection }     from '@/components/sections/stack-section'
 import { NosotrosSection }  from '@/components/sections/nosotros-section'
 import { ContactoSection, SiteFooter } from '@/components/sections/contacto-section'
+import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
 
 export function TluxLanding({ initialLocale }: { initialLocale?: Locale }) {
   const { t, setLocale } = useTranslation()
@@ -73,6 +74,7 @@ export function TluxLanding({ initialLocale }: { initialLocale?: Locale }) {
         <ContactoSection />
       </main>
       <SiteFooter />
+      <WhatsAppFloatingButton />
     </div>
   )
 }
