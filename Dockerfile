@@ -3,9 +3,9 @@ FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+COPY package.json package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* ./
 RUN \
-  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --dangerously-allow-all-builds; \
+  if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm i --dangerously-allow-all-builds; \
   elif [ -f package-lock.json ]; then npm ci; \
   else npm i; \
   fi
@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
 RUN \
-  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm run build; \
   else npm run build; \
   fi
 
