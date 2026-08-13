@@ -24,14 +24,12 @@ const dictionaries: Record<string, Record<string, unknown>> = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-function getUrlLocale(): Locale | null {
-  if (typeof window === 'undefined') return null
+function getUrlLocale(): Locale {
+  if (typeof window === 'undefined') return 'es'
   const pathname = window.location.pathname
-  if (pathname === '/' || pathname === '') return 'es'
-  const match = pathname.match(/^\/(es|en|pt|pt-BR)(\/|$)/i)
+  const match = pathname.match(/^\/(en|pt|pt-BR)(\/|$)/i)
   if (match) return normalizeLocale(match[1])
-  const saved = localStorage.getItem('tlux_locale')
-  return saved ? normalizeLocale(saved) : null
+  return 'es'
 }
 
 function subscribeUrlLocale(callback: () => void) {
@@ -50,21 +48,30 @@ export function LanguageProvider({
   children: React.ReactNode
   initialLocale?: Locale
 }) {
-  const urlLocale = useSyncExternalStore(subscribeUrlLocale, getUrlLocale, () => null)
-  const locale = urlLocale || (initialLocale ? normalizeLocale(initialLocale) : 'es')
+  const urlLocale = useSyncExternalStore(subscribeUrlLocale, getUrlLocale, () => 'es' as Locale)
+  const locale: Locale = normalizeLocale(urlLocale || initialLocale || 'es')
 
-  // Cambio de idioma: recarga completa de la página para que el servidor
-  // reconstruya el DOM, los metadatos y el JSON-LD en el idioma objetivo.
+  // Cambio de idioma: recarga completa de la página preservando la subruta actual (ej: /blog o /blog/mi-post)
   const setLocale = (newLocale: Locale) => {
     const normalized = normalizeLocale(newLocale)
     if (typeof window === 'undefined') return
     localStorage.setItem('tlux_locale', normalized)
 
-    const current = getUrlLocale()
+    const currentPath = window.location.pathname
     const hash = window.location.hash || ''
-    const newPath = normalized === 'es' ? '/' : `/${normalized}/`
 
-    if (current !== normalized) {
+    // Remueve prefijo de idioma previo (/en, /pt, /pt-BR, /es) si existe en la URL
+    const cleanPath = currentPath.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
+
+    // Construye la nueva ruta conservando el camino actual (/blog, /blog/post-slug, etc.)
+    let newPath = ''
+    if (normalized === 'es') {
+      newPath = cleanPath === '' ? '/' : cleanPath
+    } else {
+      newPath = cleanPath === '/' ? `/${normalized}/` : `/${normalized}${cleanPath}`
+    }
+
+    if (currentPath !== newPath) {
       window.location.assign(newPath + hash)
     }
   }

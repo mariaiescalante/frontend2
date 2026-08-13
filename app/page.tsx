@@ -14,7 +14,7 @@ export default function RootPage() {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <TluxLanding initialLocale="es" />
+      <TluxLanding />
     </>
   )
 }

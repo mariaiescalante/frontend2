@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useTranslation, Locale } from '../context/language-context'
+import { useTranslation } from '../context/language-context'
 import { SiteHeader }     from '@/components/sections/site-header'
 import { HeroSection }    from '@/components/sections/hero-section'
 import { StatsSection }   from '@/components/sections/stats-section'
@@ -15,15 +15,8 @@ import { NosotrosSection }  from '@/components/sections/nosotros-section'
 import { ContactoSection, SiteFooter } from '@/components/sections/contacto-section'
 import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
 
-export function TluxLanding({ initialLocale }: { initialLocale?: Locale }) {
-  const { t, setLocale } = useTranslation()
-
-  useEffect(() => {
-    if (initialLocale) {
-      setLocale(initialLocale)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLocale])
+export function TluxLanding() {
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

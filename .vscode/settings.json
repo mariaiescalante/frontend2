@@ -2,5 +2,7 @@
   "css.lint.unknownAtRules": "ignore",
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "tailwindCSS.experimental.configFile": "app/globals.css",
+  "tailwindCSS.lint.cssConflict": "ignore"
 }

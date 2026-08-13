@@ -80,7 +80,7 @@ export function WhatsAppFloatingButton() {
               stiffness: 350,
               damping: 20,
             }}
-            className="relative flex size-16 sm:size-18 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-green-400 shadow-2xl shadow-emerald-500/60 hover:shadow-emerald-400/90 transition-shadow duration-300 cursor-pointer border-2 border-white/30"
+            className="relative flex size-16 sm:size-18 items-center justify-center rounded-full bg-linear-to-tr from-emerald-600 via-emerald-500 to-green-400 shadow-2xl shadow-emerald-500/60 hover:shadow-emerald-400/90 transition-shadow duration-300 cursor-pointer border-2 border-white/30"
           >
             {/* Anillo de pulso exterior en verde esmeralda */}
             <span className="absolute inset-0 rounded-full bg-emerald-500/40 animate-ping pointer-events-none -z-10" />

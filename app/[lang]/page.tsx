@@ -30,7 +30,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <TluxLanding initialLocale={validLang} />
+      <TluxLanding />
     </>
   )
 }
