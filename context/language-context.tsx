@@ -1,6 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, useSyncExternalStore } from 'react'
+import React, { createContext, useContext } from 'react'
+import { usePathname } from 'next/navigation'
 import es from '../locales/es.json'
 import en from '../locales/en.json'
 import pt from '../locales/pt.json'
@@ -24,22 +25,7 @@ const dictionaries: Record<string, Record<string, unknown>> = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-function getUrlLocale(): Locale {
-  if (typeof window === 'undefined') return 'es'
-  const pathname = window.location.pathname
-  const match = pathname.match(/^\/(en|pt|pt-BR)(\/|$)/i)
-  if (match) return normalizeLocale(match[1])
-  return 'es'
-}
-
-function subscribeUrlLocale(callback: () => void) {
-  window.addEventListener('popstate', callback)
-  window.addEventListener('storage', callback)
-  return () => {
-    window.removeEventListener('popstate', callback)
-    window.removeEventListener('storage', callback)
-  }
-}
+const translationCache = new Map<string, string>()
 
 export function LanguageProvider({
   children,
@@ -48,35 +34,40 @@ export function LanguageProvider({
   children: React.ReactNode
   initialLocale?: Locale
 }) {
-  const urlLocale = useSyncExternalStore(subscribeUrlLocale, getUrlLocale, () => 'es' as Locale)
-  const locale: Locale = normalizeLocale(urlLocale || initialLocale || 'es')
+  const pathname = usePathname()
 
-  // Cambio de idioma: recarga completa de la página preservando la subruta actual (ej: /blog o /blog/mi-post)
+  const locale: Locale = React.useMemo(() => {
+    const match = pathname.match(/^\/(en|pt|pt-BR)(\/|$)/i)
+    if (match) return normalizeLocale(match[1])
+    if (initialLocale) return normalizeLocale(initialLocale)
+    return 'es'
+  }, [pathname, initialLocale])
+
   const setLocale = (newLocale: Locale) => {
     const normalized = normalizeLocale(newLocale)
-    if (typeof window === 'undefined') return
-    localStorage.setItem('tlux_locale', normalized)
+    const cleanPath = pathname.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
 
-    const currentPath = window.location.pathname
-    const hash = window.location.hash || ''
-
-    // Remueve prefijo de idioma previo (/en, /pt, /pt-BR, /es) si existe en la URL
-    const cleanPath = currentPath.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
-
-    // Construye la nueva ruta conservando el camino actual (/blog, /blog/post-slug, etc.)
     let newPath = ''
     if (normalized === 'es') {
       newPath = cleanPath === '' ? '/' : cleanPath
     } else {
-      newPath = cleanPath === '/' ? `/${normalized}/` : `/${normalized}${cleanPath}`
+      newPath = cleanPath === '/' ? `/${normalized}` : `/${normalized}${cleanPath}`
     }
 
-    if (currentPath !== newPath) {
-      window.location.assign(newPath + hash)
+    if (pathname !== newPath) {
+      localStorage.setItem('tlux_locale', normalized)
+      window.location.href = newPath
     }
   }
 
-  const t = (keyPath: string): string => {
+  // Traducción ultra-optimizada con caché Map en memoria (evita re-ejecutar loops y splits en cada render)
+  const t = React.useCallback((keyPath: string): string => {
+    const cacheKey = `${locale}:${keyPath}`
+    const cached = translationCache.get(cacheKey)
+    if (cached !== undefined) {
+      return cached
+    }
+
     const keys = keyPath.split('.')
     let current: unknown = dictionaries[locale] || dictionaries['es']
 
@@ -90,15 +81,20 @@ export function LanguageProvider({
           if (fallback && typeof fallback === 'object' && fbKey in (fallback as Record<string, unknown>)) {
             fallback = (fallback as Record<string, unknown>)[fbKey]
           } else {
+            translationCache.set(cacheKey, keyPath)
             return keyPath
           }
         }
-        return typeof fallback === 'string' ? fallback : keyPath
+        const resFallback = typeof fallback === 'string' ? fallback : keyPath
+        translationCache.set(cacheKey, resFallback)
+        return resFallback
       }
     }
 
-    return typeof current === 'string' ? current : keyPath
-  }
+    const res = typeof current === 'string' ? current : keyPath
+    translationCache.set(cacheKey, res)
+    return res
+  }, [locale])
 
   return (
     <LanguageContext.Provider value={{ locale, setLocale, t }}>

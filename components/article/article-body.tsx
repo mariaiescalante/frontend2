@@ -66,37 +66,65 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
 
     setTocItems(items)
 
-    // IntersectionObserver para detectar la sección activa durante el scroll
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
-          }
-        })
-      },
-      {
-        rootMargin: '-100px 0px -50% 0px',
-        threshold: 0.1,
-      }
-    )
-
-    headings.forEach((heading) => observer.observe(heading))
-
-    // Progreso de lectura en %
+    // Controlador unificado: la barra escala estrictamente desde el primer título (#introduccion, 0%) hasta el último (#conclusion, 100%)
     const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight
-      if (totalHeight > 0) {
-        const currentProgress = Math.min(Math.max((window.scrollY / totalHeight) * 100, 0), 100)
-        setScrollProgress(Math.round(currentProgress))
+      if (!contentRef.current) return
+
+      const container = contentRef.current
+
+      // Primer título de la Tabla de Contenidos (#introduccion)
+      const firstHeading = container.querySelector('#introduccion') || container.firstElementChild || container
+      // Último título de la Tabla de Contenidos (#conclusion)
+      const lastHeading = container.querySelector('#conclusion') || container.lastElementChild || container
+
+      const firstTop = firstHeading.getBoundingClientRect().top + window.scrollY
+      const lastTop = lastHeading.getBoundingClientRect().top + window.scrollY
+
+      // Punto exacto 0%: primer título (#introduccion) en la línea de lectura (offset 120px)
+      const startScroll = firstTop - 120
+      // Punto exacto 100%: último título (#conclusion) en la línea de lectura (offset 120px)
+      const endScroll = lastTop - 120
+      const totalDistance = endScroll - startScroll
+
+      // ── A. Cálculo del porcentaje de progreso (0% ➔ 100%) ──
+      if (window.scrollY <= startScroll) {
+        setScrollProgress(0)
+      } else if (window.scrollY >= endScroll) {
+        setScrollProgress(100)
+      } else if (totalDistance > 0) {
+        const currentDistance = window.scrollY - startScroll
+        const progress = Math.min(Math.max((currentDistance / totalDistance) * 100, 0), 100)
+        setScrollProgress(Math.round(progress))
       }
+
+      // ── B. Cálculo del ítem activo en la Tabla de Contenidos (TOC) ──
+      if (window.scrollY < startScroll - 60) {
+        setActiveId('')
+        return
+      }
+
+      const sectionNodes = [
+        firstHeading,
+        ...headings
+      ]
+
+      let currentActiveId = 'introduccion'
+      for (const node of sectionNodes) {
+        if (node) {
+          const nodeTop = node.getBoundingClientRect().top + window.scrollY
+          if (window.scrollY >= nodeTop - 140) {
+            currentActiveId = node.id || 'introduccion'
+          }
+        }
+      }
+
+      setActiveId(currentActiveId)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
 
     return () => {
-      headings.forEach((heading) => observer.unobserve(heading))
       window.removeEventListener('scroll', handleScroll)
     }
   }, [post.content])

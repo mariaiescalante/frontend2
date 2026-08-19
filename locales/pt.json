@@ -5,6 +5,7 @@
     "funciones": "Recursos",
     "nosotros": "Sobre Nós",
     "blog": "Blog",
+    "faq": "FAQ",
     "hablemos": "Vamos Conversar",
     "disponible": "DISPONÍVEL PARA PROJETOS Q1/Q2 2026",
     "navegacion": "Navegação",
@@ -292,5 +293,18 @@
     "related_title_italic": "relacionadas.",
     "not_found_title": "Publicação Não Encontrada",
     "not_found_desc": "O artigo que você procura não existe ou foi movido."
+  },
+  "faq": {
+    "hero_tag": "SUPORTE & AJUDA",
+    "hero_title_1": "Perguntas ",
+    "hero_title_italic": "Frequentes.",
+    "hero_description": "Tudo o que você precisa saber sobre nossa plataforma, conteúdos e publicações.",
+    "search_placeholder": "Buscar perguntas...",
+    "search_helper": "Ex: assinatura, pagamentos, artigos...",
+    "no_results": "Nenhuma pergunta encontrada para sua busca.",
+    "cta_tag": "[ VAMOS CONVERSAR ]",
+    "cta_title": "Ainda tem dúvidas ou não encontrou o que procura?",
+    "cta_button_support": "Contatar Suporte",
+    "cta_button_blog": "Explorar o Blog ↗"
   }
 }

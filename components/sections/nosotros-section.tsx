@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
 
 const hidden = { opacity: 0, y: 24 }
@@ -14,25 +14,13 @@ export function NosotrosSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
-  const handleMouseEnter = (idx: number) => {
-    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
-      setActiveIndex(idx)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
-      setActiveIndex(0)
-    }
-  }
-
   const handleClick = (idx: number) => {
     setActiveIndex(idx)
   }
 
   return (
     <section
-      id="estudio"
+      id="nosotros"
       ref={ref}
       className="scroll-mt-24 border-b border-slate-200 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10"
     >
@@ -66,15 +54,11 @@ export function NosotrosSection() {
           animate={inView ? visible : hidden}
           transition={{ duration: 0.6, ease, delay: 0.2 }}
         >
-          <div
-            onMouseLeave={handleMouseLeave}
-            className="flex flex-col md:flex-row gap-4 w-full h-full"
-          >
+          <div className="flex flex-col md:flex-row gap-4 w-full h-full">
 
             {/* ── Bloque 01 - MISIÓN ───────────────────────────── */}
             <div
               onClick={() => handleClick(0)}
-              onMouseEnter={() => handleMouseEnter(0)}
               className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${activeIndex === 0
                   ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'md:flex-1 bg-slate-50 border-slate-200'
@@ -102,36 +86,55 @@ export function NosotrosSection() {
                 </h3>
 
                 {/* Previsualización legible cuando está contraída */}
-                {activeIndex !== 0 && (
-                  <div className="mt-4 transition-all duration-300">
-                    <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
-                      {t('nosotros.mision_desc')}
-                    </p>
-                    <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
-                      {t('nosotros.expandir_hint')}
-                    </span>
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {activeIndex !== 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-4">
+                        <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
+                          {t('nosotros.mision_desc')}
+                        </p>
+                        <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
+                          {t('nosotros.expandir_hint')}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Contenido Completo Revelable cuando está abierta */}
-              {activeIndex === 0 && (
-                <div className="mt-6 transition-all duration-500 ease-in-out">
-                  <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                    {t('nosotros.mision_desc')}
-                  </p>
+              <AnimatePresence initial={false}>
+                {activeIndex === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-6 pt-4 border-t border-blue-200/60">
+                      <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
+                        {t('nosotros.mision_desc')}
+                      </p>
 
-                  <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
-                    [ FOCUS: USER SATISFACTION & GROWTH ]
-                  </span>
-                </div>
-              )}
+                      <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
+                        [ FOCUS: USER SATISFACTION & GROWTH ]
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* ── Bloque 02 - VISIÓN ───────────────────────────── */}
             <div
               onClick={() => handleClick(1)}
-              onMouseEnter={() => handleMouseEnter(1)}
               className={`group relative cursor-pointer p-6 sm:p-8 rounded-none border transition-all duration-500 ease-in-out overflow-hidden flex flex-col justify-between ${activeIndex === 1
                   ? 'md:flex-[2.5] bg-blue-50/40 border-blue-500/40 shadow-xl shadow-blue-500/5'
                   : 'md:flex-1 bg-slate-50 border-slate-200'
@@ -159,30 +162,50 @@ export function NosotrosSection() {
                 </h3>
 
                 {/* Previsualización legible cuando está contraída */}
-                {activeIndex !== 1 && (
-                  <div className="mt-4 transition-all duration-300">
-                    <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
-                      {t('nosotros.vision_desc')}
-                    </p>
-                    <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
-                      {t('nosotros.expandir_hint')}
-                    </span>
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {activeIndex !== 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-4">
+                        <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
+                          {t('nosotros.vision_desc')}
+                        </p>
+                        <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
+                          {t('nosotros.expandir_hint')}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Contenido Completo Revelable cuando está abierta */}
-              {activeIndex === 1 && (
-                <div className="mt-6 transition-all duration-500 ease-in-out">
-                  <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
-                    {t('nosotros.vision_desc')}
-                  </p>
+              <AnimatePresence initial={false}>
+                {activeIndex === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-6 pt-4 border-t border-blue-200/60">
+                      <p className="text-base font-medium leading-relaxed text-slate-800 lg:text-lg">
+                        {t('nosotros.vision_desc')}
+                      </p>
 
-                  <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
-                    [ TARGET: GLOBAL USER EXPERIENCE ]
-                  </span>
-                </div>
-              )}
+                      <span className="mt-6 block font-mono text-xs font-bold tracking-widest text-blue-600">
+                        [ TARGET: GLOBAL USER EXPERIENCE ]
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
           </div>

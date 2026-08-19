@@ -23,7 +23,50 @@ export function TluxLanding() {
       if ('scrollRestoration' in window.history) {
         window.history.scrollRestoration = 'manual'
       }
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior })
+
+      const pendingTarget = sessionStorage.getItem('scrollTarget')
+      const hashTarget = window.location.hash.replace('#', '')
+      const targetId = pendingTarget || hashTarget
+
+      if (targetId) {
+        sessionStorage.removeItem('scrollPosY')
+        const scrollToElement = () => {
+          const el = document.getElementById(targetId) ||
+            (targetId === 'servicios' ? document.getElementById('mercados') :
+             targetId === 'funciones' ? document.getElementById('metodo') :
+             targetId === 'nosotros' ? document.getElementById('estudio') : null)
+
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' })
+          } else if (targetId === 'inicio') {
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          }
+        }
+
+        scrollToElement()
+        const t1 = setTimeout(scrollToElement, 100)
+        const t2 = setTimeout(scrollToElement, 350)
+        const t3 = setTimeout(() => {
+          scrollToElement()
+          sessionStorage.removeItem('scrollTarget')
+        }, 850)
+        return () => {
+          clearTimeout(t1)
+          clearTimeout(t2)
+          clearTimeout(t3)
+        }
+      } else {
+        const savedPosY = sessionStorage.getItem('scrollPosY')
+        if (savedPosY !== null) {
+          sessionStorage.removeItem('scrollPosY')
+          const posY = parseInt(savedPosY, 10)
+          if (!isNaN(posY)) {
+            window.scrollTo({ top: posY, left: 0, behavior: 'instant' as ScrollBehavior })
+            return
+          }
+        }
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior })
+      }
     }
   }, [])
 

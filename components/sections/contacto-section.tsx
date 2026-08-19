@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
@@ -48,40 +49,27 @@ export function ContactoSection() {
             {t('contacto.tag')}
           </motion.p>
 
-          {/* Título con aparición LETRA POR LETRA fluida en TODOS los idiomas (ES, EN, PT) */}
+          {/* Título con animación de entrada fluida palabra por palabra */}
           <h2
             key={`h2-${locale}`}
-            className="max-w-3xl font-serif text-6xl leading-none tracking-tighter text-white sm:text-8xl flex flex-wrap gap-x-[0.25em] gap-y-2"
+            className="max-w-3xl font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-tight text-white flex flex-wrap gap-x-[0.28em] gap-y-2"
           >
-            {words.map(({ word, isItalic }, wIdx) => {
-              return (
-                <span
-                  key={`word-${locale}-${wIdx}-${word}`}
-                  className={isItalic ? 'text-blue-500 font-serif italic inline-flex' : 'inline-flex'}
-                >
-                  {word.split('').map((char, cIdx) => {
-                    const charDelay = globalCharIndex * 0.03
-                    globalCharIndex++
-                    return (
-                      <motion.span
-                        key={`char-${locale}-${wIdx}-${cIdx}-${char}`}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{
-                          duration: 0.35,
-                          delay: charDelay,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                        className="inline-block"
-                      >
-                        {char}
-                      </motion.span>
-                    )
-                  })}
-                </span>
-              )
-            })}
+            {words.map(({ word, isItalic }, wIdx) => (
+              <motion.span
+                key={`word-${locale}-${wIdx}-${word}`}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{
+                  duration: 0.45,
+                  delay: wIdx * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className={isItalic ? 'text-blue-500 font-serif italic inline-block' : 'inline-block'}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h2>
         </div>
 
@@ -124,13 +112,21 @@ export function ContactoSection() {
 }
 
 export function SiteFooter() {
-  const { t } = useTranslation()
+  const { locale, t } = useTranslation()
+  const router = useRouter()
+  const homeHref = locale === 'es' ? '/' : `/${locale}`
 
   const scrollToId = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
-    const el = document.getElementById(id)
+    const targetId = id.replace('#', '')
+    const el = document.getElementById(targetId)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('scrollTarget', targetId)
+      }
+      router.push(`${homeHref}#${targetId}`)
     }
   }
 
@@ -207,6 +203,22 @@ export function SiteFooter() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  href={locale === 'es' ? '/blog' : `/${locale}/blog`}
+                  className="transition-colors hover:text-white hover:translate-x-1 inline-block duration-200"
+                >
+                  {t('nav.blog')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={locale === 'es' ? '/faq' : `/${locale}/faq`}
+                  className="transition-colors hover:text-white hover:translate-x-1 inline-block duration-200"
+                >
+                  {t('nav.faq') || 'FAQ'}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -265,7 +277,10 @@ export function SiteFooter() {
             {t('footer.rights')}
           </p>
           <button
-            onClick={(e) => scrollToId(e, 'inicio')}
+            onClick={(e) => {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
             className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-400 transition-colors hover:text-blue-400 cursor-pointer"
           >
             {t('footer.volver_arriba')}{' '}

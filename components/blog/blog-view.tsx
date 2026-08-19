@@ -15,6 +15,22 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
 
+  // Restaurar la posición exacta de scroll si venimos de un cambio de idioma
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedPosY = sessionStorage.getItem('scrollPosY')
+      if (savedPosY !== null) {
+        sessionStorage.removeItem('scrollPosY')
+        const posY = parseInt(savedPosY, 10)
+        if (!isNaN(posY)) {
+          setTimeout(() => {
+            window.scrollTo({ top: posY, left: 0, behavior: 'instant' as ScrollBehavior })
+          }, 0)
+        }
+      }
+    }
+  })
+
   // Category labels map for filter buttons
   const categoryLabels: Record<CategoryFilter, string> = {
     'TODOS': t('blog.cat_todos') || 'TODOS',
@@ -73,8 +89,9 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
 
   return (
     <div className="w-full bg-slate-950 text-white selection:bg-blue-600 selection:text-white">
-      {/* ── 1. HERO / HEADER DEL BLOG (FONDO OSCURO LANDING SLATE-950) ── */}
-      <section className="mx-auto max-w-7xl px-5 pt-28 pb-12 sm:px-8 sm:pt-36 sm:pb-16 lg:px-10">
+      {/* ── 1. HERO / HEADER DEL BLOG (HERO CON ESPACIADO IDÉNTICO A LANDING Y FAQ) ── */}
+      <section className="w-full bg-slate-950 text-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="border-b border-slate-800 pb-12">
           <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-[#14b8a6]">
             {t('blog.hero_tag')}
@@ -145,6 +162,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
               <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent lg:bg-none pointer-events-none" />
             </div>
           </article>
+        </div>
         </div>
       </section>
 

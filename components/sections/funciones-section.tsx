@@ -58,7 +58,7 @@ export function FuncionesSection() {
   }
 
   return (
-    <section id="metodo" className="relative scroll-mt-24 overflow-hidden bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
+    <section id="funciones" className="relative scroll-mt-24 overflow-hidden bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16 items-center">
 
@@ -121,7 +121,7 @@ export function FuncionesSection() {
                     </span>
                   </div>
 
-                  {/* ── 1. VISTA PREVIA ORIGINAL EN DESKTOP (Emergente Flotante a la Derecha) ── */}
+                  {/* ── 1. VISTA PREVIA FLOTANTE EN DESKTOP (AUTOMÁTICA EN HOVER) ── */}
                   <AnimatePresence>
                     {isSelected && (
                       <motion.div
@@ -129,7 +129,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         exit={{ opacity: 0, scale: 0.9, x: 16 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden ultrawide:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
+                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden lg:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
                       >
                         <div className="relative h-full w-full">
                           <img
@@ -151,7 +151,7 @@ export function FuncionesSection() {
                     )}
                   </AnimatePresence>
 
-                  {/* ── 2. VISTA PREVIA ADAPTATIVA EN MÓVIL Y TABLET (Desplegable Inline) ── */}
+                  {/* ── 2. VISTA PREVIA ADAPTATIVA EN MÓVIL Y TABLET ── */}
                   <AnimatePresence>
                     {isSelected && (
                       <motion.div
@@ -159,7 +159,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden mt-4 ultrawide:hidden"
+                        className="overflow-hidden mt-4 lg:hidden"
                       >
                         <div className="relative w-full h-48 sm:h-56 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-xl">
                           <img

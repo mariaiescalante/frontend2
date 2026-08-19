@@ -33,31 +33,77 @@ export function SiteHeader() {
   const pathname = usePathname() || ''
   const router = useRouter()
   const isBlogRoute = pathname.includes('/blog')
+  const isFaqRoute = pathname.includes('/faq')
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [langMenuOpen, setLangMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState<string>('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const items: [string, string][] = [
-    [t('nav.servicios'), '#mercados'],
-    [t('nav.funciones'), '#metodo'],
-    [t('nav.nosotros'), '#estudio'],
+    [t('nav.inicio') || 'Inicio', '#inicio'],
+    [t('nav.servicios'), '#servicios'],
+    [t('nav.funciones'), '#funciones'],
+    [t('nav.nosotros'), '#nosotros'],
   ]
 
   const close = () => setMenuOpen(false)
 
   const homeHref = locale === 'es' ? '/' : `/${locale}`
   const blogHref = locale === 'es' ? '/blog' : `/${locale}/blog`
+  const faqHref = locale === 'es' ? '/faq' : `/${locale}/faq`
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
+
+      if (!isBlogRoute && !isFaqRoute) {
+        const pendingTarget = typeof window !== 'undefined' ? sessionStorage.getItem('scrollTarget') : null
+        if (pendingTarget) {
+          return
+        }
+
+        if (window.scrollY < 250) {
+          setActiveSection('#inicio')
+          if (window.location.hash && window.location.hash !== '#inicio') {
+            window.history.replaceState(null, '', `${homeHref}#inicio`)
+          }
+          return
+        }
+
+        const sections = [
+          { id: 'servicios', href: '#servicios', aliasId: 'mercados' },
+          { id: 'funciones', href: '#funciones', aliasId: 'metodo' },
+          { id: 'nosotros', href: '#nosotros', aliasId: 'estudio' },
+          { id: 'contacto', href: '#contacto' },
+        ]
+
+        const scrollPos = window.scrollY + 250
+        let current = '#inicio'
+        for (const sec of sections) {
+          const el = document.getElementById(sec.id) || (sec.aliasId ? document.getElementById(sec.aliasId) : null)
+          if (el) {
+            const top = el.offsetTop
+            const height = el.offsetHeight
+            if (scrollPos >= top && scrollPos < top + height) {
+              current = sec.href
+              break
+            }
+          }
+        }
+
+        setActiveSection(current)
+        if (current && window.location.hash !== current) {
+          window.history.replaceState(null, '', `${homeHref}${current}`)
+        }
+      }
     }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isBlogRoute, isFaqRoute, homeHref])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -71,13 +117,40 @@ export function SiteHeader() {
 
   const scrollToId = (e: React.MouseEvent, id: string) => {
     const targetId = id.replace('#', '')
-    const el = document.getElementById(targetId)
-    if (el) {
+    if (targetId === 'inicio') {
+      if (!isBlogRoute && !isFaqRoute) {
+        e.preventDefault()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        if (window.history.pushState) {
+          window.history.pushState(null, '', `${homeHref}#inicio`)
+        }
+        return
+      } else {
+        e.preventDefault()
+        sessionStorage.removeItem('scrollPosY')
+        sessionStorage.setItem('scrollTarget', 'inicio')
+        router.push(homeHref)
+        return
+      }
+    }
+
+    const el = document.getElementById(targetId) ||
+      (targetId === 'servicios' ? document.getElementById('mercados') :
+       targetId === 'funciones' ? document.getElementById('metodo') :
+       targetId === 'nosotros' ? document.getElementById('estudio') : null)
+
+    if (el && !isBlogRoute && !isFaqRoute) {
       e.preventDefault()
       el.scrollIntoView({ behavior: 'smooth' })
+      if (window.history.pushState) {
+        window.history.pushState(null, '', `${homeHref}#${targetId}`)
+      }
     } else {
       e.preventDefault()
-      router.push(`${homeHref}#${targetId}`)
+      sessionStorage.removeItem('scrollPosY')
+      sessionStorage.setItem('scrollTarget', targetId)
+      const targetUrl = `${window.location.origin}${homeHref === '/' ? '/#' : homeHref + '/#'}${targetId}`
+      window.location.assign(targetUrl)
     }
   }
 
@@ -96,31 +169,51 @@ export function SiteHeader() {
           <Logo href={homeHref} />
 
           <nav className="hidden items-center gap-8 font-mono text-[13px] uppercase tracking-wider text-zinc-700 md:flex" aria-label="Navegación principal">
-            {isBlogRoute ? (
-              <>
-                <Link href={homeHref} className="transition-colors hover:text-slate-900">
-                  {t('nav.inicio') || 'Inicio'}
-                </Link>
-                <Link href={blogHref} className="text-blue-600 font-bold transition-colors">
-                  {t('nav.blog') || 'Blog'}
-                </Link>
-              </>
-            ) : (
-              <>
-                {items.map(([label, href]) => (
-                  <a key={href} href={href} onClick={(e) => scrollToId(e, href)} className="transition-colors hover:text-slate-900">{label}</a>
-                ))}
-                <Link href={blogHref} className="transition-colors hover:text-slate-900 text-blue-600 font-semibold">
-                  {t('nav.blog')}
-                </Link>
-              </>
-            )}
+            {items.map(([label, href]) => {
+              const isActive = !isBlogRoute && !isFaqRoute && activeSection === href
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={(e) => scrollToId(e, href)}
+                  className={`transition-colors cursor-pointer ${
+                    isActive
+                      ? 'text-blue-600 font-bold'
+                      : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
+                  }`}
+                >
+                  {label}
+                </a>
+              )
+            })}
+
+            <Link
+              href={blogHref}
+              className={`transition-colors cursor-pointer ${
+                isBlogRoute
+                  ? 'text-blue-600 font-bold'
+                  : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
+              }`}
+            >
+              {t('nav.blog')}
+            </Link>
+
+            <Link
+              href={faqHref}
+              className={`transition-colors cursor-pointer ${
+                isFaqRoute
+                  ? 'text-blue-600 font-bold'
+                  : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
+              }`}
+            >
+              {t('nav.faq') || 'FAQ'}
+            </Link>
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/#contacto" onClick={(e) => scrollToId(e, 'contacto')} className="h-10 items-center gap-1 border border-slate-950 bg-slate-950 px-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white transition-colors hover:border-blue-600 hover:bg-blue-600 inline-flex">
+            <a href={`${homeHref}#contacto`} onClick={(e) => scrollToId(e, 'contacto')} className="h-10 items-center gap-1 border border-slate-950 bg-slate-950 px-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white transition-colors hover:border-blue-600 hover:bg-blue-600 inline-flex">
               {t('nav.hablemos')} <ArrowUpRight className="size-4" />
-            </Link>
+            </a>
 
             <div className="relative" ref={dropdownRef}>
               <button
@@ -135,25 +228,31 @@ export function SiteHeader() {
 
               {langMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-44 border border-slate-200 bg-white py-2 shadow-xl z-50">
-                  {LANGUAGES.map((l) => (
-                    <button
-                      key={l.code}
-                      onClick={() => {
-                        setLocale(l.code)
-                        setLangMenuOpen(false)
-                      }}
-                      className={`flex w-full items-center justify-between px-4 py-2.5 font-mono text-xs transition-colors cursor-pointer ${
-                        locale === l.code || (locale === 'pt-BR' && l.code === 'pt')
-                          ? 'bg-blue-50 text-blue-600 font-bold'
-                          : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
-                      </span>
-                    </button>
-                  ))}
+                  {LANGUAGES.map((l) => {
+                    const cleanPath = pathname.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
+                    const targetPath = l.code === 'es' ? (cleanPath === '' ? '/' : cleanPath) : (cleanPath === '/' ? `/${l.code}` : `/${l.code}${cleanPath}`)
+
+                    return (
+                      <button
+                        key={l.code}
+                        onMouseEnter={() => router.prefetch(targetPath)}
+                        onClick={() => {
+                          setLocale(l.code)
+                          setLangMenuOpen(false)
+                        }}
+                        className={`flex w-full items-center justify-between px-4 py-2.5 font-mono text-xs transition-colors cursor-pointer ${
+                          locale === l.code || (locale === 'pt-BR' && l.code === 'pt')
+                            ? 'bg-blue-50 text-blue-600 font-bold'
+                            : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{l.flag}</span>
+                          <span>{l.label}</span>
+                        </span>
+                      </button>
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -199,77 +298,86 @@ export function SiteHeader() {
               </div>
 
               <nav className="mt-8 flex flex-col" aria-label="Navegación móvil">
-                {isBlogRoute ? (
-                  <>
-                    <Link
-                      href={homeHref}
-                      onClick={close}
-                      className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white"
+                {items.map(([label, href], i) => {
+                  const isActive = !isBlogRoute && !isFaqRoute && activeSection === href
+                  return (
+                    <a
+                      key={href}
+                      href={href}
+                      onClick={(e) => { close(); scrollToId(e, href); }}
+                      className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
+                        isActive
+                          ? 'text-blue-400 font-bold'
+                          : 'text-slate-300 hover:text-white active:text-blue-400'
+                      }`}
                     >
-                      <span><span className="mr-4 text-blue-500">01</span>{t('nav.inicio') || 'Inicio'}</span>
+                      <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
                       <ArrowUpRight className="size-4 text-blue-500" />
-                    </Link>
-                    <Link
-                      href={blogHref}
-                      onClick={close}
-                      className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] text-blue-400 font-bold transition-colors hover:text-white"
-                    >
-                      <span><span className="mr-4 text-blue-500">02</span>{t('nav.blog') || 'Blog'}</span>
-                      <ArrowUpRight className="size-4 text-blue-500" />
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    {items.map(([label, href], i) => (
-                      <a
-                        key={href}
-                        href={href}
-                        onClick={(e) => { close(); scrollToId(e, href); }}
-                        className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white"
-                      >
-                        <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
-                        <ArrowUpRight className="size-4 text-blue-500" />
-                      </a>
-                    ))}
-                    <Link
-                      href={blogHref}
-                      onClick={close}
-                      className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] text-blue-400 font-semibold transition-colors hover:text-white"
-                    >
-                      <span><span className="mr-4 text-blue-500">04</span>{t('nav.blog')}</span>
-                      <ArrowUpRight className="size-4 text-blue-500" />
-                    </Link>
-                  </>
-                )}
+                    </a>
+                  )
+                })}
+
                 <Link
-                  href="/#contacto"
+                  href={blogHref}
+                  onClick={close}
+                  className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
+                    isBlogRoute
+                      ? 'text-blue-400 font-bold'
+                      : 'text-slate-300 hover:text-white active:text-blue-400'
+                  }`}
+                >
+                  <span><span className="mr-4 text-blue-500">04</span>{t('nav.blog')}</span>
+                  <ArrowUpRight className="size-4 text-blue-500" />
+                </Link>
+
+                <Link
+                  href={faqHref}
+                  onClick={close}
+                  className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
+                    isFaqRoute
+                      ? 'text-blue-400 font-bold'
+                      : 'text-slate-300 hover:text-white active:text-blue-400'
+                  }`}
+                >
+                  <span><span className="mr-4 text-blue-500">05</span>{t('nav.faq') || 'FAQ'}</span>
+                  <ArrowUpRight className="size-4 text-blue-500" />
+                </Link>
+
+                <a
+                  href={`${homeHref}#contacto`}
                   onClick={(e) => { close(); scrollToId(e, 'contacto'); }}
                   className="mt-6 flex items-center justify-between border border-blue-600 bg-blue-600 px-5 py-3.5 font-mono text-xs uppercase tracking-[0.16em] text-white transition-colors hover:bg-transparent"
                 >
                   {t('nav.hablemos')} <ArrowUpRight className="size-4" />
-                </Link>
+                </a>
               </nav>
 
               <div className="mt-8 border-t border-slate-800 pt-6">
                 <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-slate-400">[ IDIOMA / LANGUAGE ]</p>
                 <div className="grid grid-cols-3 gap-2">
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => {
-                        setLocale(lang.code)
-                        close()
-                      }}
-                      className={`flex items-center justify-center gap-1.5 rounded-lg border py-2.5 font-mono text-xs uppercase font-bold transition-all ${
-                        locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR')
-                          ? 'border-blue-500 bg-blue-600/30 text-blue-400'
-                          : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white'
-                      }`}
-                    >
-                      <span>{lang.flag}</span>
-                      <span>{lang.code.toUpperCase()}</span>
-                    </button>
-                  ))}
+                  {LANGUAGES.map((lang) => {
+                    const cleanPath = pathname.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
+                    const targetPath = lang.code === 'es' ? (cleanPath === '' ? '/' : cleanPath) : (cleanPath === '/' ? `/${lang.code}` : `/${lang.code}${cleanPath}`)
+
+                    return (
+                      <button
+                        key={lang.code}
+                        onTouchStart={() => router.prefetch(targetPath)}
+                        onPointerDown={() => router.prefetch(targetPath)}
+                        onClick={() => {
+                          setLocale(lang.code)
+                        }}
+                        className={`flex items-center justify-center gap-1.5 rounded-lg border py-2.5 font-mono text-xs uppercase font-bold transition-all cursor-pointer ${
+                          locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR')
+                            ? 'border-blue-500 bg-blue-600/30 text-blue-400'
+                            : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white'
+                        }`}
+                      >
+                        <span>{lang.flag}</span>
+                        <span>{lang.code.toUpperCase()}</span>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 

@@ -29,7 +29,7 @@ export function ServiciosSection() {
   const DesktopSvcIcon = desktopSvc.icon
 
   return (
-    <section id="mercados" className="scroll-mt-24 border-b border-slate-200 bg-slate-50 px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+    <section id="servicios" className="scroll-mt-24 border-b border-slate-200 bg-slate-50 px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
       <div className="mx-auto max-w-7xl">
 
         {/* ── Encabezado ── */}
