@@ -3,16 +3,20 @@ import { SiteFooter } from '@/components/sections/contacto-section'
 import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
 import { FaqView } from '@/components/faq/faq-view'
 import { buildFaqMetadata } from '@/lib/faq-metadata'
+import { fetchPublicFaqs } from '@/lib/faq-service'
 
 export const metadata = buildFaqMetadata('es')
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  // Cargar preguntas frecuentes dinámicas reales desde la base de datos MySQL / Panel CMS
+  const { items, categories } = await fetchPublicFaqs()
+
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-blue-600 selection:text-white flex flex-col justify-between">
       <SiteHeader />
 
       <main className="flex-1">
-        <FaqView initialLocale="es" />
+        <FaqView initialFaqs={items} initialCategories={categories} />
       </main>
 
       <SiteFooter />

@@ -217,68 +217,82 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
           </div>
 
           {/* Grid de 3 Columnas (3x2 Tarjetas de tipo <article>) */}
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post, idx) => {
-              const titleText = post.title
-              const excerptText = post.excerpt
-              const articleNum = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`
+          {filteredPosts.length === 0 ? (
+            <div className="border border-slate-200 bg-white p-12 text-center rounded-none shadow-sm">
+              <p className="font-mono text-xs uppercase tracking-widest text-blue-600 font-bold mb-2">
+                [ ℹ️ ESTADO DEL CONTENIDO ]
+              </p>
+              <h3 className="font-sans text-xl font-bold text-slate-900 mb-2">
+                No hay artículos publicados en este momento
+              </h3>
+              <p className="font-sans text-sm text-slate-600 max-w-md mx-auto">
+                Crea o habilita un artículo desde el Panel CMS (<code className="bg-slate-100 px-2 py-0.5 font-mono text-xs border border-slate-200">/blog</code>) para visualizarlo aquí en tiempo real.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPosts.map((post, idx) => {
+                const titleText = post.title
+                const excerptText = post.excerpt
+                const articleNum = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`
 
-              return (
-                <article
-                  key={post.slug}
-                  className="group flex flex-col justify-between rounded-none border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-blue-600 hover:shadow-xl shadow-sm"
-                >
-                  <div>
-                    {/* Cabecera de la tarjeta: Tag + Fecha */}
-                    <div className="flex items-center justify-between font-mono text-xs text-slate-500 mb-4 pb-3 border-b border-slate-100">
-                      <span className="text-blue-600 font-bold uppercase tracking-wider">
-                        [ ARTICLE_{articleNum} ]
-                      </span>
-                      <span>12 AUG 2026</span>
-                    </div>
-
-                    {/* Imagen / Preview */}
-                    <div className="relative aspect-video w-full overflow-hidden rounded-none border border-slate-200 mb-5 bg-slate-100">
-                      <img
-                        src={post.coverImage}
-                        alt={titleText}
-                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                      />
-                    </div>
-
-                    {/* Titular H3 */}
-                    <h3 className="font-serif text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
-                      {titleText}
-                    </h3>
-
-                    {/* Extracto corto */}
-                    <p className="mt-3 font-sans text-sm leading-relaxed text-slate-600 line-clamp-3">
-                      {excerptText}
-                    </p>
-                  </div>
-
-                  {/* Footer de la tarjeta: Tags de categorías + Link */}
-                  <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-slate-500">
-                      {post.tags.slice(0, 2).map((t) => (
-                        <span key={t} className="bg-slate-100 px-2 py-0.5 border border-slate-200 uppercase font-semibold">
-                          [ {t} ]
+                return (
+                  <article
+                    key={post.slug}
+                    className="group flex flex-col justify-between rounded-none border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-blue-600 hover:shadow-xl shadow-sm"
+                  >
+                    <div>
+                      {/* Cabecera de la tarjeta: Tag + Fecha */}
+                      <div className="flex items-center justify-between font-mono text-xs text-slate-500 mb-4 pb-3 border-b border-slate-100">
+                        <span className="text-blue-600 font-bold uppercase tracking-wider">
+                          [ ARTICLE_{articleNum} ]
                         </span>
-                      ))}
+                        <span>{post.publishedAt}</span>
+                      </div>
+
+                      {/* Imagen / Preview */}
+                      <div className="relative aspect-video w-full overflow-hidden rounded-none border border-slate-200 mb-5 bg-slate-100">
+                        <img
+                          src={post.coverImage}
+                          alt={titleText}
+                          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        />
+                      </div>
+
+                      {/* Titular H3 */}
+                      <h3 className="font-serif text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                        {titleText}
+                      </h3>
+
+                      {/* Extracto corto */}
+                      <p className="mt-3 font-sans text-sm leading-relaxed text-slate-600 line-clamp-3">
+                        {excerptText}
+                      </p>
                     </div>
 
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="inline-flex items-center gap-1 font-mono text-xs font-bold uppercase text-blue-600 group-hover:text-slate-950 transition-colors"
-                    >
-                      <span>{t('blog.featured_read_btn')}</span>
-                      <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </Link>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
+                    {/* Footer de la tarjeta: Tags de categorías + Link */}
+                    <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-slate-500">
+                        {post.tags.slice(0, 2).map((t) => (
+                          <span key={t} className="bg-slate-100 px-2 py-0.5 border border-slate-200 uppercase font-semibold">
+                            [ {t} ]
+                          </span>
+                        ))}
+                      </div>
+
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="inline-flex items-center gap-1 font-mono text-xs font-bold uppercase text-blue-600 group-hover:text-slate-950 transition-colors"
+                      >
+                        <span>{t('blog.featured_read_btn')}</span>
+                        <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </Link>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 

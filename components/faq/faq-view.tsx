@@ -1,47 +1,54 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, ChevronDown, MessageSquare, ArrowUpRight, HelpCircle } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useTranslation } from '../../context/language-context'
-import { getAllFaqCategories, getLocalizedFaqItems } from '../../lib/faq-data'
+import { fetchPublicFaqs, FaqItem, FaqCategoryItem } from '../../lib/faq-service'
 
-export function FaqView({ initialLocale = 'es' }: { initialLocale?: string }) {
-  const router = useRouter()
-  const { locale, t } = useTranslation()
-  const activeLocale = locale || initialLocale
+interface FaqViewProps {
+  initialLocale?: string
+  initialFaqs?: FaqItem[]
+  initialCategories?: FaqCategoryItem[]
+}
 
-  const categories = useMemo(() => getAllFaqCategories(activeLocale), [activeLocale])
-  const allItems = useMemo(() => getLocalizedFaqItems(activeLocale), [activeLocale])
+export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewProps) {
+  const { t } = useTranslation()
+
+  const [items, setItems] = useState<FaqItem[]>(initialFaqs)
+  const [categories, setCategories] = useState<FaqCategoryItem[]>(initialCategories)
+  const [isLoading, setIsLoading] = useState<boolean>(initialFaqs.length === 0)
 
   const [activeCategory, setActiveCategory] = useState<string>('todas')
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [openItemId, setOpenItemId] = useState<string | null>('faq-1')
+  const [openItemId, setOpenItemId] = useState<string | null>(null)
 
-  // Restaurar la posición exacta de scroll si venimos de un cambio de idioma
-  useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedPosY = sessionStorage.getItem('scrollPosY')
-      if (savedPosY !== null) {
-        sessionStorage.removeItem('scrollPosY')
-        const posY = parseInt(savedPosY, 10)
-        if (!isNaN(posY)) {
-          setTimeout(() => {
-            window.scrollTo({ top: posY, left: 0, behavior: 'instant' as ScrollBehavior })
-          }, 0)
+  // Cargar FAQs reales desde MySQL al montar el componente
+  useEffect(() => {
+    async function loadDynamicFaqs() {
+      try {
+        const { items: fetchedItems, categories: fetchedCats } = await fetchPublicFaqs()
+        setItems(fetchedItems)
+        setCategories(fetchedCats)
+        if (fetchedItems.length > 0 && !openItemId) {
+          setOpenItemId(fetchedItems[0].id)
         }
+      } catch (err) {
+        console.error('[FAQ_VIEW] Error al cargar FAQs desde MySQL:', err)
+      } finally {
+        setIsLoading(false)
       }
     }
-  })
+    loadDynamicFaqs()
+  }, [])
 
   const toggleItem = (id: string) => {
     setOpenItemId((prev) => (prev === id ? null : id))
   }
 
   const filteredItems = useMemo(() => {
-    return allItems.filter((item) => {
+    return items.filter((item) => {
       const matchesCategory = activeCategory === 'todas' || item.categoryId === activeCategory
       const query = searchQuery.trim().toLowerCase()
       const matchesSearch =
@@ -52,245 +59,264 @@ export function FaqView({ initialLocale = 'es' }: { initialLocale?: string }) {
 
       return matchesCategory && matchesSearch
     })
-  }, [allItems, activeCategory, searchQuery])
+  }, [items, activeCategory, searchQuery])
 
   const leftColItems = useMemo(
     () => filteredItems.filter((_, idx) => idx % 2 === 0),
     [filteredItems]
   )
+
   const rightColItems = useMemo(
     () => filteredItems.filter((_, idx) => idx % 2 === 1),
     [filteredItems]
   )
 
-  const homeHref = activeLocale === 'es' ? '/' : `/${activeLocale}`
-  const blogHref = activeLocale === 'es' ? '/blog' : `/${activeLocale}/blog`
-  const contactHref = `${homeHref}#contacto`
+  return (
+    <div className="w-full bg-slate-950 text-white font-sans selection:bg-blue-600 selection:text-white">
+      {/* ── 1. HERO BANNER DE PREGUNTAS FRECUENTES (HEADER NEGRO DE MARCA) ── */}
+      <section className="border-b border-slate-800 bg-slate-950 px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-flex items-center gap-2.5 rounded-none border border-slate-800 bg-slate-900/80 px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold"
+              >
+                <HelpCircle className="size-4 text-cyan-400" />
+                <span>[ MYSQL CMS // PREGUNTAS FRECUENTES ]</span>
+              </motion.div>
 
-  const handleContactClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('scrollPosY')
-      sessionStorage.setItem('scrollTarget', 'contacto')
-      const targetUrl = `${window.location.origin}${homeHref === '/' ? '/#' : homeHref + '/#'}contacto`
-      window.location.assign(targetUrl)
-    }
-  }
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="font-sans text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight"
+              >
+                Preguntas{' '}
+                <span className="font-serif italic font-normal text-blue-600">
+                  Frecuentes.
+                </span>
+              </motion.h1>
 
-  const renderCard = (item: typeof allItems[0]) => {
-    const isOpen = openItemId === item.id
-    return (
-      <div
-        key={item.id}
-        className={`group rounded-xl border transition-all duration-300 overflow-hidden ${
-          isOpen
-            ? 'bg-slate-900 text-white border-slate-900 shadow-xl ring-1 ring-blue-500/30'
-            : 'bg-white border-slate-200/90 text-slate-900 hover:border-blue-500/40 hover:bg-slate-50/80 shadow-xs'
-        }`}
-      >
-        <button
-          onClick={() => toggleItem(item.id)}
-          className="w-full flex items-start justify-between gap-4 p-5 sm:p-6 text-left cursor-pointer focus:outline-hidden"
-          aria-expanded={isOpen}
-        >
-          <div className="flex flex-col gap-2.5">
-            <span
-              className={`inline-flex items-center w-max px-2.5 py-0.5 text-xs font-semibold rounded-full font-mono uppercase tracking-wider transition-colors ${
-                isOpen
-                  ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-                  : 'bg-slate-100 text-slate-700 border border-slate-200/80'
-              }`}
-            >
-              {item.categoryLabel}
-            </span>
-            <h3
-              className={`font-sans text-base sm:text-lg font-bold tracking-tight transition-colors leading-snug ${
-                isOpen ? 'text-white' : 'text-slate-900 group-hover:text-blue-600'
-              }`}
-            >
-              {item.question}
-            </h3>
-          </div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="font-sans text-base sm:text-xl text-slate-400 max-w-2xl leading-relaxed"
+              >
+                Respuestas oficiales registradas en la base de datos MySQL desde nuestro Panel CMS.
+              </motion.p>
+            </div>
 
-          <div
-            className={`flex size-8 items-center justify-center rounded-full transition-all duration-300 shrink-0 ${
-              isOpen
-                ? 'rotate-180 bg-blue-600 text-white border border-blue-500 shadow-md'
-                : 'bg-slate-100 border border-slate-200 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-900'
-            }`}
-          >
-            <ChevronDown className="size-4" />
-          </div>
-        </button>
-
-        <AnimatePresence initial={false}>
-          {isOpen && (
+            {/* Contador de preguntas en tiempo real */}
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="bg-white text-slate-900 border-t border-slate-200"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center gap-4 rounded-none border border-slate-800 bg-slate-900/60 p-6 shrink-0"
             >
-              <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-5">
-                <p className="font-sans text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                  {item.answer}
+              <div className="flex size-14 items-center justify-center border border-slate-700 bg-slate-950 font-mono text-2xl font-black text-blue-500">
+                {items.length < 10 ? `0${items.length}` : items.length}
+              </div>
+              <div>
+                <p className="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold">
+                  ARTÍCULOS FAQ MYSQL
+                </p>
+                <p className="font-sans text-sm text-slate-200 font-semibold">
+                  Actualizado en tiempo real
                 </p>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    )
-  }
-
-  return (
-    <div className="w-full">
-      {/* ── 1. HERO SECTION (TÍTULO Y DESCRIPCIÓN PRINCIPAL) ── */}
-      <section className="w-full bg-slate-950 text-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-          <div className="max-w-3xl space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-teal-400 bg-teal-500/10 border border-teal-500/20 rounded-full">
-              <span className="inline-block size-1.5 rounded-full bg-teal-400 animate-pulse" />
-              <span>[ CENTRO DE AYUDA ]</span>
-            </div>
-
-            <h1 className="font-sans text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08]">
-              {t('faq.hero_title_1') || 'Preguntas '}
-              <span className="text-blue-500 font-serif italic font-normal">
-                {t('faq.hero_title_italic') || 'Frecuentes.'}
-              </span>
-            </h1>
-
-            <p className="font-sans text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed">
-              {t('faq.hero_description') || 'Todo lo que necesitas saber sobre nuestra plataforma, contenidos y publicaciones.'}
-            </p>
           </div>
-        </div>
-      </section>
 
-      {/* ── 2. CUERPO PRINCIPAL (FONDO BLANCO CON BARRA DE FILTROS Y BUSCADOR INLINE) ── */}
-      <section className="w-full bg-white text-slate-950 py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-          
-          {/* BARRA DE FILTROS POR CATEGORÍA Y BUSCADOR INLINE */}
-          <div className="pb-8 mb-8 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              {categories.map((cat) => {
-                const isActive = activeCategory === cat.id
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-full transition-all cursor-pointer ${
-                      isActive
-                        ? 'bg-slate-950 text-white font-bold shadow-md border border-slate-950'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 font-medium'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                )
-              })}
+          {/* ── BARRA DE FILTROS POR CATEGORÍA Y BUSCADOR EN TIEMPO REAL ── */}
+          <div className="mt-12 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-t border-slate-800/80 pt-8">
+            {/* Categorías Dinámicas de MySQL */}
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`px-4 py-2.5 rounded-none border uppercase tracking-wider font-semibold transition-all cursor-pointer ${
+                    activeCategory === cat.id
+                      ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold'
+                      : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-white'
+                  }`}
+                >
+                  [ {cat.label} ]
+                </button>
+              ))}
             </div>
 
-            {/* Buscador Inline Sobrio */}
-            <div className="relative flex items-center min-w-[260px] sm:min-w-[300px]">
-              <Search className="absolute left-3.5 size-4 text-slate-400 pointer-events-none" />
+            {/* Buscador de preguntas */}
+            <div className="relative min-w-64 sm:min-w-80">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-500 pointer-events-none" />
               <input
-                id="faq-search-input"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('faq.search_placeholder') || 'Buscar preguntas...'}
-                className="h-10 w-full bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-9 font-sans text-xs focus:border-blue-600 focus:outline-hidden transition-all rounded-full"
+                placeholder="Buscar en preguntas frecuentes..."
+                className="w-full rounded-none border border-slate-800 bg-slate-900/80 pl-10 pr-10 py-2.5 font-mono text-xs uppercase tracking-wider text-white placeholder:text-slate-500 focus:border-blue-600 focus:outline-hidden transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 p-1 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-                  aria-label="Limpiar búsqueda"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
                 >
-                  <X className="size-3.5" />
+                  <X className="size-4" />
                 </button>
               )}
             </div>
           </div>
-
-          {/* LISTADO DE PREGUNTAS EN 2 COLUMNAS INDEPENDIENTES */}
-          <div className="mb-16 sm:mb-24">
-            {filteredItems.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-start">
-                {/* Columna Izquierda */}
-                <div className="flex flex-col gap-4 sm:gap-6">
-                  {leftColItems.map((item) => renderCard(item))}
-                </div>
-
-                {/* Columna Derecha */}
-                <div className="flex flex-col gap-4 sm:gap-6">
-                  {rightColItems.map((item) => renderCard(item))}
-                </div>
-              </div>
-            ) : (
-              <div className="col-span-full py-16 text-center border border-dashed border-slate-300 rounded-2xl bg-slate-50">
-                <HelpCircle className="size-12 mx-auto text-slate-400 mb-4" />
-                <p className="font-sans text-lg text-slate-800 font-semibold mb-2">
-                  {t('faq.no_results') || 'No encontramos preguntas que coincidan con tu búsqueda.'}
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setActiveCategory('todas')
-                  }}
-                  className="mt-4 px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-colors cursor-pointer border border-slate-900"
-                >
-                  [ RESTABLECER BÚSQUEDA ]
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* ── 3. BANNER INFERIOR (CTA PREMIUM TLUX) ── */}
-          <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-linear-to-r from-slate-950 via-slate-900 to-blue-950/90 p-8 sm:p-12 shadow-2xl text-white">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-              <div>
-                <a
-                  href={contactHref}
-                  onClick={handleContactClick}
-                  className="font-mono text-xs uppercase tracking-widest text-teal-400 mb-2 font-semibold flex items-center gap-2 hover:text-teal-300 transition-colors cursor-pointer w-fit"
-                >
-                  <MessageSquare className="size-3.5 text-teal-400" />
-                  {t('faq.cta_tag') || '[ HABLEMOS ]'}
-                </a>
-                <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white max-w-xl leading-tight">
-                  {t('faq.cta_title') || '¿Aún tienes dudas o no encuentras lo que buscas?'}
-                </h2>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 shrink-0">
-                <a
-                  href={contactHref}
-                  onClick={handleContactClick}
-                  className="inline-flex h-12 items-center gap-2 rounded-xl bg-blue-600 px-6 font-mono text-xs uppercase tracking-wider text-white font-bold shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:scale-[1.02] cursor-pointer"
-                >
-                  <span>✉ {t('faq.cta_button_support') || 'Contactar a Soporte'}</span>
-                </a>
-
-                <Link
-                  href={blogHref}
-                  className="inline-flex h-12 items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-6 font-mono text-xs uppercase tracking-wider text-slate-200 font-semibold shadow-md transition-all hover:bg-slate-800 hover:border-slate-600 hover:text-white cursor-pointer"
-                >
-                  <span>{t('faq.cta_button_blog') || 'Explorar el Blog'}</span>
-                  <ArrowUpRight className="size-4 text-cyan-400" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
+
+      {/* ── 2. SECCIÓN PRINCIPAL CON FONDO CLARO LIGERO ── */}
+      <section className="bg-white text-slate-950 px-5 py-16 sm:px-8 sm:py-24 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          {isLoading ? (
+            <div className="py-20 text-center font-mono text-sm text-blue-600 font-bold">
+              [ CONSULTANDO PREGUNTAS FRECUENTES DESDE MYSQL... ]
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className="border border-slate-200 bg-slate-50 p-16 text-center rounded-none shadow-xs">
+              <MessageSquare className="mx-auto size-12 text-slate-400 mb-4" />
+              <h3 className="font-sans text-2xl font-bold text-slate-950 mb-2">
+                No hay preguntas frecuentes registradas actualmente
+              </h3>
+              <p className="font-sans text-sm text-slate-600 max-w-md mx-auto mb-6">
+                Crea tus preguntas frecuentes desde el Panel CMS (<code className="bg-slate-200 px-2 py-0.5 font-mono text-xs">/faq</code>) para visualizarlas en la Landing Page.
+              </p>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="inline-flex items-center gap-2 border border-slate-300 bg-white px-6 py-3 font-mono text-xs uppercase font-bold text-slate-800 hover:border-slate-400 cursor-pointer"
+                >
+                  [ LIMPIAR BÚSQUEDA ]
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+              {/* Columna Izquierda */}
+              <div className="space-y-6">
+                {leftColItems.map((item) => (
+                  <FaqAccordionCard
+                    key={item.id}
+                    item={item}
+                    isOpen={openItemId === item.id}
+                    onToggle={() => toggleItem(item.id)}
+                  />
+                ))}
+              </div>
+
+              {/* Columna Derecha */}
+              <div className="space-y-6">
+                {rightColItems.map((item) => (
+                  <FaqAccordionCard
+                    key={item.id}
+                    item={item}
+                    isOpen={openItemId === item.id}
+                    onToggle={() => toggleItem(item.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── BANNER INFORMATIVO INFERIOR ── */}
+          <div className="mt-20 border border-slate-200 bg-slate-50 p-10 flex flex-col md:flex-row md:items-center justify-between gap-8 rounded-none">
+            <div className="space-y-2">
+              <span className="font-mono text-xs uppercase tracking-widest text-blue-600 font-bold">
+                [ ¿NECESITAS ASISTENCIA ADICIONAL? ]
+              </span>
+              <h3 className="font-sans text-2xl sm:text-3xl font-bold text-slate-950">
+                ¿Aún tienes dudas o no encuentras lo que buscas?
+              </h3>
+              <p className="font-sans text-base text-slate-600 max-w-2xl leading-relaxed">
+                Nuestro equipo de desarrollo y consultoría está disponible para ayudarte a implementar soluciones a medida.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 shrink-0 font-mono text-xs">
+              <Link
+                href="/#contacto"
+                className="inline-flex h-14 items-center gap-2 border border-blue-600 bg-blue-600 px-8 font-bold text-white uppercase tracking-wider hover:bg-blue-700 transition-colors shadow-md cursor-pointer"
+              >
+                <span>CONTACTAR A SOPORTE</span>
+                <ArrowUpRight className="size-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function FaqAccordionCard({
+  item,
+  isOpen,
+  onToggle,
+}: {
+  item: FaqItem
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div
+      className={`border transition-all duration-200 rounded-none overflow-hidden ${
+        isOpen
+          ? 'border-blue-600 shadow-lg'
+          : 'border-slate-200 hover:border-slate-300 shadow-xs'
+      }`}
+    >
+      {/* BOTÓN / ENCABEZADO DE PREGUNTA CON FONDO SUAVE CLARO (bg-slate-50 / text-slate-950) */}
+      <button
+        onClick={onToggle}
+        className="w-full p-6 text-left flex items-start justify-between gap-4 cursor-pointer select-none bg-slate-50 text-slate-950 transition-colors hover:bg-slate-100/90"
+      >
+        <div className="flex items-start gap-4">
+          <span className="font-mono text-xs font-bold text-blue-600 pt-1 shrink-0">
+            [ {item.number} ]
+          </span>
+          <h3 className="font-sans text-lg sm:text-xl font-bold text-slate-950 leading-snug">
+            {item.question}
+          </h3>
+        </div>
+
+        <div
+          className={`size-8 rounded-none border flex items-center justify-center shrink-0 transition-transform duration-200 ${
+            isOpen
+              ? 'border-blue-600 bg-blue-600 text-white rotate-180'
+              : 'border-slate-300 bg-white text-slate-700'
+          }`}
+        >
+          <ChevronDown className="size-4" />
+        </div>
+      </button>
+
+      {/* RESPUESTA DESPLEGABLE CON FONDO BLANCO LIMPIO */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="overflow-hidden border-t border-slate-200 bg-white"
+          >
+            <div className="p-6 pt-5 font-sans text-base text-slate-700 leading-relaxed bg-white space-y-4">
+              <p>{item.answer}</p>
+              <div className="pt-3 flex items-center justify-between font-mono text-[11px] text-slate-500 border-t border-slate-100">
+                <span>CATEGORÍA: <strong className="text-slate-950 font-bold uppercase">{item.categoryLabel}</strong></span>
+                <span className="text-blue-600 font-bold">[ VERIFICADO MYSQL ]</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
