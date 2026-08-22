@@ -93,7 +93,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
       <section className="w-full bg-slate-950 text-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="border-b border-slate-800 pb-12">
-          <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-[#14b8a6]">
+          <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">
             {t('blog.hero_tag')}
           </p>
           <h1 className="max-w-4xl font-sans text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
@@ -137,7 +137,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
                   />
                   <div>
                     <p className="font-bold text-sm text-white">{featuredPost.author.name}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">{featuredPost.author.role}</p>
+                    <p className="font-mono text-xs uppercase tracking-wider text-slate-400">{featuredPost.author.role}</p>
                   </div>
                 </div>
 
@@ -195,7 +195,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
                   className={`px-4 py-2.5 rounded-none border uppercase tracking-wider font-semibold transition-all cursor-pointer ${
                     activeCategory === category
                       ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                      : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-950'
+                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-950'
                   }`}
                 >
                   [ {categoryLabels[category]} ]
@@ -204,14 +204,14 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
             </div>
 
             {/* Lado derecho: Buscador con lupa */}
-            <div className="relative min-w-65 sm:min-w-80">
+            <div className="relative min-w-64 sm:min-w-80">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('blog.search_placeholder')}
-                className="w-full rounded-none border border-slate-300 bg-white pl-10 pr-4 py-2.5 font-mono text-xs uppercase tracking-wider text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none transition-colors"
+                className="w-full h-11 rounded-none border border-slate-200 bg-white pl-10 pr-4 font-mono text-xs uppercase tracking-wider text-slate-900 placeholder:opacity-50 focus:ring-1 focus:ring-blue-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -239,53 +239,60 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
                 return (
                   <article
                     key={post.slug}
-                    className="group flex flex-col justify-between rounded-none border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-blue-600 hover:shadow-xl shadow-sm"
+                    className="group flex flex-col justify-between rounded-none border border-slate-200 bg-white p-7 transition-all duration-300 hover:border-slate-400 hover:shadow-xl relative"
                   >
                     <div>
-                      {/* Cabecera de la tarjeta: Tag + Fecha */}
-                      <div className="flex items-center justify-between font-mono text-xs text-slate-500 mb-4 pb-3 border-b border-slate-100">
-                        <span className="text-blue-600 font-bold uppercase tracking-wider">
-                          [ ARTICLE_{articleNum} ]
-                        </span>
-                        <span>{post.publishedAt}</span>
-                      </div>
-
-                      {/* Imagen / Preview */}
-                      <div className="relative aspect-video w-full overflow-hidden rounded-none border border-slate-200 mb-5 bg-slate-100">
+                      {/* Portada del post */}
+                      <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-none bg-slate-100 border border-slate-100">
                         <img
                           src={post.coverImage}
                           alt={titleText}
-                          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
+                        <div className="absolute top-3 left-3 bg-slate-950/80 px-2.5 py-1 font-mono text-xs text-teal-400 font-bold tracking-widest border border-slate-800">
+                          [ {articleNum} // INSIGHT ]
+                        </div>
                       </div>
 
-                      {/* Titular H3 */}
-                      <h3 className="font-serif text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
-                        {titleText}
+                      {/* Metadatos y Tags */}
+                      <div className="flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 mb-3">
+                        <span className="text-blue-600 font-bold">{post.tags[0] || 'DESARROLLO'}</span>
+                        <span>•</span>
+                        <span>{post.readingTime || 5} {t('blog.read_time')}</span>
+                      </div>
+
+                      {/* Título */}
+                      <h3 className="font-sans text-xl font-bold text-slate-900 leading-snug mb-3 group-hover:text-blue-600 transition-colors">
+                        <Link href={`/blog/${post.slug}`} className="hover:underline">
+                          {titleText}
+                        </Link>
                       </h3>
 
-                      {/* Extracto corto */}
-                      <p className="mt-3 font-sans text-sm leading-relaxed text-slate-600 line-clamp-3">
+                      {/* Extracto */}
+                      <p className="font-sans text-sm text-slate-600 line-clamp-3 leading-relaxed mb-6">
                         {excerptText}
                       </p>
                     </div>
 
-                    {/* Footer de la tarjeta: Tags de categorías + Link */}
-                    <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-slate-500">
-                        {post.tags.slice(0, 2).map((t) => (
-                          <span key={t} className="bg-slate-100 px-2 py-0.5 border border-slate-200 uppercase font-semibold">
-                            [ {t} ]
-                          </span>
-                        ))}
+                    {/* Footer de la tarjeta con autor y link */}
+                    <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src={post.author?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop'}
+                          alt={post.author?.name || 'Autor'}
+                          className="size-7 rounded-full object-cover border border-slate-200"
+                        />
+                        <span className="font-sans text-xs font-semibold text-slate-800 truncate max-w-32">
+                          {post.author?.name || 'Equipo Tlux'}
+                        </span>
                       </div>
 
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="inline-flex items-center gap-1 font-mono text-xs font-bold uppercase text-blue-600 group-hover:text-slate-950 transition-colors"
+                        className="font-mono text-xs font-bold uppercase tracking-wider text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 group/btn"
                       >
-                        <span>{t('blog.featured_read_btn')}</span>
-                        <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                        <span>{t('blog.read_more_btn')}</span>
+                        <ArrowUpRight className="size-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                       </Link>
                     </div>
                   </article>
@@ -296,10 +303,10 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
         </div>
       </section>
 
-      {/* ── 5. BANNER DE NEWSLETTER TÉCNICA (FONDO OSCURO BG-SLATE-950) ── */}
+      {/* ── 4. SECCIÓN NEWSLETTER FINAL (FONDO OSCURO IDÉNTICO A FAQ Y FOOTER) ── */}
       <section className="w-full border-t border-slate-800 bg-slate-950 py-20 text-white sm:py-28">
         <div className="mx-auto max-w-4xl px-5 sm:px-8 text-center">
-          <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-[#14b8a6]">
+          <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">
             {t('blog.newsletter_tag')}
           </p>
 
@@ -318,7 +325,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
               value={newsletterEmail}
               onChange={(e) => setNewsletterEmail(e.target.value)}
               placeholder={t('blog.newsletter_placeholder')}
-              className="flex-1 rounded-none border border-slate-800 bg-slate-900 px-5 py-4 font-mono text-xs uppercase tracking-wider text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
+              className="flex-1 h-12 rounded-none border border-slate-800 bg-slate-900 px-5 font-mono text-xs uppercase tracking-wider text-white placeholder:opacity-40 focus:ring-1 focus:ring-blue-600 focus:outline-none transition-colors"
             />
 
             <button
@@ -338,4 +345,3 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
     </div>
   )
 }
-
