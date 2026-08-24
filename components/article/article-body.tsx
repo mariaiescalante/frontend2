@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ArrowUpRight, Check, Share2, ChevronDown, ChevronRight, ListFilter } from 'lucide-react'
 import { getAllPosts, getLocalizedPost, type LocalizedBlogPost } from '@/lib/mock-data'
@@ -13,7 +13,12 @@ interface TocItem {
   level: 'h2' | 'h3'
 }
 
-export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
+interface ArticleBodyProps {
+  post: LocalizedBlogPost
+  allPosts?: LocalizedBlogPost[]
+}
+
+export function ArticleBody({ post, allPosts: propAllPosts }: ArticleBodyProps) {
   const { locale } = useTranslation()
   const [tocItems, setTocItems] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState<string>('introduccion')
@@ -22,10 +27,12 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
   const [isTocOpenMobile, setIsTocOpenMobile] = useState<boolean>(false)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const allPosts = getAllPosts().map((p) => getLocalizedPost(p, locale))
+  const allPosts = (propAllPosts && propAllPosts.length > 0)
+    ? propAllPosts
+    : []
   const currentIdx = allPosts.findIndex((p) => p.slug === post.slug)
   const prevPost = currentIdx > 0 ? allPosts[currentIdx - 1] : null
-  const nextPost = currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null
+  const nextPost = currentIdx >= 0 && currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null
   const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 2)
 
   const articleDate = (post as any).date || (post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() : '18 AGO 2026')
@@ -33,6 +40,28 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
   const authorName = typeof post.author === 'string' ? post.author : (post.author?.name || 'Elena Vásquez')
   const authorRole = typeof post.author === 'object' ? (post.author?.role || 'LEAD CONTENT ENGINEER') : 'LEAD CONTENT ENGINEER'
   const authorInitials = authorName.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()
+
+  // Formateador híbrido seguro: convierte párrafos de texto plano en <p> manteniendo etiquetas HTML intactas
+  const renderedContent = useMemo(() => {
+    const raw = post.content || ''
+    if (!raw.trim()) return '<p>Contenido del artículo no publicado.</p>'
+
+    const rawBlocks = raw.split(/\n\s*\n/)
+    const formattedBlocks = rawBlocks.map((block) => {
+      const trimmed = block.trim()
+      if (!trimmed) return ''
+
+      const isBlockHtml = /^<(h[1-6]|p|ul|ol|blockquote|pre|figure|table|div|hr|section|article)\b/i.test(trimmed)
+      if (isBlockHtml) {
+        return trimmed
+      } else {
+        const withBreaks = trimmed.replace(/\n/g, '<br />')
+        return `<p>${withBreaks}</p>`
+      }
+    }).filter(Boolean)
+
+    return formattedBlocks.join('\n\n')
+  }, [post.content])
 
   // Sincronización del TOC e IntersectionObserver: extrae ESTRICTAMENTE encabezados H2 y H3 reales
   useEffect(() => {
@@ -124,6 +153,29 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
   const mainTitle = titleParts.length > 2 ? titleParts.slice(0, titleParts.length - 2).join(' ') : post.title
   const italicTitle = titleParts.length > 2 ? titleParts.slice(titleParts.length - 2).join(' ') : ''
 
+  const isEn = locale === 'en'
+  const isPt = locale === 'pt' || locale === 'pt-BR'
+
+  const labelShareX = isEn ? '[ SHARE ON X ]' : isPt ? '[ COMPARTILHAR NO X ]' : '[ COMPARTIR EN X ]'
+  const labelLinkedIn = isEn ? '[ LINKEDIN ]' : isPt ? '[ LINKEDIN ]' : '[ LINKEDIN ]'
+  const labelCopy = copied 
+    ? (isEn ? '[ COPIED! ]' : isPt ? '[ COPIADO! ]' : '[ ¡COPIADO! ]')
+    : (isEn ? '[ COPY LINK 🔗 ]' : isPt ? '[ COPIAR LINK 🔗 ]' : '[ COPIAR LINK 🔗 ]')
+
+  const labelToc = isEn ? '[ TABLE OF CONTENTS ]' : isPt ? '[ TABELA DE CONTEÚDOS ]' : '[ TABLA DE CONTENIDOS ]'
+  const labelTocMobile = isEn ? 'TABLE OF CONTENTS' : isPt ? 'TABELA DE CONTEÚDOS' : 'TABLA DE CONTENIDOS'
+  const labelProgress = isEn ? 'PROGRESS' : isPt ? 'PROGRESSO' : 'PROGRESO'
+  const labelPrevArticle = isEn ? '← PREVIOUS ARTICLE' : isPt ? '← ARTIGO ANTERIOR' : '← ARTÍCULO ANTERIOR'
+  const labelNextArticle = isEn ? 'NEXT ARTICLE →' : isPt ? 'PRÓXIMO ARTIGO →' : 'SIGUIENTE ARTÍCULO →'
+  const labelRelatedHeading = isEn 
+    ? <>Related <span className="font-serif italic text-blue-600 font-normal">publications</span>.</>
+    : isPt 
+    ? <>Publicações <span className="font-serif italic text-blue-600 font-normal">relacionadas</span>.</>
+    : <>Publicaciones <span className="font-serif italic text-blue-600 font-normal">relacionadas</span>.</>
+  const labelResults = isEn ? '[ 02 RESULTS ]' : isPt ? '[ 02 RESULTADOS ]' : '[ 02 RESULTADOS ]'
+
+  const localizedPrefix = locale === 'es' ? '' : `/${locale}`
+
   return (
     <article className="w-full bg-slate-950 text-white selection:bg-blue-600 selection:text-white">
       {/* ── HEADER NEGRO TLUX (bg-slate-950) ── */}
@@ -162,28 +214,28 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
                 onClick={copyUrl}
                 className="px-4 py-2.5 border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer rounded-none uppercase font-bold"
               >
-                [ COMPARTIR EN X ]
+                {labelShareX}
               </button>
 
               <button
                 onClick={copyUrl}
                 className="px-4 py-2.5 border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer rounded-none uppercase font-bold"
               >
-                [ LINKEDIN ]
+                {labelLinkedIn}
               </button>
 
               <button
                 onClick={copyUrl}
                 className="px-4 py-2.5 border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer rounded-none uppercase font-bold flex items-center gap-1.5"
               >
-                <span>{copied ? '[ COPIADO! ]' : '[ COPIAR LINK 🔗 ]'}</span>
+                <span>{labelCopy}</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ── CUERPO BLANCO CLEAN LECTURA CON PÁRRAFOS DE PESO NORMAL (NO NEGRITA POR DEFECTO) ── */}
+      {/* ── CUERPO BLANCO CLEAN LECTURA CON PÁRRAFOS DE PESO NORMAL ── */}
       <section className="bg-white text-slate-900 px-6 py-16 sm:px-12 sm:py-24 lg:px-16">
         <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* TABLA DE CONTENIDOS EN MÓVIL DESPLEGABLE */}
@@ -195,7 +247,7 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
               >
                 <div className="flex items-center gap-2">
                   <ListFilter className="size-4 text-blue-600" />
-                  <span>TABLA DE CONTENIDOS ({tocItems.length})</span>
+                  <span>{labelTocMobile} ({tocItems.length})</span>
                 </div>
                 {isTocOpenMobile ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
               </button>
@@ -226,12 +278,11 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
               )}
             </div>
           )}
-
           {/* TABLA DE CONTENIDOS FLOTANTE EN DESKTOP */}
           <aside className="hidden lg:block lg:col-span-4">
             <div className="sticky top-32 space-y-6">
               <div className="font-mono text-xs uppercase tracking-widest text-slate-400 font-bold">
-                [ TABLA DE CONTENIDOS ]
+                {labelToc}
               </div>
 
               <nav className="space-y-3 font-mono text-xs">
@@ -262,7 +313,7 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
 
               <div className="pt-6 border-t border-slate-200 space-y-2">
                 <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest font-bold text-slate-400">
-                  <span>PROGRESO</span>
+                  <span>{labelProgress}</span>
                   <span className="text-blue-600 font-bold">{scrollProgress}%</span>
                 </div>
                 <div className="h-1 w-full bg-slate-100">
@@ -290,7 +341,7 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
                 [&_img]:w-full [&_img]:border [&_img]:border-slate-200 [&_img]:my-8 [&_img]:object-cover
                 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:font-mono [&_figcaption]:text-xs [&_figcaption]:text-slate-500 [&_figcaption]:mt-3
                 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-6 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-6 [&_ol]:space-y-2"
-              dangerouslySetInnerHTML={{ __html: post.content || '<p>Contenido del artículo no publicado.</p>' }}
+              dangerouslySetInnerHTML={{ __html: renderedContent }}
             />
           </div>
         </div>
@@ -302,10 +353,10 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-xs">
             {prevPost ? (
               <Link
-                href={`/blog/${prevPost.slug}`}
+                href={`${localizedPrefix}/blog/${prevPost.slug}`}
                 className="group border border-slate-200 bg-white p-8 hover:border-blue-600 transition-colors"
               >
-                <span className="text-slate-400 font-bold uppercase block mb-2">← ARTÍCULO ANTERIOR</span>
+                <span className="text-slate-400 font-bold uppercase block mb-2">{labelPrevArticle}</span>
                 <span className="text-lg font-sans font-bold text-slate-950 group-hover:text-blue-600 transition-colors block truncate">
                   {prevPost.title}
                 </span>
@@ -314,10 +365,10 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
 
             {nextPost ? (
               <Link
-                href={`/blog/${nextPost.slug}`}
+                href={`${localizedPrefix}/blog/${nextPost.slug}`}
                 className="group border border-slate-200 bg-white p-8 hover:border-blue-600 transition-colors text-right"
               >
-                <span className="text-slate-400 font-bold uppercase block mb-2">SIGUIENTE ARTÍCULO →</span>
+                <span className="text-slate-400 font-bold uppercase block mb-2">{labelNextArticle}</span>
                 <span className="text-lg font-sans font-bold text-slate-950 group-hover:text-blue-600 transition-colors block truncate">
                   {nextPost.title}
                 </span>
@@ -330,21 +381,21 @@ export function ArticleBody({ post }: { post: LocalizedBlogPost }) {
             <div className="space-y-8 border-t border-slate-200 pt-12">
               <div className="flex items-center justify-between">
                 <h3 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
-                  Publicaciones <span className="font-serif italic text-blue-600 font-normal">relacionadas</span>.
+                  {labelRelatedHeading}
                 </h3>
-                <span className="font-mono text-xs text-slate-400 uppercase font-bold">[ 02 RESULTADOS ]</span>
+                <span className="font-mono text-xs text-slate-400 uppercase font-bold">{labelResults}</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {relatedPosts.map((rel: any, idx: number) => (
                   <Link
                     key={rel.slug}
-                    href={`/blog/${rel.slug}`}
+                    href={`${localizedPrefix}/blog/${rel.slug}`}
                     className="group border border-slate-200 bg-white p-8 space-y-4 hover:border-blue-600 transition-colors"
                   >
                     <div className="flex items-center justify-between font-mono text-xs">
                       <span className="text-cyan-600 font-bold uppercase">[ ARTICLE_0{idx + 1} ]</span>
-                      <span className="text-slate-400">{rel.publishedAt ? new Date(rel.publishedAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() : '12 AGO 2026'}</span>
+                      <span className="text-slate-400">{rel.publishedAt ? new Date(rel.publishedAt).toLocaleDateString(isEn ? 'en-US' : isPt ? 'pt-BR' : 'es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() : '12 AGO 2026'}</span>
                     </div>
 
                     {rel.coverImage && (

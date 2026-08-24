@@ -1,5 +1,6 @@
 import { permanentRedirect } from 'next/navigation'
-import { getAllPosts, getLocalizedPost } from '@/lib/mock-data'
+import { getLocalizedPost } from '@/lib/mock-data'
+import { fetchPublicBlogPosts } from '@/lib/blog-service'
 import { normalizeLocale, type Locale } from '@/lib/locale'
 import { SiteHeader } from '@/components/sections/site-header'
 import { SiteFooter } from '@/components/sections/contacto-section'
@@ -11,13 +12,12 @@ type Props = {
   params: Promise<{ lang: string }>
 }
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export async function generateMetadata({ params }: Props) {
   const { lang } = await params
   return buildBlogListingMetadata(lang)
-}
-
-export async function generateStaticParams() {
-  return [{ lang: 'es' }, { lang: 'en' }, { lang: 'pt' }, { lang: 'pt-BR' }]
 }
 
 export default async function LocalizedBlogListingPage({ params }: Props) {
@@ -26,7 +26,7 @@ export default async function LocalizedBlogListingPage({ params }: Props) {
 
   if (validLang === 'es') permanentRedirect('/blog')
 
-  const rawPosts = getAllPosts()
+  const rawPosts = await fetchPublicBlogPosts()
   const posts = rawPosts.map((p) => getLocalizedPost(p, validLang))
 
   return (

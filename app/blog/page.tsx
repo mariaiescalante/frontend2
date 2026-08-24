@@ -6,6 +6,8 @@ import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
 import { BlogView } from '@/components/blog/blog-view'
 import { buildBlogListingMetadata } from '@/lib/blog-metadata'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 export const metadata = buildBlogListingMetadata('es')
 
 export default async function BlogListingPage() {

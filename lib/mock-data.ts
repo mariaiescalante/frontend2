@@ -1348,11 +1348,23 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
 }
 
 export function getLocalizedPost(post: BlogPost, locale: string = 'es'): LocalizedBlogPost {
-  const langKey = locale.toLowerCase() === 'pt-br' ? 'pt-BR' : locale === 'en' ? 'en' : locale === 'pt' ? 'pt' : 'es'
+  const norm = String(locale).toLowerCase()
+  const resolve = (field: Record<string, string> | any, fallbackKey = 'es') => {
+    if (!field) return ''
+    if (typeof field === 'string') return field
+    if (norm === 'pt' || norm === 'pt-br') {
+      return field['pt'] || field['pt-BR'] || field[fallbackKey] || Object.values(field)[0] || ''
+    }
+    if (norm === 'en') {
+      return field['en'] || field[fallbackKey] || Object.values(field)[0] || ''
+    }
+    return field['es'] || field[fallbackKey] || Object.values(field)[0] || ''
+  }
+
   return {
     ...post,
-    title: post.title[langKey] || post.title.es,
-    excerpt: post.excerpt[langKey] || post.excerpt.es,
-    content: post.content[langKey] || post.content.es,
+    title: resolve(post.title, 'es'),
+    excerpt: resolve(post.excerpt, 'es'),
+    content: resolve(post.content, 'es'),
   }
 }

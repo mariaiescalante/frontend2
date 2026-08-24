@@ -8,6 +8,9 @@ import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
 import { ArticleBody } from '@/components/article/article-body'
 import { buildBlogPostMetadata } from '@/lib/blog-metadata'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 type Props = {
   params: Promise<{ slug: string }>
 }
@@ -17,22 +20,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildBlogPostMetadata('es', slug)
 }
 
-export async function generateStaticParams() {
-  const posts = await fetchPublicBlogPosts()
-  return posts.map((post) => ({
-    slug: post.slug,
-  }))
-}
-
 export default async function BlogPostDetailPage({ params }: Props) {
   const { slug } = await params
-  const rawPost = await fetchPublicBlogPostBySlug(slug)
+  const [rawPost, allRawPosts] = await Promise.all([
+    fetchPublicBlogPostBySlug(slug),
+    fetchPublicBlogPosts(),
+  ])
 
   if (!rawPost) {
     notFound()
   }
 
   const post = getLocalizedPost(rawPost, 'es')
+  const allPosts = allRawPosts.map((p) => getLocalizedPost(p, 'es'))
 
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-blue-600 selection:text-white flex flex-col justify-between">
@@ -41,7 +41,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
 
       {/* Vista Detallada del Artículo desde el CMS */}
       <main className="flex-1">
-        <ArticleBody post={post} />
+        <ArticleBody post={post} allPosts={allPosts} />
       </main>
 
       {/* Footer de la landing */}

@@ -14,9 +14,17 @@ import { StackSection }     from '@/components/sections/stack-section'
 import { NosotrosSection }  from '@/components/sections/nosotros-section'
 import { ContactoSection, SiteFooter } from '@/components/sections/contacto-section'
 import { WhatsAppFloatingButton } from '@/components/whatsapp-floating-button'
+import { initSectionEngagementTracker } from '@/lib/section-tracker'
 
 export function TluxLanding() {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    const cleanupTracker = initSectionEngagementTracker()
+    return () => {
+      if (cleanupTracker) cleanupTracker()
+    }
+  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -73,7 +81,7 @@ export function TluxLanding() {
   return (
     <div className="min-h-screen overflow-x-clip bg-slate-50 font-sans text-slate-950">
       <SiteHeader />
-      <main id="inicio">
+      <main className="relative">
         <HeroSection />
         <StatsSection />
         <ClientsSection />

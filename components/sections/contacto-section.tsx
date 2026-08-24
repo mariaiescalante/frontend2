@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+import { trackLeadInteraction } from '../../lib/lead-tracker'
 
 function WhatsAppIcon({ className = "size-11 sm:size-13" }: { className?: string }) {
   return (
@@ -33,6 +34,10 @@ export function ContactoSection() {
 
   const whatsappMsg = encodeURIComponent(t('contacto.whatsapp_msg'))
   const whatsappUrl = `https://api.whatsapp.com/send?phone=573203249742&text=${whatsappMsg}`
+
+  const handleWhatsAppClick = () => {
+    trackLeadInteraction('WHATSAPP', 'Footer Sección Contacto')
+  }
 
   return (
     <section id="contacto" className="scroll-mt-24 border-t border-slate-800 bg-slate-950 px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10">
@@ -128,6 +133,7 @@ export function ContactoSection() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={handleWhatsAppClick}
             className="group inline-flex items-center gap-4 rounded-none border border-emerald-500/40 bg-emerald-950/40 p-4 transition-all duration-300 hover:border-emerald-400 hover:bg-emerald-900/50 hover:shadow-xl hover:shadow-emerald-950/60 cursor-pointer"
           >
             <div className="flex size-14 items-center justify-center rounded-none bg-emerald-500/20 border border-emerald-500/30 transition-transform group-hover:scale-105">
