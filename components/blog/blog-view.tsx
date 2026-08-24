@@ -5,11 +5,13 @@ import Link from 'next/link'
 import { Search, ArrowUpRight } from 'lucide-react'
 import type { LocalizedBlogPost } from '@/lib/mock-data'
 import { useTranslation } from '@/context/language-context'
+import { useLandingContent } from '@/lib/use-landing-content'
 
 type CategoryFilter = 'TODOS' | 'DESARROLLO' | 'DISEÑO UI/UX' | 'SEO & AEO'
 
 export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('TODOS')
   const [searchQuery, setSearchQuery] = useState('')
   const [newsletterEmail, setNewsletterEmail] = useState('')
@@ -87,24 +89,35 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
     }
   }
 
+  // Textos dinámicos del Blog desde CMS con fallback a traducción
+  const heroTag = (locale === 'es' && content.blog?.heroTag) || t('blog.hero_tag')
+  const heroTitlePart1 = (locale === 'es' && content.blog?.heroTitlePart1) || t('blog.hero_title_1')
+  const heroTitleItalic = (locale === 'es' && content.blog?.heroTitleItalic) || t('blog.hero_title_italic')
+  const heroDescription = (locale === 'es' && content.blog?.heroDescription) || t('blog.hero_description')
+
+  const recentTag = (locale === 'es' && content.blog?.recentTag) || t('blog.recent_tag')
+  const recentTitlePart1 = (locale === 'es' && content.blog?.recentTitlePart1) || t('blog.recent_title_1')
+  const recentTitleItalic = (locale === 'es' && content.blog?.recentTitleItalic) || t('blog.recent_title_italic')
+  const recentTitlePart2 = (locale === 'es' && content.blog?.recentTitlePart2) || t('blog.recent_title_2')
+
   return (
     <div className="w-full bg-slate-950 text-white selection:bg-blue-600 selection:text-white">
-      {/* ── 1. HERO / HEADER DEL BLOG (HERO CON ESPACIADO IDÉNTICO A LANDING Y FAQ) ── */}
+      {/* ── 1. HERO / HEADER DEL BLOG ── */}
       <section className="w-full bg-slate-950 text-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="border-b border-slate-800 pb-12">
           <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">
-            {t('blog.hero_tag')}
+            {heroTag}
           </p>
           <h1 className="max-w-4xl font-sans text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-            {t('blog.hero_title_1')}<span className="font-serif italic font-normal text-blue-500">{t('blog.hero_title_italic')}</span>
+            {heroTitlePart1}<span className="font-serif italic font-normal text-blue-500">{heroTitleItalic}</span>
           </h1>
           <p className="mt-6 max-w-3xl font-sans text-base sm:text-lg leading-relaxed text-slate-400">
-            {t('blog.hero_description')}
+            {heroDescription}
           </p>
         </div>
 
-        {/* ── 2. ARTÍCULO DESTACADO / FEATURED INSIGHT (HERO GRID 2 COLUMNAS) ── */}
+        {/* ── 2. ARTÍCULO DESTACADO / FEATURED INSIGHT ── */}
         <div className="mt-12">
           <article className="grid grid-cols-1 lg:grid-cols-12 rounded-none border border-slate-800 bg-slate-900/50 overflow-hidden shadow-2xl">
             {/* Columna Izquierda */}
@@ -152,7 +165,7 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
               </div>
             </div>
 
-            {/* Columna Derecha (Preview técnica full cover) */}
+            {/* Columna Derecha */}
             <div className="lg:col-span-5 relative min-h-75 lg:min-h-full bg-slate-950">
               <img
                 src={featuredPost.coverImage}
@@ -166,17 +179,17 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
         </div>
       </section>
 
-      {/* ── 3. SECCIÓN "NUESTROS ARTÍCULOS MÁS RECIENTES" CON FILTROS Y BUSCADOR JUSTO ENCIMA DE LAS NOTICIAS ── */}
+      {/* ── 3. SECCIÓN "NUESTROS ARTÍCULOS MÁS RECIENTES" CON FILTROS Y BUSCADOR ── */}
       <section id="articulos-recientes" className="w-full border-t border-slate-200 bg-white py-16 text-slate-950 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           {/* Header de la sección clara */}
           <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-8">
             <div>
               <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">
-                {t('blog.recent_tag')}
+                {recentTag}
               </p>
               <h2 className="font-sans text-3xl sm:text-5xl font-bold tracking-tight text-slate-950">
-                {t('blog.recent_title_1')}<span className="font-serif italic font-normal text-blue-600">{t('blog.recent_title_italic')}</span>{t('blog.recent_title_2')}
+                {recentTitlePart1}<span className="font-serif italic font-normal text-blue-600">{recentTitleItalic}</span>{recentTitlePart2}
               </h2>
             </div>
             <span className="font-mono text-xs uppercase tracking-widest text-slate-500 shrink-0">
@@ -194,152 +207,148 @@ export function BlogView({ posts }: { posts: LocalizedBlogPost[] }) {
                   onClick={() => setActiveCategory(category)}
                   className={`px-4 py-2.5 rounded-none border uppercase tracking-wider font-semibold transition-all cursor-pointer ${
                     activeCategory === category
-                      ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-950'
+                      ? 'border-blue-600 bg-blue-600 text-white shadow-sm'
+                      : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-950'
                   }`}
                 >
-                  [ {categoryLabels[category]} ]
+                  {categoryLabels[category]}
                 </button>
               ))}
             </div>
 
-            {/* Lado derecho: Buscador con lupa */}
-            <div className="relative min-w-64 sm:min-w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
+            {/* Input de Búsqueda */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('blog.search_placeholder')}
-                className="w-full h-11 rounded-none border border-slate-200 bg-white pl-10 pr-4 font-mono text-xs uppercase tracking-wider text-slate-900 placeholder:opacity-50 focus:ring-1 focus:ring-blue-600 focus:outline-none transition-colors"
+                placeholder={t('blog.search_placeholder') || 'Buscar artículos...'}
+                className="w-full h-11 pl-10 pr-4 rounded-none border border-slate-300 bg-white text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
 
-          {/* Grid de 3 Columnas (3x2 Tarjetas de tipo <article>) */}
+          {/* Rejilla de Artículos Filtrados */}
           {filteredPosts.length === 0 ? (
-            <div className="border border-slate-200 bg-white p-12 text-center rounded-none shadow-sm">
-              <p className="font-mono text-xs uppercase tracking-widest text-blue-600 font-bold mb-2">
-                [ ℹ️ ESTADO DEL CONTENIDO ]
+            <div className="py-20 text-center border border-dashed border-slate-300 bg-slate-50/50 p-8 rounded-none">
+              <p className="font-mono text-sm text-slate-500 uppercase tracking-wider mb-2">
+                [ {t('blog.no_results')} ]
               </p>
-              <h3 className="font-sans text-xl font-bold text-slate-900 mb-2">
-                No hay artículos publicados en este momento
-              </h3>
-              <p className="font-sans text-sm text-slate-600 max-w-md mx-auto">
-                Crea o habilita un artículo desde el Panel CMS (<code className="bg-slate-100 px-2 py-0.5 font-mono text-xs border border-slate-200">/blog</code>) para visualizarlo aquí en tiempo real.
+              <p className="font-sans text-xs text-slate-400">
+                {t('blog.try_another_search')}
               </p>
             </div>
           ) : (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filteredPosts.map((post, idx) => {
-                const titleText = post.title
-                const excerptText = post.excerpt
-                const articleNum = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`
-
-                return (
-                  <article
-                    key={post.slug}
-                    className="group flex flex-col justify-between rounded-none border border-slate-200 bg-white p-7 transition-all duration-300 hover:border-slate-400 hover:shadow-xl relative"
-                  >
-                    <div>
-                      {/* Portada del post */}
-                      <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-none bg-slate-100 border border-slate-100">
-                        <img
-                          src={post.coverImage}
-                          alt={titleText}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute top-3 left-3 bg-slate-950/80 px-2.5 py-1 font-mono text-xs text-teal-400 font-bold tracking-widest border border-slate-800">
-                          [ {articleNum} // INSIGHT ]
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPosts.map((post) => (
+                <article
+                  key={post.slug}
+                  className="group flex flex-col justify-between border border-slate-200 bg-white rounded-none overflow-hidden transition-all duration-300 hover:border-blue-600 hover:shadow-xl"
+                >
+                  <div>
+                    {/* Imagen de Portada */}
+                    <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-block px-2.5 py-1 bg-slate-950/80 backdrop-blur-sm text-cyan-400 font-mono text-xs uppercase font-bold border border-slate-800">
+                          {post.tags[0] || 'GENERAL'}
+                        </span>
                       </div>
+                    </div>
 
-                      {/* Metadatos y Tags */}
-                      <div className="flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 mb-3">
-                        <span className="text-blue-600 font-bold">{post.tags[0] || 'DESARROLLO'}</span>
+                    {/* Contenido */}
+                    <div className="p-6 sm:p-7">
+                      <div className="flex items-center gap-2 font-mono text-xs text-slate-400 mb-3">
+                        <span>[ {post.readingTime || 4} {t('blog.read_time')} ]</span>
                         <span>•</span>
-                        <span>{post.readingTime || 5} {t('blog.read_time')}</span>
+                        <span>18 AUG 2026</span>
                       </div>
 
-                      {/* Título */}
-                      <h3 className="font-sans text-xl font-bold text-slate-900 leading-snug mb-3 group-hover:text-blue-600 transition-colors">
+                      <h3 className="font-sans text-xl sm:text-2xl font-bold tracking-tight text-slate-950 group-hover:text-blue-600 transition-colors line-clamp-2 mb-3">
                         <Link href={`/blog/${post.slug}`} className="hover:underline">
-                          {titleText}
+                          {post.title}
                         </Link>
                       </h3>
 
-                      {/* Extracto */}
-                      <p className="font-sans text-sm text-slate-600 line-clamp-3 leading-relaxed mb-6">
-                        {excerptText}
+                      <p className="font-sans text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                        {post.excerpt}
                       </p>
                     </div>
+                  </div>
 
-                    {/* Footer de la tarjeta con autor y link */}
-                    <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
-                      <div className="flex items-center gap-2.5">
-                        <img
-                          src={post.author?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop'}
-                          alt={post.author?.name || 'Autor'}
-                          className="size-7 rounded-full object-cover border border-slate-200"
-                        />
-                        <span className="font-sans text-xs font-semibold text-slate-800 truncate max-w-32">
-                          {post.author?.name || 'Equipo Tlux'}
-                        </span>
-                      </div>
-
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="font-mono text-xs font-bold uppercase tracking-wider text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 group/btn"
-                      >
-                        <span>{t('blog.read_more_btn')}</span>
-                        <ArrowUpRight className="size-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                      </Link>
+                  {/* Footer de Tarjeta con Autor y Enlace */}
+                  <div className="p-6 sm:p-7 pt-0 flex items-center justify-between border-t border-slate-100 mt-4">
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src={post.author.avatar}
+                        alt={post.author.name}
+                        className="size-8 rounded-full object-cover border border-slate-200"
+                      />
+                      <span className="font-sans text-xs font-semibold text-slate-800">
+                        {post.author.name}
+                      </span>
                     </div>
-                  </article>
-                )
-              })}
+
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="inline-flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-wider text-blue-600 group-hover:translate-x-1 transition-transform"
+                    >
+                      <span>LEER</span>
+                      <ArrowUpRight className="size-3.5" />
+                    </Link>
+                  </div>
+                </article>
+              ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* ── 4. SECCIÓN NEWSLETTER FINAL (FONDO OSCURO IDÉNTICO A FAQ Y FOOTER) ── */}
-      <section className="w-full border-t border-slate-800 bg-slate-950 py-20 text-white sm:py-28">
-        <div className="mx-auto max-w-4xl px-5 sm:px-8 text-center">
-          <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">
-            {t('blog.newsletter_tag')}
-          </p>
+      {/* ── 4. NEWSLETTER & SUSCRIPCIÓN TÉCNICA ── */}
+      <section className="w-full border-t border-slate-800 bg-slate-950 py-16 text-white sm:py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="border border-slate-800 bg-slate-900/40 p-8 sm:p-12 lg:p-16 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="max-w-xl">
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-teal-400">
+                [ TLUX_NEWSLETTER // DISPATCHES ]
+              </span>
+              <h3 className="mt-3 font-sans text-2xl sm:text-4xl font-bold tracking-tight text-white">
+                {t('blog.newsletter_title')}
+              </h3>
+              <p className="mt-4 font-sans text-sm sm:text-base text-slate-400 leading-relaxed">
+                {t('blog.newsletter_description')}
+              </p>
+            </div>
 
-          <h2 className="font-sans text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
-            {t('blog.newsletter_title_1')}<span className="font-serif italic font-normal text-blue-500">{t('blog.newsletter_title_italic')}</span>{t('blog.newsletter_title_2')}
-          </h2>
-
-          <p className="mt-4 font-sans text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
-            {t('blog.newsletter_desc')}
-          </p>
-
-          <form onSubmit={handleNewsletterSubmit} className="mt-10 flex flex-col sm:flex-row items-stretch justify-center gap-3 max-w-xl mx-auto">
-            <input
-              type="email"
-              required
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              placeholder={t('blog.newsletter_placeholder')}
-              className="flex-1 h-12 rounded-none border border-slate-800 bg-slate-900 px-5 font-mono text-xs uppercase tracking-wider text-white placeholder:opacity-40 focus:ring-1 focus:ring-blue-600 focus:outline-none transition-colors"
-            />
-
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-none border border-blue-600 bg-blue-600 px-8 py-4 font-mono text-xs font-bold uppercase tracking-wider text-white transition-all hover:bg-blue-700 cursor-pointer shadow-lg shadow-blue-950/50 shrink-0"
-            >
-              <span>{subscribed ? t('blog.newsletter_success') : t('blog.newsletter_btn')}</span>
-              <ArrowUpRight className="size-4" />
-            </button>
-          </form>
-
-          <p className="mt-6 font-mono text-xs text-slate-500 uppercase tracking-widest">
-            {t('blog.newsletter_subscribers')}
-          </p>
+            <form onSubmit={handleNewsletterSubmit} className="w-full lg:max-w-md space-y-3">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  required
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  placeholder={t('blog.newsletter_placeholder') || 'tu@email.com'}
+                  className="flex-1 h-12 px-4 rounded-none border border-slate-800 bg-slate-950 text-sm font-mono text-white placeholder:text-slate-500 focus:border-blue-600 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="h-12 px-6 rounded-none bg-blue-600 text-white font-mono text-xs font-bold uppercase tracking-wider hover:bg-blue-700 transition-colors shrink-0 cursor-pointer"
+                >
+                  {t('blog.newsletter_btn')}
+                </button>
+              </div>
+              {subscribed && (
+                <p className="font-mono text-xs text-teal-400 font-bold">
+                  ✓ {t('blog.newsletter_success')}
+                </p>
+              )}
+            </form>
+          </div>
         </div>
       </section>
     </div>

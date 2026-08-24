@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, ChevronDown, MessageSquare, ArrowUpRight, HelpCircle } from 'lucide-react'
 import { useTranslation } from '../../context/language-context'
 import { fetchPublicFaqs, FaqItem, FaqCategoryItem } from '../../lib/faq-service'
+import { useLandingContent } from '../../lib/use-landing-content'
 
 interface FaqViewProps {
   initialLocale?: string
@@ -14,7 +15,8 @@ interface FaqViewProps {
 }
 
 export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewProps) {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
 
   const [items, setItems] = useState<FaqItem[]>(initialFaqs)
   const [categories, setCategories] = useState<FaqCategoryItem[]>(initialCategories)
@@ -71,6 +73,13 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
     [filteredItems]
   )
 
+  // Textos dinámicos FAQ del CMS con fallback
+  const faqHeroTag = (locale === 'es' && content.faq?.heroTag) || t('faq.hero_tag') || '[ 01 // PREGUNTAS_FRECUENTES ]'
+  const faqHeroBadge = (locale === 'es' && content.faq?.heroBadge) || t('faq.hero_badge') || 'CENTRO DE AYUDA & SOPORTE TÉCNICO'
+  const faqHeroTitlePart1 = (locale === 'es' && content.faq?.heroTitlePart1) || t('faq.hero_title_1') || 'Preguntas '
+  const faqHeroTitleItalic = (locale === 'es' && content.faq?.heroTitleItalic) || t('faq.hero_title_italic') || 'Frecuentes.'
+  const faqHeroDescription = (locale === 'es' && content.faq?.heroDescription) || t('faq.hero_description') || 'Respuestas oficiales registradas en la base de datos MySQL desde nuestro Panel CMS.'
+
   return (
     <div className="w-full bg-slate-950 text-white font-sans selection:bg-blue-600 selection:text-white">
       {/* ── 1. HERO BANNER DE PREGUNTAS FRECUENTES (HEADER NEGRO DE MARCA) ── */}
@@ -84,7 +93,7 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
                 className="inline-flex items-center gap-2.5 rounded-none border border-slate-800 bg-slate-900/80 px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold"
               >
                 <HelpCircle className="size-4 text-cyan-400" />
-                <span>[ MYSQL CMS // PREGUNTAS FRECUENTES ]</span>
+                <span>{faqHeroBadge}</span>
               </motion.div>
 
               <motion.h1
@@ -93,9 +102,9 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
                 transition={{ delay: 0.1 }}
                 className="font-sans text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight"
               >
-                Preguntas{' '}
-                <span className="font-serif italic font-normal text-blue-600">
-                  Frecuentes.
+                {faqHeroTitlePart1}
+                <span className="font-serif italic font-normal text-blue-500">
+                  {faqHeroTitleItalic}
                 </span>
               </motion.h1>
 
@@ -105,7 +114,7 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
                 transition={{ delay: 0.2 }}
                 className="font-sans text-base sm:text-xl text-slate-400 max-w-2xl leading-relaxed"
               >
-                Respuestas oficiales registradas en la base de datos MySQL desde nuestro Panel CMS.
+                {faqHeroDescription}
               </motion.p>
             </div>
 
@@ -140,29 +149,29 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
                   onClick={() => setActiveCategory(cat.id)}
                   className={`px-4 py-2.5 rounded-none border uppercase tracking-wider font-semibold transition-all cursor-pointer ${
                     activeCategory === cat.id
-                      ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold'
-                      : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-white'
+                      ? 'border-blue-600 bg-blue-600 text-white shadow-sm'
+                      : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700 hover:text-white'
                   }`}
                 >
-                  [ {cat.label} ]
+                  {cat.label}
                 </button>
               ))}
             </div>
 
-            {/* Buscador de preguntas */}
-            <div className="relative min-w-64 sm:min-w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-500 pointer-events-none" />
+            {/* Input de Búsqueda */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar en preguntas frecuentes..."
-                className="w-full rounded-none border border-slate-800 bg-slate-900/80 pl-10 pr-10 py-2.5 font-mono text-xs uppercase tracking-wider text-white placeholder:text-slate-500 focus:border-blue-600 focus:outline-hidden transition-colors"
+                placeholder="Buscar preguntas o respuestas..."
+                className="w-full h-11 pl-10 pr-10 rounded-none border border-slate-800 bg-slate-900 text-xs font-mono text-white placeholder:text-slate-500 focus:border-blue-600 focus:outline-none transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
                 >
                   <X className="size-4" />
                 </button>
@@ -172,151 +181,175 @@ export function FaqView({ initialFaqs = [], initialCategories = [] }: FaqViewPro
         </div>
       </section>
 
-      {/* ── 2. SECCIÓN PRINCIPAL CON FONDO CLARO LIGERO ── */}
-      <section className="bg-white text-slate-950 px-5 py-16 sm:px-8 sm:py-24 lg:px-10">
+      {/* ── 2. ACORDEÓN DE PREGUNTAS FRECUENTES (2 COLUMNAS INMUTABLES) ── */}
+      <section className="px-5 py-16 sm:px-8 sm:py-24 lg:px-10">
         <div className="mx-auto max-w-7xl">
           {isLoading ? (
-            <div className="py-20 text-center font-mono text-sm text-blue-600 font-bold">
-              [ CONSULTANDO PREGUNTAS FRECUENTES DESDE MYSQL... ]
+            <div className="flex items-center justify-center py-20">
+              <div className="flex items-center gap-3 font-mono text-xs text-cyan-400">
+                <div className="size-4 border-2 border-cyan-400 border-t-transparent animate-spin" />
+                <span>[ CARGANDO PREGUNTAS DESDE MYSQL... ]</span>
+              </div>
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="border border-slate-200 bg-slate-50 p-16 text-center rounded-none shadow-xs">
-              <MessageSquare className="mx-auto size-12 text-slate-400 mb-4" />
-              <h3 className="font-sans text-2xl font-bold text-slate-950 mb-2">
-                No hay preguntas frecuentes registradas actualmente
-              </h3>
-              <p className="font-sans text-sm text-slate-600 max-w-md mx-auto mb-6">
-                Crea tus preguntas frecuentes desde el Panel CMS (<code className="bg-slate-200 px-2 py-0.5 font-mono text-xs">/faq</code>) para visualizarlas en la Landing Page.
+            <div className="border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center rounded-none">
+              <p className="font-mono text-sm uppercase text-slate-400">
+                [ NO SE ENCONTRARON PREGUNTAS QUE COINCIDAN ]
               </p>
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="inline-flex items-center gap-2 border border-slate-300 bg-white px-6 py-3 font-mono text-xs uppercase font-bold text-slate-800 hover:border-slate-400 cursor-pointer"
-                >
-                  [ LIMPIAR BÚSQUEDA ]
-                </button>
-              )}
+              <p className="mt-2 text-xs text-slate-500">
+                Intenta con otra palabra clave o selecciona otra categoría.
+              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 items-start">
               {/* Columna Izquierda */}
-              <div className="space-y-6">
-                {leftColItems.map((item) => (
-                  <FaqAccordionCard
-                    key={item.id}
-                    item={item}
-                    isOpen={openItemId === item.id}
-                    onToggle={() => toggleItem(item.id)}
-                  />
-                ))}
+              <div className="flex flex-col gap-4">
+                {leftColItems.map((faq) => {
+                  const isOpen = openItemId === faq.id
+                  return (
+                    <div
+                      key={faq.id}
+                      className={`border transition-colors duration-200 rounded-none ${
+                        isOpen
+                          ? 'border-slate-700 bg-slate-900/90 shadow-xl'
+                          : 'border-slate-800/80 bg-slate-900/40 hover:border-slate-700/80'
+                      }`}
+                    >
+                      <button
+                        onClick={() => toggleItem(faq.id)}
+                        className="flex w-full items-center justify-between gap-4 p-6 text-left cursor-pointer"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <span className="font-mono text-xs uppercase tracking-wider text-cyan-400 font-bold">
+                            {faq.categoryLabel}
+                          </span>
+                          <h3 className="font-sans text-base sm:text-lg font-bold text-white leading-snug">
+                            {faq.question}
+                          </h3>
+                        </div>
+                        <div
+                          className={`flex size-8 shrink-0 items-center justify-center border border-slate-800 bg-slate-950 text-slate-400 transition-transform duration-300 ${
+                            isOpen ? 'rotate-180 text-blue-500 border-blue-500/50' : ''
+                          }`}
+                        >
+                          <ChevronDown className="size-4" />
+                        </div>
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+                            className="overflow-hidden"
+                          >
+                            <div className="border-t border-slate-800/80 px-6 pb-6 pt-4 text-sm sm:text-base leading-relaxed text-slate-300">
+                              {faq.answer}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
               </div>
 
               {/* Columna Derecha */}
-              <div className="space-y-6">
-                {rightColItems.map((item) => (
-                  <FaqAccordionCard
-                    key={item.id}
-                    item={item}
-                    isOpen={openItemId === item.id}
-                    onToggle={() => toggleItem(item.id)}
-                  />
-                ))}
+              <div className="flex flex-col gap-4">
+                {rightColItems.map((faq) => {
+                  const isOpen = openItemId === faq.id
+                  return (
+                    <div
+                      key={faq.id}
+                      className={`border transition-colors duration-200 rounded-none ${
+                        isOpen
+                          ? 'border-slate-700 bg-slate-900/90 shadow-xl'
+                          : 'border-slate-800/80 bg-slate-900/40 hover:border-slate-700/80'
+                      }`}
+                    >
+                      <button
+                        onClick={() => toggleItem(faq.id)}
+                        className="flex w-full items-center justify-between gap-4 p-6 text-left cursor-pointer"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <span className="font-mono text-xs uppercase tracking-wider text-cyan-400 font-bold">
+                            {faq.categoryLabel}
+                          </span>
+                          <h3 className="font-sans text-base sm:text-lg font-bold text-white leading-snug">
+                            {faq.question}
+                          </h3>
+                        </div>
+                        <div
+                          className={`flex size-8 shrink-0 items-center justify-center border border-slate-800 bg-slate-950 text-slate-400 transition-transform duration-300 ${
+                            isOpen ? 'rotate-180 text-blue-500 border-blue-500/50' : ''
+                          }`}
+                        >
+                          <ChevronDown className="size-4" />
+                        </div>
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+                            className="overflow-hidden"
+                          >
+                            <div className="border-t border-slate-800/80 px-6 pb-6 pt-4 text-sm sm:text-base leading-relaxed text-slate-300">
+                              {faq.answer}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}
+        </div>
+      </section>
 
-          {/* ── BANNER INFORMATIVO INFERIOR ── */}
-          <div className="mt-20 border border-slate-200 bg-slate-50 p-10 flex flex-col md:flex-row md:items-center justify-between gap-8 rounded-none">
-            <div className="space-y-2">
-              <span className="font-mono text-xs uppercase tracking-widest text-blue-600 font-bold">
-                [ ¿NECESITAS ASISTENCIA ADICIONAL? ]
+      {/* ── 3. CTA FOOTER BANNER ── */}
+      <section className="border-t border-slate-800 bg-slate-900/30 px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="border border-slate-800 bg-slate-950 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-8 rounded-none">
+            <div className="space-y-3 max-w-2xl text-center md:text-left">
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-teal-400">
+                [ ¿TIENES MÁS PREGUNTAS? ]
               </span>
-              <h3 className="font-sans text-2xl sm:text-3xl font-bold text-slate-950">
-                ¿Aún tienes dudas o no encuentras lo que buscas?
-              </h3>
-              <p className="font-sans text-base text-slate-600 max-w-2xl leading-relaxed">
-                Nuestro equipo de desarrollo y consultoría está disponible para ayudarte a implementar soluciones a medida.
+              <h2 className="font-sans text-2xl sm:text-4xl font-bold text-white tracking-tight">
+                Estamos listos para analizar tu proyecto.
+              </h2>
+              <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+                Agenda una consulta técnica con nuestros especialistas y recibe una propuesta de arquitectura a medida.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 shrink-0 font-mono text-xs">
-              <Link
-                href="/#contacto"
-                className="inline-flex h-14 items-center gap-2 border border-blue-600 bg-blue-600 px-8 font-bold text-white uppercase tracking-wider hover:bg-blue-700 transition-colors shadow-md cursor-pointer"
+            <div className="flex flex-col sm:flex-row gap-4 shrink-0 w-full sm:w-auto">
+              <a
+                href="mailto:hola@tlux.studio"
+                className="inline-flex items-center justify-center gap-2 border border-slate-800 bg-slate-900 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white hover:border-slate-700 transition-all rounded-none"
               >
-                <span>CONTACTAR A SOPORTE</span>
+                <span>CORREO DIRECTO</span>
                 <ArrowUpRight className="size-4" />
-              </Link>
+              </a>
+
+              <a
+                href="#contacto"
+                className="inline-flex items-center justify-center gap-2 border border-blue-600 bg-blue-600 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700 transition-all rounded-none shadow-lg shadow-blue-950/50"
+              >
+                <span>HABLEMOS POR WHATSAPP</span>
+                <MessageSquare className="size-4" />
+              </a>
             </div>
           </div>
         </div>
       </section>
-    </div>
-  )
-}
-
-function FaqAccordionCard({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: FaqItem
-  isOpen: boolean
-  onToggle: () => void
-}) {
-  return (
-    <div
-      className={`border transition-all duration-200 rounded-none overflow-hidden ${
-        isOpen
-          ? 'border-blue-600 shadow-lg'
-          : 'border-slate-200 hover:border-slate-300 shadow-xs'
-      }`}
-    >
-      {/* BOTÓN / ENCABEZADO DE PREGUNTA CON FONDO SUAVE CLARO (bg-slate-50 / text-slate-950) */}
-      <button
-        onClick={onToggle}
-        className="w-full p-6 text-left flex items-start justify-between gap-4 cursor-pointer select-none bg-slate-50 text-slate-950 transition-colors hover:bg-slate-100/90"
-      >
-        <div className="flex items-start gap-4">
-          <span className="font-mono text-xs font-bold text-blue-600 pt-1 shrink-0">
-            [ {item.number} ]
-          </span>
-          <h3 className="font-sans text-lg sm:text-xl font-bold text-slate-950 leading-snug">
-            {item.question}
-          </h3>
-        </div>
-
-        <div
-          className={`size-8 rounded-none border flex items-center justify-center shrink-0 transition-transform duration-200 ${
-            isOpen
-              ? 'border-blue-600 bg-blue-600 text-white rotate-180'
-              : 'border-slate-300 bg-white text-slate-700'
-          }`}
-        >
-          <ChevronDown className="size-4" />
-        </div>
-      </button>
-
-      {/* RESPUESTA DESPLEGABLE CON FONDO BLANCO LIMPIO */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="overflow-hidden border-t border-slate-200 bg-white"
-          >
-            <div className="p-6 pt-5 font-sans text-base text-slate-700 leading-relaxed bg-white space-y-4">
-              <p>{item.answer}</p>
-              <div className="pt-3 flex items-center justify-between font-mono text-[11px] text-slate-500 border-t border-slate-100">
-                <span>CATEGORÍA: <strong className="text-slate-950 font-bold uppercase">{item.categoryLabel}</strong></span>
-                <span className="text-blue-600 font-bold">[ VERIFICADO MYSQL ]</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }

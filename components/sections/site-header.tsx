@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { ArrowUpRight, Menu, X, Globe, ChevronDown } from 'lucide-react'
+import { ArrowUpRight, Menu, X, Globe, ChevronDown, Check } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation, Locale } from '../../context/language-context'
@@ -38,7 +38,6 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [langMenuOpen, setLangMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState<string>('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const items: [string, string][] = [
@@ -57,53 +56,11 @@ export function SiteHeader() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
-
-      if (!isBlogRoute && !isFaqRoute) {
-        const pendingTarget = typeof window !== 'undefined' ? sessionStorage.getItem('scrollTarget') : null
-        if (pendingTarget) {
-          return
-        }
-
-        if (window.scrollY < 250) {
-          setActiveSection('#inicio')
-          if (window.location.hash && window.location.hash !== '#inicio') {
-            window.history.replaceState(null, '', `${homeHref}#inicio`)
-          }
-          return
-        }
-
-        const sections = [
-          { id: 'servicios', href: '#servicios', aliasId: 'mercados' },
-          { id: 'funciones', href: '#funciones', aliasId: 'metodo' },
-          { id: 'nosotros', href: '#nosotros', aliasId: 'estudio' },
-          { id: 'contacto', href: '#contacto' },
-        ]
-
-        const scrollPos = window.scrollY + 250
-        let current = '#inicio'
-        for (const sec of sections) {
-          const el = document.getElementById(sec.id) || (sec.aliasId ? document.getElementById(sec.aliasId) : null)
-          if (el) {
-            const top = el.offsetTop
-            const height = el.offsetHeight
-            if (scrollPos >= top && scrollPos < top + height) {
-              current = sec.href
-              break
-            }
-          }
-        }
-
-        setActiveSection(current)
-        if (current && window.location.hash !== current) {
-          window.history.replaceState(null, '', `${homeHref}${current}`)
-        }
-      }
     }
-
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [isBlogRoute, isFaqRoute, homeHref])
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -115,46 +72,30 @@ export function SiteHeader() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const scrollToId = (e: React.MouseEvent, id: string) => {
-    const targetId = id.replace('#', '')
-    if (targetId === 'inicio') {
-      if (!isBlogRoute && !isFaqRoute) {
-        e.preventDefault()
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        if (window.history.pushState) {
-          window.history.pushState(null, '', `${homeHref}#inicio`)
-        }
-        return
-      } else {
-        e.preventDefault()
-        sessionStorage.removeItem('scrollPosY')
-        sessionStorage.setItem('scrollTarget', 'inicio')
-        router.push(homeHref)
-        return
-      }
+  const scrollToId = (e: React.MouseEvent, href: string) => {
+    e.preventDefault()
+    close()
+    const targetId = href.replace('#', '')
+
+    if (isBlogRoute || isFaqRoute) {
+      sessionStorage.setItem('scrollTarget', targetId)
+      router.push(homeHref)
+      return
     }
 
-    const el = document.getElementById(targetId) ||
+    const element = document.getElementById(targetId) ||
       (targetId === 'servicios' ? document.getElementById('mercados') :
        targetId === 'funciones' ? document.getElementById('metodo') :
        targetId === 'nosotros' ? document.getElementById('estudio') : null)
 
-    if (el && !isBlogRoute && !isFaqRoute) {
-      e.preventDefault()
-      el.scrollIntoView({ behavior: 'smooth' })
-      if (window.history.pushState) {
-        window.history.pushState(null, '', `${homeHref}#${targetId}`)
-      }
-    } else {
-      e.preventDefault()
-      sessionStorage.removeItem('scrollPosY')
-      sessionStorage.setItem('scrollTarget', targetId)
-      const targetUrl = `${window.location.origin}${homeHref === '/' ? '/#' : homeHref + '/#'}${targetId}`
-      window.location.assign(targetUrl)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    } else if (targetId === 'inicio') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
 
-  const currentLang = LANGUAGES.find((l) => l.code === locale || (locale === 'pt-BR' && l.code === 'pt')) || LANGUAGES[0]
+  const currentLang = LANGUAGES.find((l) => l.code === locale) || LANGUAGES[0]
 
   return (
     <>
@@ -168,31 +109,22 @@ export function SiteHeader() {
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
           <Logo href={homeHref} />
 
-          <nav className="hidden items-center gap-8 font-mono text-[13px] uppercase tracking-wider text-zinc-700 md:flex" aria-label="Navegación principal">
-            {items.map(([label, href]) => {
-              const isActive = !isBlogRoute && !isFaqRoute && activeSection === href
-              return (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={(e) => scrollToId(e, href)}
-                  className={`transition-colors cursor-pointer ${
-                    isActive
-                      ? 'text-blue-600 font-bold'
-                      : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
-                  }`}
-                >
-                  {label}
-                </a>
-              )
-            })}
+          <nav className="hidden items-center gap-8 font-mono text-xs uppercase tracking-wider text-zinc-700 md:flex" aria-label="Navegación principal">
+            {items.map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={(e) => scrollToId(e, href)}
+                className="transition-colors hover:text-slate-900 cursor-pointer"
+              >
+                {label}
+              </a>
+            ))}
 
             <Link
               href={blogHref}
-              className={`transition-colors cursor-pointer ${
-                isBlogRoute
-                  ? 'text-blue-600 font-bold'
-                  : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
+              className={`transition-colors hover:text-slate-900 ${
+                isBlogRoute ? 'text-blue-600 font-bold' : ''
               }`}
             >
               {t('nav.blog')}
@@ -200,25 +132,20 @@ export function SiteHeader() {
 
             <Link
               href={faqHref}
-              className={`transition-colors cursor-pointer ${
-                isFaqRoute
-                  ? 'text-blue-600 font-bold'
-                  : 'text-zinc-700 hover:text-blue-600 active:text-blue-600'
+              className={`transition-colors hover:text-slate-900 ${
+                isFaqRoute ? 'text-blue-600 font-bold' : ''
               }`}
             >
               {t('nav.faq') || 'FAQ'}
             </Link>
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
-            <a href={`${homeHref}#contacto`} onClick={(e) => scrollToId(e, 'contacto')} className="h-10 items-center gap-1 border border-slate-950 bg-slate-950 px-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white transition-colors hover:border-blue-600 hover:bg-blue-600 inline-flex">
-              {t('nav.hablemos')} <ArrowUpRight className="size-4" />
-            </a>
-
+          <div className="hidden items-center gap-4 md:flex">
+            {/* ── Selector de Idiomas ── */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setLangMenuOpen(!langMenuOpen)}
-                className="flex h-10 items-center gap-2 border border-slate-300 bg-white px-3 font-mono text-xs font-semibold uppercase tracking-wider text-slate-800 transition-all hover:border-blue-600 hover:text-blue-600 cursor-pointer shadow-xs"
+                className="flex h-10 items-center gap-2 border border-slate-300 bg-white px-3.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-800 transition-all hover:border-blue-600 hover:text-blue-600 cursor-pointer"
                 aria-label="Seleccionar idioma"
               >
                 <Globe className="size-4 text-blue-600" />
@@ -226,41 +153,55 @@ export function SiteHeader() {
                 <ChevronDown className={`size-3 text-slate-500 transition-transform duration-200 ${langMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
-              {langMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-44 border border-slate-200 bg-white py-2 shadow-xl z-50">
-                  {LANGUAGES.map((l) => {
-                    const cleanPath = pathname.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
-                    const targetPath = l.code === 'es' ? (cleanPath === '' ? '/' : cleanPath) : (cleanPath === '/' ? `/${l.code}` : `/${l.code}${cleanPath}`)
-
-                    return (
+              <AnimatePresence>
+                {langMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
+                  >
+                    {LANGUAGES.map((lang) => (
                       <button
-                        key={l.code}
-                        onMouseEnter={() => router.prefetch(targetPath)}
+                        key={lang.code}
                         onClick={() => {
-                          setLocale(l.code)
+                          setLocale(lang.code)
                           setLangMenuOpen(false)
                         }}
-                        className={`flex w-full items-center justify-between px-4 py-2.5 font-mono text-xs transition-colors cursor-pointer ${
-                          locale === l.code || (locale === 'pt-BR' && l.code === 'pt')
+                        className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 font-mono text-xs font-semibold transition-colors cursor-pointer ${
+                          locale === lang.code
                             ? 'bg-blue-50 text-blue-600 font-bold'
-                            : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                            : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                         }`}
                       >
-                        <span className="flex items-center gap-2">
-                          <span>{l.flag}</span>
-                          <span>{l.label}</span>
+                        <span className="flex items-center gap-2.5">
+                          <span className="text-base">{lang.flag}</span>
+                          <span>{lang.label}</span>
                         </span>
+                        {locale === lang.code && <Check className="size-4 text-blue-600" />}
                       </button>
-                    )
-                  })}
-                </div>
-              )}
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
+            {/* ── Botón Original HABLEMOS ── */}
+            <a
+              href="#contacto"
+              onClick={(e) => scrollToId(e, '#contacto')}
+              className="h-10 items-center gap-1.5 border border-slate-950 bg-slate-950 px-5 font-mono text-xs uppercase tracking-widest text-white transition-colors hover:border-blue-600 hover:bg-blue-600 inline-flex cursor-pointer"
+            >
+              <span>{t('nav.hablemos') || 'Hablemos'}</span>
+              <ArrowUpRight className="size-4" />
+            </a>
           </div>
 
           <button
-            className="flex size-11 items-center justify-center border border-slate-200 bg-white text-slate-900 transition-colors hover:border-blue-600 hover:text-blue-600 md:hidden"
-            aria-label="Abrir menú de navegación"
+            className="flex size-10 items-center justify-center border border-slate-300 text-slate-900 md:hidden cursor-pointer"
+            aria-label="Abrir menú"
+            aria-expanded={menuOpen}
             onClick={() => setMenuOpen(true)}
           >
             <Menu />
@@ -268,6 +209,7 @@ export function SiteHeader() {
         </div>
       </header>
 
+      {/* ── ANIMACIÓN DE APARICIÓN SUAVE DEL MENÚ LATERAL (SIDEBAR DRAWER) ── */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -287,9 +229,9 @@ export function SiteHeader() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-                <Logo />
+                <Logo href={homeHref} />
                 <button
-                  className="flex size-11 items-center justify-center border border-slate-700 text-white transition-colors hover:border-blue-600 hover:bg-blue-600"
+                  className="flex size-11 items-center justify-center border border-slate-700 text-white transition-colors hover:border-blue-600 hover:bg-blue-600 cursor-pointer"
                   aria-label="Cerrar menú"
                   onClick={close}
                 >
@@ -298,90 +240,69 @@ export function SiteHeader() {
               </div>
 
               <nav className="mt-8 flex flex-col" aria-label="Navegación móvil">
-                {items.map(([label, href], i) => {
-                  const isActive = !isBlogRoute && !isFaqRoute && activeSection === href
-                  return (
-                    <a
-                      key={href}
-                      href={href}
-                      onClick={(e) => { close(); scrollToId(e, href); }}
-                      className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
-                        isActive
-                          ? 'text-blue-400 font-bold'
-                          : 'text-slate-300 hover:text-white active:text-blue-400'
-                      }`}
-                    >
-                      <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
-                      <ArrowUpRight className="size-4 text-blue-500" />
-                    </a>
-                  )
-                })}
-
+                {items.map(([label, href], i) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => { close(); scrollToId(e, href); }}
+                    className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-wider text-slate-300 transition-colors hover:text-white"
+                  >
+                    <span><span className="mr-4 text-blue-500">0{i + 1}</span>{label}</span>
+                    <ArrowUpRight className="size-4 text-blue-500" />
+                  </a>
+                ))}
                 <Link
                   href={blogHref}
                   onClick={close}
-                  className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
-                    isBlogRoute
-                      ? 'text-blue-400 font-bold'
-                      : 'text-slate-300 hover:text-white active:text-blue-400'
-                  }`}
+                  className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-wider text-slate-300 transition-colors hover:text-white"
                 >
-                  <span><span className="mr-4 text-blue-500">04</span>{t('nav.blog')}</span>
+                  <span>{t('nav.blog')}</span>
                   <ArrowUpRight className="size-4 text-blue-500" />
                 </Link>
-
                 <Link
                   href={faqHref}
                   onClick={close}
-                  className={`flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-[0.16em] transition-colors ${
-                    isFaqRoute
-                      ? 'text-blue-400 font-bold'
-                      : 'text-slate-300 hover:text-white active:text-blue-400'
-                  }`}
+                  className="flex items-center justify-between border-b border-slate-800 py-4 font-mono text-sm uppercase tracking-wider text-slate-300 transition-colors hover:text-white"
                 >
-                  <span><span className="mr-4 text-blue-500">05</span>{t('nav.faq') || 'FAQ'}</span>
+                  <span>{t('nav.faq') || 'FAQ'}</span>
                   <ArrowUpRight className="size-4 text-blue-500" />
                 </Link>
 
                 <a
-                  href={`${homeHref}#contacto`}
-                  onClick={(e) => { close(); scrollToId(e, 'contacto'); }}
-                  className="mt-6 flex items-center justify-between border border-blue-600 bg-blue-600 px-5 py-3.5 font-mono text-xs uppercase tracking-[0.16em] text-white transition-colors hover:bg-transparent"
+                  href="#contacto"
+                  onClick={(e) => { close(); scrollToId(e, '#contacto'); }}
+                  className="mt-6 flex items-center justify-between border border-blue-600 bg-blue-600 px-5 py-3.5 font-mono text-xs uppercase tracking-wider text-white transition-colors hover:bg-transparent"
                 >
-                  {t('nav.hablemos')} <ArrowUpRight className="size-4" />
+                  <span>{t('nav.hablemos') || 'Hablemos'}</span>
+                  <ArrowUpRight className="size-4" />
                 </a>
               </nav>
 
+              {/* Selector de idioma en menú móvil */}
               <div className="mt-8 border-t border-slate-800 pt-6">
-                <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-slate-400">[ IDIOMA / LANGUAGE ]</p>
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-slate-400">[ IDIOMA / LANGUAGE ]</p>
                 <div className="grid grid-cols-3 gap-2">
-                  {LANGUAGES.map((lang) => {
-                    const cleanPath = pathname.replace(/^\/(es|en|pt|pt-BR)(\/|$)/i, '/')
-                    const targetPath = lang.code === 'es' ? (cleanPath === '' ? '/' : cleanPath) : (cleanPath === '/' ? `/${lang.code}` : `/${lang.code}${cleanPath}`)
-
-                    return (
-                      <button
-                        key={lang.code}
-                        onTouchStart={() => router.prefetch(targetPath)}
-                        onPointerDown={() => router.prefetch(targetPath)}
-                        onClick={() => {
-                          setLocale(lang.code)
-                        }}
-                        className={`flex items-center justify-center gap-1.5 rounded-lg border py-2.5 font-mono text-xs uppercase font-bold transition-all cursor-pointer ${
-                          locale === lang.code || (lang.code === 'pt' && locale === 'pt-BR')
-                            ? 'border-blue-500 bg-blue-600/30 text-blue-400'
-                            : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white'
-                        }`}
-                      >
-                        <span>{lang.flag}</span>
-                        <span>{lang.code.toUpperCase()}</span>
-                      </button>
-                    )
-                  })}
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLocale(lang.code)
+                        close()
+                      }}
+                      className={`flex items-center justify-center gap-1.5 rounded-lg border py-2.5 font-mono text-xs uppercase font-bold transition-all ${
+                        locale === lang.code
+                          ? 'border-blue-500 bg-blue-600/30 text-blue-400'
+                          : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white'
+                      }`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.code.toUpperCase()}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <p className="mt-auto pt-6 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500">TLUX / Digital studio / 2026</p>
+              <p className="mt-auto pt-6 font-mono text-xs uppercase tracking-wider text-slate-500">TLUX / Digital studio / 2026</p>
             </motion.aside>
           </motion.div>
         )}

@@ -52,81 +52,122 @@ export function ContactoSection() {
           {/* Título con animación de entrada fluida palabra por palabra */}
           <h2
             key={`h2-${locale}`}
-            className="max-w-3xl font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-tight text-white flex flex-wrap gap-x-[0.28em] gap-y-2"
+            className="max-w-3xl font-serif text-4xl sm:text-6xl lg:text-7xl leading-tight tracking-tight text-white flex flex-wrap gap-x-3 gap-y-2"
           >
             {words.map(({ word, isItalic }, wIdx) => (
               <motion.span
                 key={`word-${locale}-${wIdx}-${word}`}
                 initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: 0.45,
-                  delay: wIdx * 0.08,
+                  duration: 0.55,
                   ease: [0.22, 1, 0.36, 1],
+                  delay: wIdx * 0.07,
                 }}
-                className={isItalic ? 'text-blue-500 font-serif italic inline-block' : 'inline-block'}
+                className="inline-block"
               >
-                {word}
+                {isItalic ? (
+                  <span className="font-serif italic text-blue-500 font-normal">
+                    {word.split('').map((char, cIdx) => {
+                      const charDelay = 0.25 + globalCharIndex * 0.02
+                      globalCharIndex++
+                      return (
+                        <motion.span
+                          key={`char-${cIdx}-${char}`}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.35,
+                            ease: 'easeOut',
+                            delay: charDelay,
+                          }}
+                          className="inline-block"
+                        >
+                          {char}
+                        </motion.span>
+                      )
+                    })}
+                  </span>
+                ) : (
+                  <span>
+                    {word.split('').map((char, cIdx) => {
+                      const charDelay = 0.1 + globalCharIndex * 0.015
+                      globalCharIndex++
+                      return (
+                        <motion.span
+                          key={`char-${cIdx}-${char}`}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: 'easeOut',
+                            delay: charDelay,
+                          }}
+                          className="inline-block"
+                        >
+                          {char}
+                        </motion.span>
+                      )
+                    })}
+                  </span>
+                )}
               </motion.span>
             ))}
           </h2>
         </div>
 
-        {/* Botón de acción hacia WhatsApp (+57 320 324 9742) con el logo agrandado y resaltado */}
-        <motion.a
-          id="empezar-conversacion"
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0, scale: 0.9, y: 24 }}
-          whileInView={{
-            opacity: 1,
-            scale: 1,
-            y: [0, -15, 0],
-          }}
-          whileHover={{
-            scale: 1.04,
-            y: -4,
-            boxShadow: '0 14px 35px rgba(37, 211, 102, 0.35)',
-          }}
-          whileTap={{
-            scale: 0.96,
-            y: 0,
-          }}
+        {/* ── BOTÓN DE WHATSAPP ───────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{
-            opacity: { duration: 0.5, delay: 0.8 },
-            y: { duration: 1.2, delay: 0.9, ease: [0.22, 1, 0.36, 1] },
-            scale: { type: 'spring', stiffness: 300, damping: 15 },
-          }}
-          className="group scroll-mt-32 inline-flex w-fit items-center gap-4 border border-emerald-500/60 bg-slate-900 px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-emerald-400 hover:bg-slate-800 cursor-pointer shadow-xl shadow-emerald-950/50"
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="shrink-0"
         >
-          <WhatsAppIcon className="size-11 sm:size-13" />
-          <span className="text-sm font-semibold">{t('contacto.cta')}</span>
-          <ArrowUpRight className="size-5 text-emerald-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-        </motion.a>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-4 rounded-none border border-emerald-500/40 bg-emerald-950/40 p-4 transition-all duration-300 hover:border-emerald-400 hover:bg-emerald-900/50 hover:shadow-xl hover:shadow-emerald-950/60 cursor-pointer"
+          >
+            <div className="flex size-14 items-center justify-center rounded-none bg-emerald-500/20 border border-emerald-500/30 transition-transform group-hover:scale-105">
+              <WhatsAppIcon className="size-8" />
+            </div>
+            <div className="text-left pr-2">
+              <span className="block font-mono text-xs font-bold uppercase tracking-widest text-emerald-400">
+                [ {t('contacto.cta')} ]
+              </span>
+              <span className="block font-sans text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">
+                Chat en WhatsApp
+              </span>
+            </div>
+            <ArrowUpRight className="size-5 text-emerald-400 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
+        </motion.div>
       </div>
     </section>
   )
 }
 
 export function SiteFooter() {
-  const { locale, t } = useTranslation()
+  const { t, locale } = useTranslation()
   const router = useRouter()
-  const homeHref = locale === 'es' ? '/' : `/${locale}`
 
   const scrollToId = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
-    const targetId = id.replace('#', '')
-    const el = document.getElementById(targetId)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('scrollTarget', targetId)
+    if (typeof window !== 'undefined') {
+      const isHome = window.location.pathname === '/' || window.location.pathname === `/${locale}`
+      if (!isHome) {
+        sessionStorage.setItem('scrollTarget', id)
+        router.push(locale === 'es' ? '/' : `/${locale}`)
+        return
       }
-      router.push(`${homeHref}#${targetId}`)
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      } else if (id === 'inicio') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
     }
   }
 
@@ -138,10 +179,10 @@ export function SiteFooter() {
   ]
 
   const navLinks = [
-    { name: t('nav.servicios'), href: 'mercados' },
-    { name: t('nav.funciones'), href: 'metodo' },
-    { name: t('nav.nosotros'), href: 'estudio' },
-    { name: t('nav.hablemos'), href: 'contacto' },
+    { name: t('nav.inicio'), href: 'inicio' },
+    { name: t('nav.servicios'), href: 'servicios' },
+    { name: t('nav.funciones'), href: 'funciones' },
+    { name: t('nav.nosotros'), href: 'nosotros' },
   ]
 
   const serviceLinks = [
@@ -277,10 +318,7 @@ export function SiteFooter() {
             {t('footer.rights')}
           </p>
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
+            onClick={(e) => scrollToId(e, 'inicio')}
             className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-400 transition-colors hover:text-blue-400 cursor-pointer"
           >
             {t('footer.volver_arriba')}{' '}

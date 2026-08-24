@@ -2,10 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+import { useLandingContent } from '../../lib/use-landing-content'
 
 export function ClientsSection() {
-  const { t } = useTranslation()
-  const brands = [
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
+
+  const defaultBrands = [
     { name: 'BDL Cap', src: '/BDL-Cap.webp' },
     { name: 'Elizabeth Costa', src: '/Elizabeth-Costa-Top-Real-Estate-Agent-Doral-logo-fondo-nergo.webp' },
     { name: 'Forget Me Not', src: '/Forget-me-not.webp' },
@@ -14,7 +17,18 @@ export function ClientsSection() {
     { name: 'Trailvision Optics', src: '/Trailvision-Optics.webp' },
     { name: 'Vistalite', src: '/Vistalite_color-version.webp' },
   ]
-  const marquee = [...brands, ...brands, ...brands, ...brands]
+
+  const dynamicClients = locale === 'es' && content.clients?.items?.length > 0
+    ? content.clients.items.map((c) => ({
+        name: c.companyName,
+        src: c.logoUrl || '/Maraka.webp',
+      }))
+    : defaultBrands
+
+  const marquee = [...dynamicClients, ...dynamicClients, ...dynamicClients, ...dynamicClients]
+
+  const tag = (locale === 'es' && content.clients?.tag) || t('clients.tag')
+  const description = (locale === 'es' && content.clients?.description) || t('clients.description')
 
   return (
     <section className="border-b border-slate-800 bg-slate-950 py-12 text-white sm:py-16">
@@ -26,11 +40,11 @@ export function ClientsSection() {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto flex max-w-4xl flex-col items-center px-5 text-center sm:px-8"
       >
-        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-blue-500">{t('clients.tag')}</p>
+        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-blue-500">{tag}</p>
         <h2 className="font-serif text-3xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
           {t('clients.title_part1')}<em className="font-serif italic text-blue-500">{t('clients.title_bold1')}</em>{t('clients.title_part2')}<em className="font-serif italic text-blue-500">{t('clients.title_bold2')}</em>{t('clients.title_part3')}
         </h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">{t('clients.description')}</p>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">{description}</p>
       </motion.div>
 
       {/* ── Carrusel de Marcas con efecto Fade-Up Suave y Retraso Escalonado ── */}
@@ -50,13 +64,19 @@ export function ClientsSection() {
                 key={`${brand.name}-${i}`}
                 className="group relative flex h-24 sm:h-28 w-52 sm:w-64 shrink-0 items-center justify-center rounded-xl bg-white p-2.5 sm:p-3 shadow-md shadow-white/5 transition-all duration-300 ease-out hover:scale-105 hover:z-20 hover:shadow-2xl hover:shadow-blue-500/20 transform-gpu"
               >
-                <img
-                  src={brand.src}
-                  alt={brand.name}
-                  loading="eager"
-                  decoding="async"
-                  className="h-full w-full object-contain pointer-events-none transform-gpu"
-                />
+                {brand.src ? (
+                  <img
+                    src={brand.src}
+                    alt={brand.name}
+                    loading="eager"
+                    decoding="async"
+                    className="h-full w-full object-contain pointer-events-none transform-gpu"
+                  />
+                ) : (
+                  <span className="font-mono text-xs font-bold text-slate-900 uppercase tracking-widest">
+                    {brand.name}
+                  </span>
+                )}
               </div>
             ))}
           </div>
