@@ -11,7 +11,7 @@ export const initialLandingData: FullLandingContent = {
     ctaUrl: '#servicios',
     systemTag: '[ TLUX_SYSTEM // 01 ]',
     designTag: '[ INNOVACIÓN_Y_DISEÑO ]',
-    heroImageUrl: 'https://res.cloudinary.com/dri5k0qio/image/upload/v1787503210/corptlux/landing/hezsd5kqpbeltohvnnll.jpg',
+    heroImageUrl: 'https://res.cloudinary.com/dri5k0qio/image/upload/v1787603537/corptlux/landing/demk6uy7loarughgumtd.jpg',
   },
   stats: {
     projectsCount: '+15',

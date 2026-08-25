@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowUpRight, ArrowUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+import { useLandingContent } from '../../lib/use-landing-content'
 import { trackLeadInteraction } from '../../lib/lead-tracker'
 
 function WhatsAppIcon({ className = "size-11 sm:size-13" }: { className?: string }) {
@@ -19,6 +20,8 @@ function WhatsAppIcon({ className = "size-11 sm:size-13" }: { className?: string
 
 export function ContactoSection() {
   const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
+  const contactData = locale === 'es' ? content.contact : null
 
   const part1 = t('contacto.title_part1')
   const part2 = t('contacto.title_part2')
@@ -51,7 +54,7 @@ export function ContactoSection() {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-500"
           >
-            {t('contacto.tag')}
+            {contactData?.tag || t('contacto.tag')}
           </motion.p>
 
           {/* Título con animación de entrada fluida palabra por palabra */}

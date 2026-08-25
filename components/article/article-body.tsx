@@ -173,14 +173,27 @@ export function ArticleBody({ post, allPosts: propAllPosts }: ArticleBodyProps) 
     ? <>Publicações <span className="font-serif italic text-blue-600 font-normal">relacionadas</span>.</>
     : <>Publicaciones <span className="font-serif italic text-blue-600 font-normal">relacionadas</span>.</>
   const labelResults = isEn ? '[ 02 RESULTS ]' : isPt ? '[ 02 RESULTADOS ]' : '[ 02 RESULTADOS ]'
+  const labelBackToBlog = isEn ? '← BACK TO BLOG' : isPt ? '← VOLTAR AO BLOG' : '← VOLVER AL BLOG'
+  const labelBackToBlogShort = isEn ? 'BACK TO BLOG' : isPt ? 'VOLTAR AO BLOG' : 'VOLVER AL BLOG'
 
   const localizedPrefix = locale === 'es' ? '' : `/${locale}`
 
   return (
     <article className="w-full bg-slate-950 text-white selection:bg-blue-600 selection:text-white">
       {/* ── HEADER NEGRO TLUX (bg-slate-950) ── */}
-      <header className="border-b border-slate-800 bg-slate-950 px-6 py-16 sm:px-12 sm:py-24 lg:px-16">
+      <header className="border-b border-slate-800 bg-slate-950 px-6 pt-24 pb-16 sm:px-12 sm:pt-32 sm:pb-20 lg:px-16 lg:pt-36">
         <div className="mx-auto max-w-5xl space-y-8">
+          {/* ── BOTÓN DE RETORNO: VOLVER AL BLOG ── */}
+          <div className="flex items-center justify-between mb-2">
+            <Link
+              href={`${localizedPrefix}/blog`}
+              className="group inline-flex items-center gap-2.5 px-4 py-2 border border-slate-800 bg-slate-900/90 hover:bg-slate-900 text-slate-300 hover:text-white hover:border-blue-600 transition-all font-mono text-xs font-bold uppercase tracking-widest rounded-none shadow-sm cursor-pointer"
+            >
+              <ArrowLeft className="size-4 text-blue-500 transition-transform group-hover:-translate-x-1" />
+              <span>{labelBackToBlog}</span>
+            </Link>
+          </div>
+
           <div className="flex items-center gap-3 font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">
             <span>{articleDate}</span>
             <span className="text-slate-700">|</span>
@@ -232,6 +245,17 @@ export function ArticleBody({ post, allPosts: propAllPosts }: ArticleBodyProps) 
               </button>
             </div>
           </div>
+
+          {/* ── IMAGEN DE PORTADA HD DESTACADA (CLOUDINARY) ── */}
+          {post.coverImage && (
+            <div className="mt-12 overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl rounded-none">
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full max-h-130 object-cover object-center"
+              />
+            </div>
+          )}
         </div>
       </header>
 
@@ -322,6 +346,20 @@ export function ArticleBody({ post, allPosts: propAllPosts }: ArticleBodyProps) 
                     style={{ width: `${scrollProgress}%` }}
                   />
                 </div>
+              </div>
+
+              {/* Botón rápido en sidebar */}
+              <div className="pt-2">
+                <Link
+                  href={`${localizedPrefix}/blog`}
+                  className="group w-full flex items-center justify-between p-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-600 transition-all font-mono text-xs font-bold text-slate-700 hover:text-blue-600 uppercase tracking-wider"
+                >
+                  <span className="flex items-center gap-2">
+                    <ArrowLeft className="size-3.5 text-blue-600 transition-transform group-hover:-translate-x-1" />
+                    <span>{labelBackToBlogShort}</span>
+                  </span>
+                  <span className="text-slate-400 group-hover:text-blue-600">↵</span>
+                </Link>
               </div>
             </div>
           </aside>

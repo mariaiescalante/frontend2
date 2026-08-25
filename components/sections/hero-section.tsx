@@ -15,7 +15,7 @@ function HeroGraphic({
 }) {
   const { t } = useTranslation()
   const { content } = useLandingContent()
-  const resolvedImg = imageUrl || content.hero?.heroImageUrl
+  const resolvedImg = imageUrl || content.hero?.heroImageUrl || content.hero?.imageUrl || content.hero?.image_url || content.hero?.image
 
   return (
     <div className="group relative aspect-4/3 sm:aspect-square w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 p-2.5 shadow-2xl shadow-slate-950/10 transition-all duration-300 hover:shadow-blue-500/10">
@@ -25,6 +25,7 @@ function HeroGraphic({
             src={resolvedImg}
             alt="TLUX Equipo y Colaboración Digital"
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            suppressHydrationWarning
           />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent" />
@@ -59,7 +60,7 @@ export function HeroSection() {
   const ctaText = heroData?.ctaText || t('hero.cta_enfoque')
 
   // La imagen establecida en el CMS es global y permanente
-  const heroImageUrl = content.hero?.heroImageUrl
+  const heroImageUrl = content.hero?.heroImageUrl || content.hero?.imageUrl || content.hero?.image_url || content.hero?.image
 
   return (
     <section id="inicio" className="relative isolate overflow-hidden scroll-mt-24 px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:px-10 lg:pt-32">

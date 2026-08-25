@@ -65,7 +65,12 @@
     "t8_comment": "Cumpriram com tudo o que foi prometido. A plataforma ficou rápida, moderna e sem erros. Com certeza voltaria a trabalhar com eles.",
     "t8_tag": "[ PLATAFORMA DIGITAL ]",
     "t9_comment": "Incrível trabalho de desenvolvimento. O design ficou muito limpo, os efeitos são ótimos e a adaptação móvel funciona perfeitamente.",
-    "t9_tag": "[ ADAPTAÇÃO MÓVEL ]"
+    "t9_tag": "[ ADAPTAÇÃO MÓVEL ]",
+    "client_tag": "[ CLIENTE TLUX ]",
+    "t10_comment": "A TLUX Studio acelerou significativamente o lançamento da minha plataforma SaaS, entregando um desenvolvimento impecável antes do prazo.",
+    "t10_tag": "[ DESENVOLVIMENTO WEB ]",
+    "t11_comment": "A empresa é ótima e os resultados são sólidos.",
+    "t11_tag": "[ CLIENTE TLUX ]"
   },
   "servicios": {
     "tag": "[ 01 / SERVIÇOS & SOLUÇÕES ]",
@@ -79,7 +84,6 @@
     "s1_d2": "Desempenho e escalabilidade ideais",
     "s1_d3": "Arquitetura full-stack moderna",
     "s1_result": "Mais controle. Máximo desempenho.",
-
     "s2_title": "Desenvolvimento de E-Commerce",
     "s2_kicker": "Conversão que se sente",
     "s2_desc": "Desenvolvemos lojas virtuais de alta conversão com gestão avançada de inventário, gateways de pagamento seguros e UX sem atrito.",
@@ -87,7 +91,6 @@
     "s2_d2": "Gestão avançada de estoque",
     "s2_d3": "Experiência de usuário envolvente",
     "s2_result": "Mais vendas. Menos atrito.",
-
     "s3_title": "Marketing Digital Estratégico",
     "s3_kicker": "Crescimento que importa",
     "s3_desc": "Executamos estratégias de marketing baseadas em dados em SEO, PPC e redes sociais para fortalecer a autoridade da marca e atrair clientes qualificados.",
@@ -95,7 +98,6 @@
     "s3_d2": "Campanhas direcionadas nas redes sociais",
     "s3_d3": "Tráfego qualificado de alta conversão",
     "s3_result": "Mais alcance. Leads de valor.",
-
     "s4_title": "Engenharia de Backend",
     "s4_kicker": "Infraestrutura sólida",
     "s4_desc": "Projetamos sistemas robustos e seguros que gerenciam operações de banco de dados e integrações de API com máxima eficiência.",
@@ -103,7 +105,6 @@
     "s4_d2": "Gestão eficiente de dados e APIs",
     "s4_d3": "Integrações de plataforma sem falhas",
     "s4_result": "Operações estáveis. Zero falhas.",
-
     "s5_title": "Automação de Email Marketing",
     "s5_kicker": "Comunicação que conecta",
     "s5_desc": "Criamos campanhas de email marketing segmentadas e fluxos automatizados de alto impacto que fidelizam clientes e geram receita recorrente.",
@@ -111,7 +112,6 @@
     "s5_d2": "Design de alto impacto visual",
     "s5_d3": "Retenção e fidelização de clientes",
     "s5_result": "Maior retenção. Maior LTV.",
-
     "s6_title": "Consultoria de Transformação Digital",
     "s6_kicker": "Estratégia com visão",
     "s6_desc": "Aconselhamos empresas na adoção de tecnologias modernas para otimizar processos internos e aumentar a competitividade no mercado.",
@@ -119,7 +119,6 @@
     "s6_d2": "Adoção de novas tecnologias",
     "s6_d3": "Otimização de processos internos",
     "s6_result": "Mais eficiência. Vantagem competitiva.",
-
     "s7_title": "SEO & SEM Avançado",
     "s7_kicker": "Visibilidade orgânica e paga",
     "s7_desc": "Oferecemos serviços especializados de SEO e campanhas de busca SEM de alto ROAS para capturar intenção direta e dominar os buscadores.",
@@ -127,14 +126,58 @@
     "s7_d2": "Campanhas SEM estratégicas de alto ROAS",
     "s7_d3": "Resultados imediatos e ROI comprovado",
     "s7_result": "Topo nos buscadores. Tráfego de qualidade.",
-
     "s8_title": "Integração de CRM Corporativo",
     "s8_kicker": "Foco total no cliente",
     "s8_desc": "Centralizamos a gestão de relacionamento com clientes integrando um CRM sob medida que automatiza vendas e oferece relatórios em tempo real.",
     "s8_d1": "Centralização da gestão de clientes",
     "s8_d2": "Automação de tarefas em tempo real",
     "s8_d3": "Relatórios e produtividade avançada",
-    "s8_result": "Maior produtividade. Fidelização real."
+    "s8_result": "Maior produtividade. Fidelização real.",
+    "s9_title": "Inteligência Artificial & Automação",
+    "s9_kicker": "Eficiência e fluxos autônomos",
+    "s9_desc": "Projetamos e implementamos soluções sob medida de inteligência artificial que automatizam tarefas repetitivas e otimizam a tomada de decisões.",
+    "s9_d1": "Modelagem e treinamento de modelos de IA",
+    "s9_d2": "Robôs de processo (RPA) e automação",
+    "s9_d3": "Integração de APIs e plataformas de dados",
+    "s9_result": "Processos 40% mais ágeis e redução de custos.",
+    "s10_title": "Cibersegurança Empresarial & Auditorias",
+    "s10_kicker": "Proteção integral para o seu negócio digital",
+    "s10_desc": "Implementamos estratégias avançadas de cibersegurança e auditorias completas para proteger dados críticos e assegurar a continuidade.",
+    "s10_d1": "Avaliação de riscos e vulnerabilidades",
+    "s10_d2": "Mitigação e resposta a incidentes",
+    "s10_d3": "Firewalls e detecção de intrusões",
+    "s10_result": "80% menos incidentes com conformidade garantida.",
+    "cta_talk": "FALE CONOSCO SOBRE ISSO",
+    "deliverables_tag": "[ ENTREGÁVEIS ]",
+    "cta_more": "Ver mais serviços",
+    "s12_title": "Desenvolvimento de Apps Móveis iOS e Android",
+    "s12_kicker": "Experiências móveis nativas e fluidas",
+    "s12_desc": "Desenvolvimento de aplicações móveis de alto desempenho usando Flutter e React Native.",
+    "s12_result": "Mais downloads. Zero falhas.",
+    "s12_d1": "Arquitetura multiplataforma",
+    "s12_d2": "Publicação na App Store e Google Play",
+    "s12_d3": "Notificações push e análise em tempo real",
+    "s13_title": "Arquitetura Cloud & DevOps",
+    "s13_kicker": "Infraestrutura elástica e resiliente",
+    "s13_desc": "Implantação automatizada de microsserviços na AWS e Google Cloud com pipelines CI/CD.",
+    "s13_result": "Zero tempo de inatividade. Escalabilidade total.",
+    "s13_d1": "Automatização CI/CD com GitHub Actions",
+    "s13_d2": "Infraestrutura como Código com Terraform",
+    "s13_d3": "Monitoramento 24/7 com alertas proativos",
+    "s11_title": "Desenvolvimento de Apps Móveis iOS e Android",
+    "s11_kicker": "Experiências móveis nativas e fluidas",
+    "s11_desc": "Desenvolvimento de aplicações móveis de alto desempenho usando Flutter e React Native.",
+    "s11_d1": "Arquitetura multiplataforma",
+    "s11_d2": "Publicação na App Store e Google Play",
+    "s11_d3": "Notificações push e análise em tempo real",
+    "s11_result": "Mais downloads. Zero falhas.",
+    "s14_title": "Marketing Digital Integral",
+    "s14_kicker": "Estratégias de crescimento acelerado",
+    "s14_desc": "Implementamos campanhas multicanal otimizadas para maximizar sua visibilidade online e converter tráfego em clientes leais.",
+    "s14_result": "Aumento de 40% em leads qualificados em 3 meses",
+    "s14_d1": "Auditoria de presença digital",
+    "s14_d2": "Campanhas de PPC e SEM",
+    "s14_d3": "Gestão de redes sociais e conteúdo"
   },
   "funciones": {
     "tag": "[ 02 / RECURSOS ]",
@@ -154,7 +197,17 @@
     "f5_title": "Acompanhamento de Conversão em Tempo Real",
     "f5_kicker": "Métricas & Conversão em Tempo Real",
     "f6_title": "Gestão de Presença em Redes Sociais",
-    "f6_kicker": "Branding & Presença Digital"
+    "f6_kicker": "Branding & Presença Digital",
+    "f7_title": "Arquitetura Serverless Global",
+    "f7_kicker": "Alta Disponibilidade & Alto Desempenho",
+    "f8_title": "Microfrontends Modulares",
+    "f8_kicker": "Escalabilidade Frontend & Arquitetura",
+    "f9_title": "Busca Semântica com IA Vetorial",
+    "f9_kicker": "Descoberta de Conteúdo em Tempo Real",
+    "f10_title": "Observabilidade e Telemetria em Tempo Real",
+    "f10_kicker": "Monitoramento Preditivo de Infraestrutura",
+    "f11_title": "Automatización Robótica de Procesos con IA",
+    "f11_kicker": "Flujos de Trabajo Inteligentes y Autónomos"
   },
   "stack": {
     "tag": "[ 05 // SYSTEM_STACK ]",
@@ -166,49 +219,44 @@
     "active_insight": "INSIGHT_ATIVO",
     "usage_case": "Caso de Uso",
     "metric_label": "Métrica de Desempenho",
-
     "angular_desc": "Framework enterprise do Google para aplicações web progressivas de alta densidade e estado complexo.",
     "angular_case": "Plataformas SaaS, dashboards executivos e sistemas de grande escala.",
-
     "laravel_desc": "Motor backend elegante para arquiteturas de dados complexas, ORM Eloquent e integrações de API seguras.",
     "laravel_case": "APIs RESTful, microsserviços corporativos e portais web transacionais.",
-
     "nextjs_desc": "O padrão moderno do Next.js para renderização híbrida (SSR, SSG, ISR), otimização de ativos e velocidade máxima.",
     "nextjs_case": "E-commerce headless, plataformas de conteúdo de alto tráfego e interfaces focadas em SEO.",
-
     "nodejs_desc": "Ambiente de execução assíncrono orientado a eventos para microsserviços em tempo real de alta concorrência.",
     "nodejs_case": "WebSockets, APIs GraphQL/gRPC e backends distribuídos na nuvem.",
-
     "postgres_desc": "O banco de dados relacional código aberto mais avançado do mundo, especializado em integridade de dados e busca vetorial.",
     "postgres_case": "Armazenamento transacional, dados financeiros e vetores para Inteligência Artificial.",
-
     "python_desc": "Linguagem líder em automação, processamento massivo de dados, Machine Learning e integrações de IA.",
     "python_case": "Modelos de linguagem (LLMs), pipelines de dados e APIs com FastAPI/Django.",
-
     "react_desc": "A biblioteca UI mais popular do mundo para construção de interfaces declarativas e reativas baseadas em componentes.",
     "react_case": "SPAs de alto desempenho, microfrontends e aplicativos móveis com React Native.",
-
     "tailwind_desc": "Motor CSS de última geração compilado em Rust para criar sistemas de design responsivos sem CSS desnecessário.",
     "tailwind_case": "Interfaces premiadas Awwwards, sistemas de design corporativos e microanimações fluidas.",
-
     "typescript_desc": "Superset tipado de JavaScript que garante manutenibilidade a longo prazo e segurança em tempo de compilação.",
     "typescript_case": "Grandes bases de código, integrações complexas e contratos de dados tipados.",
-
     "facebook_desc": "Plataforma de anúncios da Meta para campanhas de alto impacto, segmentação avançada e rastreamento CAPI.",
     "facebook_case": "Campanhas de aquisição, retargeting dinâmico e geração de clientes potenciais.",
     "facebook_ads_desc": "Plataforma de anúncios da Meta para campanhas de alto impacto, segmentação avançada e rastreamento CAPI.",
     "facebook_ads_case": "Campanhas de aquisição, retargeting dinâmico e geração de clientes potenciais.",
-
     "google_desc": "Ecossistema de anúncios do Google para captura imediata de intenção de busca, Performance Max e Shopping.",
     "google_case": "Captura de intenção direta de compra, anúncios de busca e aquisição multicanal.",
     "google_ads_desc": "Ecossistema de anúncios do Google para captura imediata de intenção de busca, Performance Max e Shopping.",
     "google_ads_case": "Captura de intenção direta de compra, anúncios de busca e aquisição multicanal.",
-
     "shopify_desc": "Plataforma líder global de e-commerce para lojas virtuais de alta conversão, checkout e inventário.",
     "shopify_case": "Lojas online escaláveis, comércio eletrônico global e checkout ultrarrápido.",
-
     "wordpress_desc": "O gerenciador de conteúdo mais utilizado do mundo para portais corporativos, notícias e headless CMS.",
-    "wordpress_case": "Sites corporativos autogerenciáveis, portais de notícias e integrações headless CMS."
+    "wordpress_case": "Sites corporativos autogerenciáveis, portais de notícias e integrações headless CMS.",
+    "docker_desc": "Plataforma de contêineres para implantações consistentes e microsserviços isolados.",
+    "docker_case": "Ambientes de desenvolvimento reproduzíveis e pipelines CI/CD na nuvem.",
+    "redis_desc": "Armazenamento em memória para cache ultrarrápido e filas de alta velocidade.",
+    "redis_case": "Gerenciamento de sessões distribuídas e cache de respostas de API.",
+    "kubernetes_desc": "Orquestração de contêineres que automatiza a implantação, escalonamento e gestão de clusters.",
+    "kubernetes_case": "Clusters resilientes em nuvem com alta disponibilidade.",
+    "graphql_desc": "Linguagem de consulta declarativa para APIs que permite requisitar dados precisos.",
+    "graphql_case": "Federações de microsserviços e backends para mobile."
   },
   "nosotros": {
     "tag": "[ 03 // SOBRE NÓS ]",

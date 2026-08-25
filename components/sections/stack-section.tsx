@@ -5,6 +5,7 @@ import { Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useTranslation } from '../../context/language-context'
+import { useLandingContent } from '../../lib/use-landing-content'
 
 interface TechTool {
   id: string
@@ -283,9 +284,89 @@ const TECH_TOOLS: TechTool[] = [
 ]
 
 export function StackSection() {
-  const { t } = useTranslation()
-  const [selectedTool, setSelectedTool] = useState<TechTool>(TECH_TOOLS[0])
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
+  const stackData = content.techStack
+
+  const COLOR_PALETTE = ['#000000', '#61DAFB', '#3178C6', '#38BDF8', '#5FA04E', '#336791', '#0db7ed', '#FF2D20', '#DD0031', '#F24E1E', '#E44D26', '#10B981', '#6366F1']
+
+  const KNOWN_LOGOS: Record<string, string> = {
+    docker: '/docker.svg',
+    nodejs: '/Node.js_logo.svg',
+    'node.js': '/Node.js_logo.svg',
+    node: '/Node.js_logo.svg',
+    react: '/React.webp',
+    nextjs: '/Nextjs.webp',
+    'next.js': '/Nextjs.webp',
+    typescript: '/Typescript_logo_2020.svg.webp',
+    tailwind: '/Tailwind_CSS_Logo.svg.webp',
+    'tailwind css': '/Tailwind_CSS_Logo.svg.webp',
+    postgresql: '/Postgresql.svg.webp',
+    postgres: '/Postgresql.svg.webp',
+    angular: '/Angularjsoldicon.webp',
+    laravel: '/Laravel.svg.webp',
+    shopify: '/shopify.webp',
+    wordpress: '/wordpress.webp',
+    python: '/python.webp',
+    'facebook ads': '/facebook-ads.svg',
+    'google ads': '/google-ads.webp',
+  }
+
+  const activeTools: TechTool[] = Array.isArray(stackData?.items) && stackData.items.length > 0
+    ? stackData.items.map((it: any, idx: number) => {
+        const nameLower = (it.name || '').toLowerCase().trim()
+        const color = it.accentColor || COLOR_PALETTE[idx % COLOR_PALETTE.length]
+        const rawTag = it.category || it.categoryTag || 'DEV_STACK'
+        const categoryTag = rawTag.startsWith('[') ? rawTag : `[ ${rawTag.toUpperCase()} ]`
+        
+        let targetLogo = it.logoUrl
+        if (!targetLogo || targetLogo.endsWith('.svg.webp')) {
+          targetLogo = KNOWN_LOGOS[nameLower] || (targetLogo ? targetLogo.replace('.svg.webp', '.svg') : undefined)
+        }
+        if (!targetLogo) {
+          targetLogo = KNOWN_LOGOS[nameLower]
+        }
+
+        const slugKey = nameLower.replace(/[^a-z0-9]/g, '')
+        const dictDesc = locale !== 'es' && t(`stack.${slugKey}_desc`) !== `stack.${slugKey}_desc` ? t(`stack.${slugKey}_desc`) : null
+        const dictCase = locale !== 'es' && t(`stack.${slugKey}_case`) !== `stack.${slugKey}_case` ? t(`stack.${slugKey}_case`) : null
+
+        return {
+          id: it.id || `tech-${idx + 1}`,
+          name: it.name || 'Tecnología',
+          categoryTag,
+          categoryName: it.categoryName || it.category || 'System Architecture Component',
+          version: it.version || 'vLatest Stable Suite',
+          accentColor: color,
+          description: dictDesc || it.description || 'Tecnología de alto rendimiento integrada en nuestro stack oficial.',
+          useCase: dictCase || it.usageCase || it.useCase || 'Plataformas SaaS y aplicaciones web empresariales.',
+          performanceMetric: it.performanceMetric || '99.9% Reliability & High-Efficiency Performance',
+          logo: targetLogo ? (
+            <img
+              src={targetLogo}
+              alt={it.name}
+              className="h-7 w-auto object-contain transition-transform duration-300"
+            />
+          ) : (
+            <div className="flex size-7 items-center justify-center font-mono text-xs font-bold text-slate-800 bg-slate-200 rounded">
+              {it.name?.slice(0, 2).toUpperCase() || 'TX'}
+            </div>
+          )
+        }
+      })
+    : TECH_TOOLS
+
+  const [selectedTool, setSelectedTool] = useState<TechTool>(activeTools[0] || TECH_TOOLS[0])
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (activeTools.length > 0) {
+      setSelectedTool((prev) => {
+        const found = activeTools.find((a) => a.id === prev.id)
+        return found || activeTools[0]
+      })
+    }
+  }, [stackData?.items])
 
   // Desplazamiento suave continuo para el carrusel infinito de tecnologías
   useEffect(() => {
@@ -338,13 +419,13 @@ export function StackSection() {
         >
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-slate-500 font-semibold">
-              {t('stack.tag')}
+              {(locale === 'es' && stackData?.tag) || t('stack.tag')}
             </p>
             <h2 className="mt-4 font-sans text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              {t('stack.title_part1')}<span className="font-serif italic text-[#2563eb]">{t('stack.title_bold')}</span>.
+              {(locale === 'es' && stackData?.titlePart1) || t('stack.title_part1')}<span className="font-serif italic text-[#2563eb]">{(locale === 'es' && stackData?.titleBold) || t('stack.title_bold')}</span>.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-base">
-              {t('stack.description')}
+              {(locale === 'es' && stackData?.description) || t('stack.description')}
             </p>
           </div>
           <div className="hidden items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-500 lg:flex">
@@ -370,7 +451,7 @@ export function StackSection() {
             ref={scrollRef}
             className="flex overflow-x-auto scrollbar-none touch-pan-x gap-3 sm:gap-4 px-4 py-1 select-none cursor-drag"
           >
-            {[...TECH_TOOLS, ...TECH_TOOLS, ...TECH_TOOLS, ...TECH_TOOLS].map((tool, index) => {
+            {[...activeTools, ...activeTools, ...activeTools, ...activeTools].map((tool, index) => {
               const isSelected = selectedTool.id === tool.id
               return (
                 <button

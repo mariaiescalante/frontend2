@@ -18,7 +18,7 @@ export function ClientsSection() {
     { name: 'Vistalite', src: '/Vistalite_color-version.webp' },
   ]
 
-  const dynamicClients = locale === 'es' && content.clients?.items?.length > 0
+  const dynamicClients = Array.isArray(content.clients?.items) && content.clients.items.length > 0
     ? content.clients.items.map((c) => ({
         name: c.companyName,
         src: c.logoUrl || '/Maraka.webp',

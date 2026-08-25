@@ -79,7 +79,6 @@
     "s1_d2": "Rendimiento y escalabilidad óptimos",
     "s1_d3": "Arquitectura moderna",
     "s1_result": "Más control. Máximo rendimiento.",
-
     "s2_title": "Desarrollo de E-commerce",
     "s2_kicker": "Conversión que se siente",
     "s2_desc": "Creamos plataformas de comercio electrónico personalizadas y optimizadas que permiten vender en línea de manera efectiva, con gestión de inventario, pasarelas de pago seguras y experiencias atractivas.",
@@ -87,7 +86,6 @@
     "s2_d2": "Gestión avanzada de inventario",
     "s2_d3": "Experiencias de usuario atractivas",
     "s2_result": "Más ventas. Menos fricción.",
-
     "s3_title": "Marketing Digital Estratégico",
     "s3_kicker": "Alcance que importa",
     "s3_desc": "Implementamos estrategias efectivas de marketing digital que incluyen SEO, PPC y campañas en redes sociales para aumentar tu visibilidad y atraer tráfico relevante.",
@@ -95,7 +93,6 @@
     "s3_d2": "Campañas en redes sociales",
     "s3_d3": "Tráfico relevante y calificado",
     "s3_result": "Más visibilidad. Tráfico de valor.",
-
     "s4_title": "Software de Backend",
     "s4_kicker": "Infraestructura sólida",
     "s4_desc": "Proporcionamos sistemas robustos y seguros que gestionan eficientemente tus operaciones y datos, asegurando una integración fluida con tus plataformas.",
@@ -103,7 +100,6 @@
     "s4_d2": "Gestión eficiente de datos",
     "s4_d3": "Integración fluida de plataformas",
     "s4_result": "Operaciones estables. Cero fallos.",
-
     "s5_title": "Email Marketing",
     "s5_kicker": "Comunicación que conecta",
     "s5_desc": "Diseñamos campañas de email marketing segmentadas que resuenan con tu audiencia y fomentan la lealtad de los clientes a través de diseños de alto impacto.",
@@ -111,7 +107,6 @@
     "s5_d2": "Diseños de alto impacto",
     "s5_d3": "Fidelización de clientes",
     "s5_result": "Más retención. Mayor lealtad.",
-
     "s6_title": "Consultoría Digital",
     "s6_kicker": "Estrategia con visión",
     "s6_desc": "Asesoramos a las empresas en su proceso de digitalización, ayudándoles a adoptar tecnologías que optimicen sus procesos y mejoren su competitividad en el mercado.",
@@ -119,7 +114,6 @@
     "s6_d2": "Adopción de nuevas tecnologías",
     "s6_d3": "Optimización de procesos internos",
     "s6_result": "Más eficiencia. Alta competitividad.",
-
     "s7_title": "SEO | SEM",
     "s7_kicker": "Visibilidad orgánica",
     "s7_desc": "Ofrecemos servicios expertos de SEO y SEM para potenciar tu presencia online y atraer tráfico de calidad. Campañas SEM estratégicas que maximizan tu retorno de inversión (ROI).",
@@ -127,14 +121,34 @@
     "s7_d2": "Campañas SEM estratégicas",
     "s7_d3": "Resultados inmediatos y ROI alto",
     "s7_result": "Posiciones destacadas. Tráfico de calidad.",
-
     "s8_title": "Integración de CRM",
     "s8_kicker": "Clientes en el centro",
     "s8_desc": "Centralizamos y optimizamos la gestión de clientes integrando un CRM adaptado a tus procesos, automatizando tareas y brindando datos en tiempo real para impulsar la productividad.",
     "s8_d1": "Centralización de gestión de clientes",
     "s8_d2": "Tareas automatizadas en tiempo real",
     "s8_d3": "Productividad e informes avanzados",
-    "s8_result": "Mayor productividad. Fidelización real."
+    "s8_result": "Mayor productividad. Fidelización real.",
+    "s12_title": "Desarrollo de Apps Móviles iOS y Android",
+    "s12_kicker": "Experiencias móviles nativas y fluidas",
+    "s12_desc": "Desarrollo de aplicaciones móviles de alto rendimiento utilizando Flutter y React Native, garantizando una experiencia de usuario fluida y consistente en ambas plataformas.",
+    "s12_result": "Apps publicadas y métricas de uso optimizadas",
+    "s12_d1": "Arquitectura multiplataforma",
+    "s12_d2": "Publicación en App Store y Google Play",
+    "s12_d3": "Notificaciones push y analítica",
+    "s13_title": "Arquitectura Cloud & DevOps",
+    "s13_kicker": "Infraestructura elástica y resiliente",
+    "s13_desc": "Despliegue automatizado de microservicios en AWS y Google Cloud con pipelines CI/CD.",
+    "s13_result": "Resultados medibles y garantizados.",
+    "s13_d1": "Automatización CI/CD con GitHub Actions",
+    "s13_d2": "Infraestructura como Código con Terraform",
+    "s13_d3": "Monitorización 24/7 con alertas proactivas",
+    "s14_title": "Marketing Digital Integral",
+    "s14_kicker": "Estrategias de crecimiento acelerado",
+    "s14_desc": "Implementamos campañas multicanal optimizadas para maximizar tu visibilidad online y convertir tráfico en clientes leales.",
+    "s14_result": "Incremento del 40% en leads cualificados en 3 meses",
+    "s14_d1": "Auditoría de presencia digital",
+    "s14_d2": "Campañas de PPC y SEM",
+    "s14_d3": "Gestión de redes sociales y contenido"
   },
   "funciones": {
     "tag": "[ 02 / FUNCIONES ]",
@@ -154,7 +168,17 @@
     "f5_title": "Seguimiento y Reporte de Rendimiento",
     "f5_kicker": "Métricas & Conversión en Tiempo Real",
     "f6_title": "Gestión de Redes Sociales",
-    "f6_kicker": "Branding & Presencia Digital"
+    "f6_kicker": "Branding & Presencia Digital",
+    "f7_title": "Arquitectura Serverless Global",
+    "f7_kicker": "Alta Disponibilidad & Rendimiento",
+    "f8_title": "Microfrontends Modulares",
+    "f8_kicker": "Escalabilidad Frontend",
+    "f9_title": "Búsqueda Semántica con IA Vectorial",
+    "f9_kicker": "Descubrimiento de Contenido en Tiempo Real",
+    "f10_title": "Observabilidad y Telemetría en Tiempo Real",
+    "f10_kicker": "Monitoreo Predictivo de Infraestructura",
+    "f11_title": "Automatización Robótica de Procesos con IA",
+    "f11_kicker": "Flujos de Trabajo Inteligentes y Autónomos"
   },
   "stack": {
     "tag": "[ 05 // SYSTEM_STACK ]",
@@ -166,47 +190,34 @@
     "active_insight": "INSIGHT_ACTIVO",
     "usage_case": "Caso de Uso",
     "metric_label": "Métrica de Rendimiento",
-
     "angular_desc": "Framework enterprise de Google para aplicaciones web progresivas de alta densidad y estado complejo.",
     "angular_case": "Plataformas SaaS, dashboards ejecutivos y sistemas de alta escala.",
-
     "laravel_desc": "Motor backend de alta elegancia para arquitecturas de datos complejas, ORM Eloquent e integraciones API seguras.",
     "laravel_case": "APIs RESTful, microservicios empresariales y portales web transaccionales.",
-
     "nextjs_desc": "El estándar moderno de Next.js para renderizado híbrido (SSR, SSG, ISR), optimización de assets y carga ultrarrápida.",
     "nextjs_case": "E-commerce headless, plataformas de contenido masivo e interfaces interactivas de alto SEO.",
-
     "nodejs_desc": "Entorno de ejecución orientado a eventos y E/S no bloqueante para servicios en tiempo real y microservicios escalables.",
     "nodejs_case": "WebSockets, APIs GraphQL/gRPC y backends distribuidos en la nube.",
-
     "postgres_desc": "La base de datos relacional de código abierto más avanzada del mundo, especializada en integridad de datos y búsquedas vectoriales.",
     "postgres_case": "Almacenamiento transaccional, datos financieros y vectores para Inteligencia Artificial.",
-
     "python_desc": "Lenguaje líder en automatización, procesamiento masivo de datos, algoritmos de Machine Learning e integraciones de IA.",
     "python_case": "Modelos de lenguaje (LLMs), pipelines de datos y APIs con FastAPI/Django.",
-
     "react_desc": "La librería UI más popular para construir interfaces declarativas y reactivas con renderizado basado en componentes.",
     "react_case": "SPAs de alto rendimiento, microfrontends y aplicaciones móviles con React Native.",
-
     "tailwind_desc": "Motor CSS de última generación compilado en Rust para crear sistemas de diseño responsivos y de alto impacto estético sin CSS residual.",
     "tailwind_case": "Interfaces premium Awwwards, sistemas de diseño corporativos y animaciones fluidas.",
-
     "typescript_desc": "Superset tipado de JavaScript que garantiza mantenibilidad a largo plazo, refactorización segura y detección de errores en desarrollo.",
     "typescript_case": "Grandes bases de código, integraciones complejas y contratos de datos seguros.",
-
     "facebook_desc": "Plataforma publicitaria de Meta para campañas de alto impacto, segmentación avanzada de audiencias y retargeting conversivo.",
     "facebook_case": "Campañas de adquisición, retargeting dinámico y generación de clientes potenciales.",
     "facebook_ads_desc": "Plataforma publicitaria de Meta para campañas de alto impacto, segmentación avanzada de audiencias y retargeting conversivo.",
     "facebook_ads_case": "Campañas de adquisición, retargeting dinámico y generación de clientes potenciales.",
-
     "google_desc": "Ecosistema publicitario de Google para posicionamiento inmediato en búsquedas, campañas de Display, Shopping y Performance Max.",
     "google_case": "Captura de intención de compra directa, anuncios de búsqueda y campañas multicanal.",
     "google_ads_desc": "Ecosistema publicitario de Google para posicionamiento inmediato en búsquedas, campañas de Display, Shopping y Performance Max.",
     "google_ads_case": "Captura de intención de compra directa, anuncios de búsqueda y campañas multicanal.",
-
     "shopify_desc": "La plataforma de comercio electrónico líder para tiendas online de alta conversión, pasarelas de pago y gestión de inventario.",
     "shopify_case": "Tiendas online escalables, e-commerce global y checkout ultrarrápido.",
-
     "wordpress_desc": "El gestor de contenidos más utilizado del mundo para portales de noticias, blogs corporativos y sitios institucionales autogestionables.",
     "wordpress_case": "Sitios corporativos autogestionables, portales de noticias e integraciones headless."
   },

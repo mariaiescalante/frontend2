@@ -65,7 +65,12 @@
     "t8_comment": "They delivered everything promised. The platform turned out fast, modern, and bug-free. I would definitely work with them again.",
     "t8_tag": "[ DIGITAL PLATFORM ]",
     "t9_comment": "Incredible development work. The design turned out very clean, the effects look great, and mobile responsiveness works perfectly.",
-    "t9_tag": "[ MOBILE RESPONSIVENESS ]"
+    "t9_tag": "[ MOBILE RESPONSIVENESS ]",
+    "client_tag": "[ TLUX CLIENT ]",
+    "t10_comment": "TLUX Studio significantly accelerated the launch of my SaaS platform, delivering flawless web development ahead of schedule.",
+    "t10_tag": "[ WEB DEVELOPMENT ]",
+    "t11_comment": "The company is great and the results are solid.",
+    "t11_tag": "[ TLUX CLIENT ]"
   },
   "servicios": {
     "tag": "[ 01 / SERVICES & SOLUTIONS ]",
@@ -79,7 +84,6 @@
     "s1_d2": "Optimal performance & scalability",
     "s1_d3": "Modern full-stack tech stack",
     "s1_result": "More control. Maximum performance.",
-
     "s2_title": "E-Commerce Development",
     "s2_kicker": "High-converting shopping",
     "s2_desc": "We engineer custom, high-converting e-commerce platforms with advanced inventory management, secure payment gateways, and frictionless UX.",
@@ -87,7 +91,6 @@
     "s2_d2": "Advanced inventory management",
     "s2_d3": "Engaging customer experience",
     "s2_result": "More sales. Zero friction.",
-
     "s3_title": "Strategic Digital Marketing",
     "s3_kicker": "Growth that matters",
     "s3_desc": "We execute data-driven marketing strategies across SEO, PPC, and social media campaigns to boost brand authority and drive qualified traffic.",
@@ -95,7 +98,6 @@
     "s3_d2": "Targeted social ad campaigns",
     "s3_d3": "High-intent customer traffic",
     "s3_result": "Higher reach. Valuable leads.",
-
     "s4_title": "Backend Engineering",
     "s4_kicker": "Solid infrastructure",
     "s4_desc": "We engineer robust, secure server architectures that handle complex database operations and API integrations seamlessly.",
@@ -103,7 +105,6 @@
     "s4_d2": "Efficient data & API management",
     "s4_d3": "Flawless platform integrations",
     "s4_result": "Stable operations. Zero downtime.",
-
     "s5_title": "Email Marketing Automation",
     "s5_kicker": "Communication that connects",
     "s5_desc": "We design high-impact, segmented email automation workflows that nurture subscriber loyalty and drive repeat revenue.",
@@ -111,7 +112,6 @@
     "s5_d2": "High-converting visual templates",
     "s5_d3": "Customer retention & loyalty",
     "s5_result": "Better retention. Higher LTV.",
-
     "s6_title": "Digital Transformation Consulting",
     "s6_kicker": "Visionary strategy",
     "s6_desc": "We advise enterprise organizations through digital transformation, adopting modern tech stacks to optimize operations and market edge.",
@@ -119,7 +119,6 @@
     "s6_d2": "Modern technology adoption",
     "s6_d3": "Internal workflow optimization",
     "s6_result": "Greater efficiency. Market edge.",
-
     "s7_title": "Advanced SEO | SEM",
     "s7_kicker": "Organic & paid search dominance",
     "s7_desc": "We deliver expert technical SEO and high-ROAS SEM search campaigns that capture active buying intent and dominate search results.",
@@ -127,14 +126,58 @@
     "s7_d2": "High-ROAS SEM campaigns",
     "s7_d3": "Immediate results & clear ROI",
     "s7_result": "Top rankings. Qualified intent.",
-
     "s8_title": "Enterprise CRM Integration",
     "s8_kicker": "Customer-centric workflows",
     "s8_desc": "We centralize customer relationship data by integrating customized CRM platforms, automating repetitive sales tasks with real-time reporting.",
     "s8_d1": "Centralized customer management",
     "s8_d2": "Real-time task automation",
     "s8_d3": "Advanced analytics & reporting",
-    "s8_result": "Higher productivity. Real retention."
+    "s8_result": "Higher productivity. Real retention.",
+    "s9_title": "Artificial Intelligence & Automation",
+    "s9_kicker": "Autonomous efficiency & workflows",
+    "s9_desc": "We engineer custom artificial intelligence solutions that automate repetitive operations, optimize executive decisions, and drive business innovation.",
+    "s9_d1": "Custom AI model design & fine-tuning",
+    "s9_d2": "RPA process bots & autonomous workflows",
+    "s9_d3": "Enterprise data & API integrations",
+    "s9_result": "40% faster workflows and up to 30% cost reduction.",
+    "s10_title": "Enterprise Cybersecurity & Web Audits",
+    "s10_kicker": "360° Digital Infrastructure Protection",
+    "s10_desc": "We implement advanced cybersecurity strategies and thorough vulnerability audits to protect critical enterprise data and guarantee business continuity.",
+    "s10_d1": "Risk assessment & vulnerability audits",
+    "s10_d2": "Incident mitigation & response protocols",
+    "s10_d3": "Web Application Firewalls & intrusion detection",
+    "s10_result": "80% reduction in security incidents with certified compliance.",
+    "cta_talk": "LET'S TALK ABOUT THIS",
+    "deliverables_tag": "[ DELIVERABLES ]",
+    "cta_more": "View more services",
+    "s12_title": "Development of iOS & Android Mobile Apps",
+    "s12_kicker": "Native and fluid mobile experiences",
+    "s12_desc": "High-performance mobile application development using Flutter and React Native, ensuring a fluid user experience.",
+    "s12_result": "More downloads. Zero crashes.",
+    "s12_d1": "Cross-platform architecture",
+    "s12_d2": "Publishing on App Store and Google Play",
+    "s12_d3": "Push notifications and real-time analytics",
+    "s13_title": "Cloud Architecture & DevOps",
+    "s13_kicker": "Elastic & resilient infrastructure",
+    "s13_desc": "Automated deployment of microservices on AWS and Google Cloud with CI/CD pipelines.",
+    "s13_result": "Zero downtime. Maximum scalability.",
+    "s13_d1": "CI/CD automation with GitHub Actions",
+    "s13_d2": "Infrastructure as Code with Terraform",
+    "s13_d3": "24/7 monitoring with proactive alerts",
+    "s11_title": "Development of iOS & Android Mobile Apps",
+    "s11_kicker": "Native and fluid mobile experiences",
+    "s11_desc": "High-performance mobile application development using Flutter and React Native, ensuring a fluid user experience.",
+    "s11_d1": "Cross-platform architecture",
+    "s11_d2": "Publishing on App Store and Google Play",
+    "s11_d3": "Push notifications and real-time analytics",
+    "s11_result": "More downloads. Zero crashes.",
+    "s14_title": "Integrated Digital Marketing",
+    "s14_kicker": "Accelerated Growth Strategies",
+    "s14_desc": "We implement optimized multichannel campaigns to maximize your online visibility and convert traffic into loyal customers.",
+    "s14_result": "40% increase in qualified leads in 3 months",
+    "s14_d1": "Digital presence audit",
+    "s14_d2": "PPC and SEM campaigns",
+    "s14_d3": "Social media and content management"
   },
   "funciones": {
     "tag": "[ 02 / FEATURES ]",
@@ -148,13 +191,23 @@
     "f2_title": "Full-Stack Development",
     "f2_kicker": "Scalable Code & Architecture",
     "f3_title": "Content & UX Copy Optimization",
-    "f3_kicker": "UX Writing & High-Impact Copy",
+    "f3_kicker": "UX Writing & Copywriting",
     "f4_title": "Comprehensive Site Analysis",
     "f4_kicker": "Performance & Core Web Vitals",
     "f5_title": "Real-Time Conversion Tracking",
     "f5_kicker": "Real-Time Metrics & Conversion",
     "f6_title": "Social Media Brand Management",
-    "f6_kicker": "Branding & Digital Presence"
+    "f6_kicker": "Branding & Digital Presence",
+    "f7_title": "Global Serverless Architecture",
+    "f7_kicker": "High Availability & Peak Performance",
+    "f8_title": "Modular Microfrontends",
+    "f8_kicker": "Frontend Scalability & Architecture",
+    "f9_title": "Semantic Search with Vector AI",
+    "f9_kicker": "Real-Time Content Discovery",
+    "f10_title": "Real-Time Observability & Telemetry",
+    "f10_kicker": "Predictive Infrastructure Monitoring",
+    "f11_title": "Automatización Robótica de Procesos con IA",
+    "f11_kicker": "Flujos de Trabajo Inteligentes y Autónomos"
   },
   "stack": {
     "tag": "[ 05 // SYSTEM_STACK ]",
@@ -166,49 +219,44 @@
     "active_insight": "ACTIVE_INSIGHT",
     "usage_case": "Use Case",
     "metric_label": "Performance Metric",
-
     "angular_desc": "Google enterprise framework for high-density, complex progressive web applications.",
     "angular_case": "SaaS platforms, executive dashboards, and large-scale enterprise systems.",
-
     "laravel_desc": "Elegant PHP backend engine for complex data architectures, Eloquent ORM, and secure API integrations.",
     "laravel_case": "RESTful APIs, enterprise microservices, and transactional portals.",
-
     "nextjs_desc": "The modern Next.js framework standard for hybrid rendering (SSR, SSG, ISR), asset optimization, and blazing speed.",
     "nextjs_case": "Headless e-commerce, high-traffic media sites, and interactive SEO-focused interfaces.",
-
     "nodejs_desc": "Asynchronous event-driven runtime environment for high-concurrency real-time microservices.",
     "nodejs_case": "WebSockets, GraphQL/gRPC APIs, and cloud-native distributed backends.",
-
     "postgres_desc": "The world's most advanced open-source relational database, specialized in data integrity and vector search.",
     "postgres_case": "Transactional storage, financial ledgers, and AI vector embeddings.",
-
     "python_desc": "Leading language for automation, large-scale data processing, Machine Learning, and AI integrations.",
     "python_case": "LLM integrations, data pipelines, and high-performance APIs with FastAPI/Django.",
-
     "react_desc": "The gold-standard UI library for building declarative, component-driven interactive user interfaces.",
     "react_case": "High-performance SPAs, microfrontends, and cross-platform mobile apps with React Native.",
-
     "tailwind_desc": "Next-generation Rust-compiled CSS engine for creating responsive, high-end design systems with zero bloat.",
     "tailwind_case": "Award-winning Awwwards interfaces, corporate design systems, and fluid micro-animations.",
-
     "typescript_desc": "Strongly typed JavaScript superset ensuring long-term code maintainability and compile-time safety.",
     "typescript_case": "Large codebases, complex API integrations, and type-safe data contracts.",
-
     "facebook_desc": "Meta advertising platform for high-impact performance campaigns, custom audience targeting, and CAPI tracking.",
     "facebook_case": "Acquisition campaigns, dynamic retargeting, and qualified lead generation.",
     "facebook_ads_desc": "Meta advertising platform for high-impact performance campaigns, custom audience targeting, and CAPI tracking.",
     "facebook_ads_case": "Acquisition campaigns, dynamic retargeting, and qualified lead generation.",
-
     "google_desc": "Google advertising ecosystem for instant search intent capture, Performance Max, Display, and Shopping.",
     "google_case": "Direct buying intent capture, search ads, and multi-channel acquisition.",
     "google_ads_desc": "Google advertising ecosystem for instant search intent capture, Performance Max, Display, and Shopping.",
     "google_ads_case": "Direct buying intent capture, search ads, and multi-channel acquisition.",
-
     "shopify_desc": "Industry-leading global commerce infrastructure for high-converting online stores, checkout, and inventory.",
     "shopify_case": "Scalable online stores, global cross-border e-commerce, and ultra-fast checkout.",
-
     "wordpress_desc": "The world's most widely used content management engine for self-hosted corporate portals, news, and headless CMS.",
-    "wordpress_case": "Self-managed corporate portals, publishing platforms, and headless CMS integrations."
+    "wordpress_case": "Self-managed corporate portals, publishing platforms, and headless CMS integrations.",
+    "docker_desc": "Enterprise containerization platform for consistent deployments and isolated microservices.",
+    "docker_case": "Reproducible dev environments and cloud CI/CD pipelines.",
+    "redis_desc": "In-memory data store for ultra-fast caching and high-throughput job queues.",
+    "redis_case": "Distributed session management and API response caching.",
+    "kubernetes_desc": "Container orchestration platform that automates deployment, scaling, and cluster management.",
+    "kubernetes_case": "Resilient multi-cloud clusters and automated zero-downtime rollouts.",
+    "graphql_desc": "Declarative API query language that allows clients to request exactly the data they need.",
+    "graphql_case": "Complex microservice federations and mobile API backends."
   },
   "nosotros": {
     "tag": "[ 03 // ABOUT US ]",

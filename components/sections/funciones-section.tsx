@@ -10,12 +10,23 @@ export function FuncionesSection() {
   const { content } = useLandingContent()
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null)
 
-  const features = locale === 'es' && content.features?.items?.length > 0
-    ? content.features.items.map((item, idx) => ({
-        title: item.title,
-        kicker: item.kicker,
-        image: item.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
-      }))
+  const features = Array.isArray(content.features?.items) && content.features.items.length > 0
+    ? content.features.items.map((item: any, idx: number) => {
+        const langKey = locale.startsWith('pt') ? 'pt' : (locale === 'en' ? 'en' : 'es')
+        const transObj = item.translations?.[langKey] || item.translations?.[locale]
+        const dictTitle = locale !== 'es'
+          ? (transObj?.title || (t(`funciones.f${idx + 1}_title`) !== `funciones.f${idx + 1}_title` ? t(`funciones.f${idx + 1}_title`) : null))
+          : null
+        const dictKicker = locale !== 'es'
+          ? (transObj?.kicker || (t(`funciones.f${idx + 1}_kicker`) !== `funciones.f${idx + 1}_kicker` ? t(`funciones.f${idx + 1}_kicker`) : null))
+          : null
+
+        return {
+          title: dictTitle || item.title,
+          kicker: dictKicker || item.kicker,
+          image: item.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+        }
+      })
     : [
         {
           title: t('funciones.f1_title'),
@@ -82,7 +93,7 @@ export function FuncionesSection() {
           >
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-teal-400">{tag}</p>
             <h2 className="font-serif text-4xl leading-none tracking-tighter sm:text-5xl lg:text-6xl">
-              {t('funciones.title_part1')}<em className="text-blue-500 font-serif italic">{t('funciones.title_bold1')}</em>{t('funciones.title_part2')}<em className="text-blue-500 font-serif italic">{t('funciones.title_bold2')}</em>
+              {(locale === 'es' && content.features?.titlePart1) || t('funciones.title_part1')}<em className="text-blue-500 font-serif italic">{(locale === 'es' && content.features?.titleBold1) || t('funciones.title_bold1')}</em>{(locale === 'es' && content.features?.titlePart2) || t('funciones.title_part2')}<em className="text-blue-500 font-serif italic">{(locale === 'es' && content.features?.titleBold2) || t('funciones.title_bold2')}</em>
             </h2>
             <p className="mt-8 max-w-lg text-base leading-7 text-slate-400">
               {description}

@@ -8,6 +8,9 @@ export interface HeroSectionContent {
   systemTag: string
   designTag: string
   heroImageUrl?: string
+  imageUrl?: string
+  image_url?: string
+  image?: string
 }
 
 export interface StatsSectionContent {

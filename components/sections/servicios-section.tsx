@@ -4,13 +4,18 @@ import { ArrowRight, Check, Code, ShoppingBag, Megaphone, Database, Mail, BookOp
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+import { useLandingContent } from '../../lib/use-landing-content'
 
 export function ServiciosSection() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
+  const servicesDataContent = content.services
   const [activeDesktopService, setActiveDesktopService] = useState<number>(0)
   const [activeMobileService, setActiveMobileService] = useState<number | null>(0)
 
-  const servicesData = [
+  const SERVICE_ICONS = [Code, ShoppingBag, Megaphone, Database, Mail, BookOpen, TrendingUp, Users]
+
+  const defaultServices = [
     { index: '01', title: t('servicios.s1_title'), kicker: t('servicios.s1_kicker'), description: t('servicios.s1_desc'), deliverables: [t('servicios.s1_d1'), t('servicios.s1_d2'), t('servicios.s1_d3')], result: t('servicios.s1_result'), icon: Code },
     { index: '02', title: t('servicios.s2_title'), kicker: t('servicios.s2_kicker'), description: t('servicios.s2_desc'), deliverables: [t('servicios.s2_d1'), t('servicios.s2_d2'), t('servicios.s2_d3')], result: t('servicios.s2_result'), icon: ShoppingBag },
     { index: '03', title: t('servicios.s3_title'), kicker: t('servicios.s3_kicker'), description: t('servicios.s3_desc'), deliverables: [t('servicios.s3_d1'), t('servicios.s3_d2'), t('servicios.s3_d3')], result: t('servicios.s3_result'), icon: Megaphone },
@@ -20,6 +25,33 @@ export function ServiciosSection() {
     { index: '07', title: t('servicios.s7_title'), kicker: t('servicios.s7_kicker'), description: t('servicios.s7_desc'), deliverables: [t('servicios.s7_d1'), t('servicios.s7_d2'), t('servicios.s7_d3')], result: t('servicios.s7_result'), icon: TrendingUp },
     { index: '08', title: t('servicios.s8_title'), kicker: t('servicios.s8_kicker'), description: t('servicios.s8_desc'), deliverables: [t('servicios.s8_d1'), t('servicios.s8_d2'), t('servicios.s8_d3')], result: t('servicios.s8_result'), icon: Users },
   ]
+
+  const servicesData = Array.isArray(servicesDataContent?.items) && servicesDataContent.items.length > 0
+    ? servicesDataContent.items.map((it: any, idx: number) => {
+        const langKey = locale.startsWith('pt') ? 'pt' : (locale === 'en' ? 'en' : 'es')
+        const transObj = it.translations?.[langKey] || it.translations?.[locale]
+
+        const dictTitle = locale !== 'es' ? (transObj?.title || (t(`servicios.s${idx + 1}_title`) !== `servicios.s${idx + 1}_title` ? t(`servicios.s${idx + 1}_title`) : null)) : null
+        const dictKicker = locale !== 'es' ? (transObj?.kicker || (t(`servicios.s${idx + 1}_kicker`) !== `servicios.s${idx + 1}_kicker` ? t(`servicios.s${idx + 1}_kicker`) : null)) : null
+        const dictDesc = locale !== 'es' ? (transObj?.description || (t(`servicios.s${idx + 1}_desc`) !== `servicios.s${idx + 1}_desc` ? t(`servicios.s${idx + 1}_desc`) : null)) : null
+        const dictResult = locale !== 'es' ? (transObj?.result || (t(`servicios.s${idx + 1}_result`) !== `servicios.s${idx + 1}_result` ? t(`servicios.s${idx + 1}_result`) : null)) : null
+        const dictD1 = locale !== 'es' ? (transObj?.deliverables?.[0] || (t(`servicios.s${idx + 1}_d1`) !== `servicios.s${idx + 1}_d1` ? t(`servicios.s${idx + 1}_d1`) : null)) : null
+        const dictD2 = locale !== 'es' ? (transObj?.deliverables?.[1] || (t(`servicios.s${idx + 1}_d2`) !== `servicios.s${idx + 1}_d2` ? t(`servicios.s${idx + 1}_d2`) : null)) : null
+        const dictD3 = locale !== 'es' ? (transObj?.deliverables?.[2] || (t(`servicios.s${idx + 1}_d3`) !== `servicios.s${idx + 1}_d3` ? t(`servicios.s${idx + 1}_d3`) : null)) : null
+
+        return {
+          index: (idx + 1).toString().padStart(2, '0'),
+          title: dictTitle || it.title || `Servicio ${idx + 1}`,
+          kicker: dictKicker || it.kicker || 'Tecnología de Alto Impacto',
+          description: dictDesc || it.description || '',
+          deliverables: (dictD1 && dictD2 && dictD3)
+            ? [dictD1, dictD2, dictD3]
+            : (Array.isArray(it.deliverables) && it.deliverables.length > 0 ? it.deliverables : ['Solución 100% personalizada', 'Rendimiento y escalabilidad', 'Soporte especializado']),
+          result: dictResult || it.result || 'Resultados medibles y garantizados.',
+          icon: SERVICE_ICONS[idx % SERVICE_ICONS.length]
+        }
+      })
+    : defaultServices
 
   const toggleMobileService = (index: number) => {
     setActiveMobileService((prev) => (prev === index ? null : index))
@@ -41,13 +73,13 @@ export function ServiciosSection() {
           className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
           <div>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">{t('servicios.tag')}</p>
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-blue-600">{(locale === 'es' && servicesDataContent?.tag) || t('servicios.tag')}</p>
             <h2 className="max-w-3xl font-serif text-5xl leading-none tracking-tighter text-slate-900 sm:text-7xl lg:text-7xl">
-              {t('servicios.title_part1')}<em className="text-blue-600 font-serif italic">{t('servicios.title_bold')}</em>
+              {(locale === 'es' && servicesDataContent?.titlePart1) || t('servicios.title_part1')}<em className="text-blue-600 font-serif italic">{(locale === 'es' && servicesDataContent?.titleBold) || t('servicios.title_bold')}</em>
             </h2>
           </div>
           <p className="max-w-sm text-base leading-relaxed text-slate-600 font-medium">
-            {t('servicios.description')}
+            {(locale === 'es' && servicesDataContent?.description) || t('servicios.description')}
           </p>
         </motion.div>
 
@@ -105,10 +137,10 @@ export function ServiciosSection() {
 
                         <div className="border-t border-slate-800 pt-4">
                           <p className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-400">
-                            [ ENTREGABLES ]
+                            {t('servicios.deliverables_tag')}
                           </p>
                           <ul className="space-y-2.5">
-                            {item.deliverables.map((d) => (
+                            {item.deliverables.map((d: string) => (
                               <li key={d} className="flex items-center gap-3 text-xs font-semibold text-slate-200">
                                 <Check className="size-4 shrink-0 text-teal-400 stroke-[2.5]" />
                                 <span>{d}</span>
@@ -128,7 +160,7 @@ export function ServiciosSection() {
                           }}
                           className="inline-flex items-center gap-2 border-b-2 border-blue-500 pb-1 font-mono text-xs font-bold uppercase tracking-wider text-blue-400 hover:text-white"
                         >
-                          HABLEMOS DE ESTO <ArrowRight className="size-4" />
+                          {t('servicios.cta_talk') || (locale === 'es' ? 'HABLEMOS DE ESTO' : locale === 'pt' ? 'FALE CONOSCO' : "LET'S TALK ABOUT THIS")} <ArrowRight className="size-4" />
                         </a>
                       </div>
                     </motion.div>
@@ -203,14 +235,14 @@ export function ServiciosSection() {
                 }}
                 className="mt-8 inline-flex items-center gap-2 border-b-2 border-slate-900 pb-2 font-mono text-xs font-bold uppercase tracking-wider text-slate-900 transition-colors hover:border-blue-600 hover:text-blue-600"
               >
-                HABLEMOS DE ESTO <ArrowRight className="size-4" />
+                {t('servicios.cta_talk') || (locale === 'es' ? 'HABLEMOS DE ESTO' : locale === 'pt' ? 'FALE CONOSCO' : "LET'S TALK ABOUT THIS")} <ArrowRight className="size-4" />
               </a>
             </div>
 
             <div className="border-t border-slate-200 pt-6 lg:border-l lg:border-t-0 lg:pl-10">
-              <p className="mb-5 font-mono text-xs font-bold uppercase tracking-widest text-slate-600">[ ENTREGABLES ]</p>
+              <p className="mb-5 font-mono text-xs font-bold uppercase tracking-widest text-slate-600">{t('servicios.deliverables_tag')}</p>
               <ul className="flex flex-col divide-y divide-slate-200">
-                {desktopSvc.deliverables.map((d) => (
+                {desktopSvc.deliverables.map((d: string) => (
                   <li key={d} className="flex items-center gap-3.5 py-3.5 text-base font-semibold text-slate-700">
                     <Check className="size-5 shrink-0 text-teal-600 stroke-[2.5]" />
                     <span>{d}</span>

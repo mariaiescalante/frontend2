@@ -3,13 +3,16 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { useTranslation } from '../../context/language-context'
+import { useLandingContent } from '../../lib/use-landing-content'
 
 const hidden = { opacity: 0, y: 24 }
 const visible = { opacity: 1, y: 0 }
 const ease = 'easeOut' as const
 
 export function NosotrosSection() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
+  const { content } = useLandingContent()
+  const aboutData = locale === 'es' ? content.about : null
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const [activeIndex, setActiveIndex] = useState<number>(0)
@@ -33,17 +36,17 @@ export function NosotrosSection() {
           transition={{ duration: 0.6, ease, delay: 0 }}
         >
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-zinc-400">
-            {t('nosotros.tag')}
+            {aboutData?.tag || t('nosotros.tag')}
           </p>
           <h2 className="max-w-4xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            {t('nosotros.title_part1')}{' '}
+            {aboutData?.titlePart1 || t('nosotros.title_part1')}{' '}
             <span className="font-serif italic text-[#2563eb]">
-              {t('nosotros.title_bold')}
+              {aboutData?.titleBold || t('nosotros.title_bold')}
             </span>{' '}
-            {t('nosotros.title_part2')}
+            {aboutData?.titlePart2 || t('nosotros.title_part2')}
           </h2>
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-500 lg:text-lg">
-            {t('nosotros.description')}
+            {aboutData?.description || t('nosotros.description')}
           </p>
         </motion.div>
 
@@ -150,7 +153,7 @@ export function NosotrosSection() {
               <div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold tracking-widest text-blue-600">
-                    {t('nosotros.vision_tag')}
+                    {aboutData?.visionTag || t('nosotros.vision_tag')}
                   </span>
                   <span className="font-mono text-xs font-bold text-slate-400">
                     02
@@ -158,7 +161,7 @@ export function NosotrosSection() {
                 </div>
 
                 <h3 className="mt-4 text-4xl font-extrabold tracking-tight text-blue-600 transition-colors duration-300 sm:text-5xl lg:text-7xl">
-                  {t('nosotros.vision_title')}
+                  {aboutData?.visionTitle || t('nosotros.vision_title')}
                 </h3>
 
                 {/* Previsualización legible cuando está contraída */}
@@ -173,7 +176,7 @@ export function NosotrosSection() {
                     >
                       <div className="mt-4">
                         <p className="line-clamp-2 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
-                          {t('nosotros.vision_desc')}
+                          {aboutData?.visionDesc || t('nosotros.vision_desc')}
                         </p>
                         <span className="mt-3 block font-mono text-[11px] font-bold text-blue-600">
                           {t('nosotros.expandir_hint')}
