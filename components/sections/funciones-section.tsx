@@ -12,66 +12,70 @@ export function FuncionesSection() {
 
   const features = Array.isArray(content.features?.items) && content.features.items.length > 0
     ? content.features.items.map((item: any, idx: number) => {
-        const langKey = locale.startsWith('pt') ? 'pt' : (locale === 'en' ? 'en' : 'es')
-        const transObj = item.translations?.[langKey] || item.translations?.[locale]
-        const dictTitle = locale !== 'es'
-          ? (transObj?.title || (t(`funciones.f${idx + 1}_title`) !== `funciones.f${idx + 1}_title` ? t(`funciones.f${idx + 1}_title`) : null))
-          : null
-        const dictKicker = locale !== 'es'
-          ? (transObj?.kicker || (t(`funciones.f${idx + 1}_kicker`) !== `funciones.f${idx + 1}_kicker` ? t(`funciones.f${idx + 1}_kicker`) : null))
-          : null
+      const langKey = locale.startsWith('pt') ? 'pt' : (locale === 'en' ? 'en' : 'es')
+      const transObj = item.translations?.[langKey] || item.translations?.[locale]
+      const dictTitle = locale !== 'es'
+        ? (transObj?.title || (t(`funciones.f${idx + 1}_title`) !== `funciones.f${idx + 1}_title` ? t(`funciones.f${idx + 1}_title`) : null))
+        : null
+      const dictKicker = locale !== 'es'
+        ? (transObj?.kicker || (t(`funciones.f${idx + 1}_kicker`) !== `funciones.f${idx + 1}_kicker` ? t(`funciones.f${idx + 1}_kicker`) : null))
+        : null
 
-        return {
-          title: dictTitle || item.title,
-          kicker: dictKicker || item.kicker,
-          image: item.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
-        }
-      })
+      return {
+        title: dictTitle || item.title,
+        kicker: dictKicker || item.kicker,
+        image: item.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+      }
+    })
     : [
-        {
-          title: t('funciones.f1_title'),
-          image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f1_kicker'),
-        },
-        {
-          title: t('funciones.f2_title'),
-          image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f2_kicker'),
-        },
-        {
-          title: t('funciones.f3_title'),
-          image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f3_kicker'),
-        },
-        {
-          title: t('funciones.f4_title'),
-          image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f4_kicker'),
-        },
-        {
-          title: t('funciones.f5_title'),
-          image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f5_kicker'),
-        },
-        {
-          title: t('funciones.f6_title'),
-          image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop',
-          kicker: t('funciones.f6_kicker'),
-        },
-      ]
+      {
+        title: t('funciones.f1_title'),
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f1_kicker'),
+      },
+      {
+        title: t('funciones.f2_title'),
+        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f2_kicker'),
+      },
+      {
+        title: t('funciones.f3_title'),
+        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f3_kicker'),
+      },
+      {
+        title: t('funciones.f4_title'),
+        image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f4_kicker'),
+      },
+      {
+        title: t('funciones.f5_title'),
+        image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f5_kicker'),
+      },
+      {
+        title: t('funciones.f6_title'),
+        image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop',
+        kicker: t('funciones.f6_kicker'),
+      },
+    ]
 
   const tag = (locale === 'es' && content.features?.tag) || t('funciones.tag')
   const description = (locale === 'es' && content.features?.description) || t('funciones.description')
 
   const handleMouseEnter = (i: number) => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
-      setActiveItemIndex(i)
+      if (window.innerWidth >= 1900) {
+        setActiveItemIndex(i)
+      }
     }
   }
 
   const handleMouseLeave = () => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
-      setActiveItemIndex(null)
+      if (window.innerWidth >= 1900) {
+        setActiveItemIndex(null)
+      }
     }
   }
 
@@ -117,31 +121,27 @@ export function FuncionesSection() {
                   onClick={() => handleClick(i)}
                   onMouseEnter={() => handleMouseEnter(i)}
                   onMouseLeave={handleMouseLeave}
-                  className={`group relative flex flex-col border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${
-                    isSelected ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
-                  }`}
+                  className={`group relative flex flex-col border-b border-slate-800/80 px-5 py-6 transition-all duration-300 cursor-pointer sm:px-8 ${isSelected ? 'bg-slate-900/80 border-slate-700' : 'hover:bg-slate-900/40'
+                    }`}
                 >
                   <div className="flex items-center gap-4 sm:gap-5">
                     <span
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${
-                        isSelected
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-bold transition-all duration-300 ${isSelected
                           ? 'border-blue-500 bg-blue-600 text-white shadow-md shadow-blue-500/20'
                           : 'border-slate-700 bg-slate-900 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-400'
-                      }`}
+                        }`}
                     >
                       ✓
                     </span>
                     <span
-                      className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${
-                        isSelected ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
-                      }`}
+                      className={`font-sans text-base sm:text-lg font-semibold transition-all duration-300 ${isSelected ? 'text-white translate-x-2' : 'text-slate-400 group-hover:text-slate-200'
+                        }`}
                     >
                       {feature.title}
                     </span>
                     <span
-                      className={`ml-auto font-mono text-xs transition-colors ${
-                        isSelected ? 'text-blue-400 font-bold' : 'text-slate-600'
-                      }`}
+                      className={`ml-auto font-mono text-xs transition-colors ${isSelected ? 'text-blue-400 font-bold' : 'text-slate-600'
+                        }`}
                     >
                       [0{i + 1}]
                     </span>
@@ -155,7 +155,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         exit={{ opacity: 0, scale: 0.9, x: 16 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden lg:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
+                        className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-6 z-30 hidden min-[1900px]:block w-72 h-44 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-2xl shadow-blue-500/20"
                       >
                         <div className="relative h-full w-full">
                           <img
@@ -185,7 +185,7 @@ export function FuncionesSection() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden mt-4 lg:hidden"
+                        className="overflow-hidden mt-4 min-[1900px]:hidden"
                       >
                         <div className="relative w-full h-48 sm:h-56 overflow-hidden rounded-xl border border-slate-700/90 bg-slate-900 shadow-xl">
                           <img

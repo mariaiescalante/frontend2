@@ -36,7 +36,7 @@ export default function RootLayout({
         <LanguageProvider>
           {children}
         </LanguageProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics mode="production" />}
+        {process.env.NODE_ENV === 'production' && process.env.VERCEL && <Analytics mode="production" />}
       </body>
     </html>
   )

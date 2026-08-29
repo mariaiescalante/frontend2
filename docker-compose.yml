@@ -5,10 +5,14 @@ services:
       dockerfile: Dockerfile
     container_name: tlux_frontend
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:4000/api
+      - API_URL=http://host.docker.internal:4000/api
 
   nginx:
     image: nginx:alpine

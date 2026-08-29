@@ -1,7 +1,7 @@
 import { FullLandingContent } from '../types/landing'
 import { initialLandingData } from './landing-mock-data'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
+const API_BASE_URL = (typeof window === 'undefined' ? process.env.API_URL : null) || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
 
 export async function fetchLandingContent(): Promise<FullLandingContent> {
   try {
